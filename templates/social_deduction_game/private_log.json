@@ -1,0 +1,72 @@
+[
+  {
+    "turn": 1,
+    "player": "P1",
+    "role": "VILLAGER",
+    "bid": 0.5,
+    "reasoning": "I want to have a chance to speak early in the game to set the tone for the villagers and encourage us to work together to identify the werewolves."
+  },
+  {
+    "turn": 1,
+    "player": "P2",
+    "role": "VILLAGER",
+    "bid": 0.5,
+    "reasoning": "As a Villager, I want to participate actively in the discussion to help identify potential werewolves. A middle bid gives me a fair chance to speak without appearing overly aggressive, which might draw suspicion."
+  },
+  {
+    "turn": 1,
+    "player": "P3",
+    "role": "VILLAGER",
+    "bid": 0.5,
+    "reasoning": "I want to speak early to suggest that we should gather information and watch for inconsistencies in others' statements. It's crucial to identify werewolves quickly."
+  },
+  {
+    "turn": 1,
+    "player": "P4",
+    "role": "WEREWOLF",
+    "bid": 0.7,
+    "reasoning": "I want to take an active role in shaping the initial conversation and potentially mislead the villagers with a confident demeanor."
+  },
+  {
+    "turn": 1,
+    "player": "P5",
+    "role": "VILLAGER",
+    "bid": 0.45,
+    "reasoning": "I want to participate in the discussion early to gather information and observe how others react. Speaking early might help me identify suspicious behavior or gather clues about who might be a werewolf."
+  },
+  {
+    "turn": 2,
+    "player": "P1",
+    "role": "VILLAGER",
+    "bid": 0.5,
+    "reasoning": "It's the first voting phase, and I want to be active in the discussion. By bidding a moderate amount, I hope to contribute to the conversation and influence the decision-making process without appearing overly eager or suspicious."
+  },
+  {
+    "turn": 2,
+    "player": "P2",
+    "role": "VILLAGER",
+    "bid": 0.5,
+    "reasoning": "I want to participate in the conversation and share my thoughts on the importance of cooperation among villagers. My bid is moderate to ensure I have a chance to speak and contribute to the discussion, but not too high since it's only the first round."
+  },
+  {
+    "turn": 2,
+    "player": "P3",
+    "role": "VILLAGER",
+    "bid": 0.3,
+    "reasoning": "It's early in the game, and I don't have a strong feeling about who might be a werewolf yet. I'll place a moderate bid to potentially contribute to the conversation if needed, but I'm also fine with listening to others' thoughts first."
+  },
+  {
+    "turn": 2,
+    "player": "P4",
+    "role": "WEREWOLF",
+    "bid": 0.7,
+    "reasoning": "I want to influence the discussion early on and steer suspicion away from myself and my fellow werewolf. By speaking, I can advocate for a strategy that keeps the spotlight off us, perhaps by pointing out inconsistencies in someone else's message."
+  },
+  {
+    "turn": 2,
+    "player": "P5",
+    "role": "VILLAGER",
+    "bid": 0.3,
+    "reasoning": "I want to participate in the discussion to gather more information and observe others' reactions. It's early in the game, so a moderate bid will allow me to stay engaged without drawing too much attention."
+  }
+]

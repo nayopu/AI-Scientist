@@ -1,0 +1,23 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Social Deduction Game",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/templates/social_deduction_game/flex_social_deduction.py",
+            "args": [
+                "--spec",
+                "blood_clocktower_full.json",
+                "--plugin",
+                "blood_clocktower_plugin.py"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/templates/social_deduction_game"
+        }
+    ]
+}
