@@ -241,6 +241,7 @@ conda activate ai_scientist
 # Run the paper generation.
 python launch_scientist.py --model "gpt-4o-2024-05-13" --experiment nanoGPT_lite --num-ideas 2
 python launch_scientist.py --model "claude-3-5-sonnet-20241022" --experiment nanoGPT_lite --num-ideas 2
+python launch_scientist.py --model "gpt-4o-2024-05-13" --experiment social_deduction_framework --num-ideas 2
 ```
 
 If you have more than one GPU, use the `--parallel` option to parallelize ideas across multiple GPUs.
@@ -305,6 +306,7 @@ We welcome community contributions in the form of new templates. While these are
 - Earthquake Prediction (`earthquake-prediction`) - [PR #167](https://github.com/SakanaAI/AI-Scientist/pull/167)
 - Tensorial Radiance Fields (`tensorf`) - [PR #175](https://github.com/SakanaAI/AI-Scientist/pull/175)
 - Large Language Model Steering / Probes (`probes`) - [PR #215](https://github.com/SakanaAI/AI-Scientist/pull/215)
+- Social Deduction Framework (`social_deduction_framework`) - [PR #XXX](https://github.com/SakanaAI/AI-Scientist/pull/XXX)
 
 *This section is reserved for community contributions. Please submit a pull request to add your template to the list! Please describe the template in the PR description, and also show examples of the generated papers.*
 
