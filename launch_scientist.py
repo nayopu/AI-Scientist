@@ -89,6 +89,17 @@ def parse_arguments():
         choices=["semanticscholar", "openalex"],
         help="Scholar engine to use.",
     )
+    parser.add_argument(
+        "--docker",
+        action="store_true",
+        help="Run experiments inside a restricted Docker container.",
+    )
+    parser.add_argument(
+        "--docker-image",
+        type=str,
+        default="ai-scientist:latest",
+        help="Docker image to use when --docker is specified.",
+    )
     return parser.parse_args()
 
 
@@ -129,6 +140,8 @@ def worker(
         writeup,
         improvement,
         gpu_id,
+        use_docker,
+        docker_image,
 ):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
     print(f"Worker {gpu_id} started.")
@@ -145,6 +158,8 @@ def worker(
             client_model,
             writeup,
             improvement,
+            use_docker,
+            docker_image,
             log_file=True,
         )
         print(f"Completed idea: {idea['Name']}, Success: {success}")
@@ -160,6 +175,8 @@ def do_idea(
         client_model,
         writeup,
         improvement,
+        use_docker=False,
+        docker_image="ai-scientist:latest",
         log_file=False,
 ):
     ## CREATE PROJECT FOLDER
@@ -218,7 +235,14 @@ def do_idea(
         print_time()
         print(f"*Starting Experiments*")
         try:
-            success = perform_experiments(idea, folder_name, coder, baseline_results)
+            success = perform_experiments(
+                idea,
+                folder_name,
+                coder,
+                baseline_results,
+                use_docker=use_docker,
+                docker_image=docker_image,
+            )
         except Exception as e:
             print(f"Error during experiments: {e}")
             print(f"Experiments failed for idea {idea_name}")
@@ -384,6 +408,8 @@ if __name__ == "__main__":
                     args.writeup,
                     args.improvement,
                     gpu_id,
+                    args.docker,
+                    args.docker_image,
                 ),
             )
             p.start()
@@ -411,6 +437,8 @@ if __name__ == "__main__":
                     client_model,
                     args.writeup,
                     args.improvement,
+                    args.docker,
+                    args.docker_image,
                 )
                 print(f"Completed idea: {idea['Name']}, Success: {success}")
             except Exception as e:

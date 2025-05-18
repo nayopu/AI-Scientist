@@ -388,6 +388,13 @@ docker run -it -e OPENAI_API_KEY=$OPENAI_API_KEY \
   <AI_SCIENTIST_IMAGE>
 ```
 
+The experiment runner supports executing `experiment.py` (and subsequent
+`plot.py`) inside a container using `docker run` with restricted resources.
+Pass `--docker` when launching `launch_scientist.py` to enable this wrapper. You
+may also set a custom image via `--docker-image` (defaults to
+`ai-scientist:latest`). The container runs with one CPU, 2GB of memory and no
+network access to mitigate malicious code.
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=SakanaAI/AI-Scientist&type=Date)](https://star-history.com/#SakanaAI/AI-Scientist&Date)
