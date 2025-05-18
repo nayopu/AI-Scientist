@@ -27,8 +27,32 @@ You can then implement the next thing on your list."""
 
 
 # RUN EXPERIMENT
-def run_experiment(folder_name, run_num, timeout=7200):
+def run_experiment(
+    folder_name: str,
+    run_num: int,
+    timeout: int = 7200,
+    use_docker: bool = False,
+    docker_image: str = "ai-scientist:latest",
+):
+    """Run ``experiment.py`` either locally or inside a Docker container.
+
+    Parameters
+    ----------
+    folder_name : str
+        Path to the experiment template folder.
+    run_num : int
+        Run index used for naming the output directory.
+    timeout : int, optional
+        Timeout for the process in seconds.
+    use_docker : bool, optional
+        If ``True``, execute the experiment inside ``docker_image`` with
+        restricted resources.
+    docker_image : str, optional
+        Name of the Docker image to use when ``use_docker`` is ``True``.
+    """
     cwd = osp.abspath(folder_name)
+    if use_docker and shutil.which("docker") is None:
+        raise EnvironmentError("Docker executable not found. Cannot use --docker")
     # COPY CODE SO WE CAN SEE IT.
     shutil.copy(
         osp.join(folder_name, "experiment.py"),
@@ -36,14 +60,37 @@ def run_experiment(folder_name, run_num, timeout=7200):
     )
 
     # LAUNCH COMMAND
-    command = [
-        "python",
-        "experiment.py",
-        f"--out_dir=run_{run_num}",
-    ]
+    if use_docker:
+        command = [
+            "docker",
+            "run",
+            "--rm",
+            "--cpus",
+            "1",
+            "--memory",
+            "2g",
+            "--network",
+            "none",
+            "-v",
+            f"{cwd}:/workspace",
+            "--workdir",
+            "/workspace",
+            docker_image,
+            "python",
+            "experiment.py",
+            f"--out_dir=run_{run_num}",
+        ]
+        run_cwd = None
+    else:
+        command = [
+            "python",
+            "experiment.py",
+            f"--out_dir=run_{run_num}",
+        ]
+        run_cwd = cwd
     try:
         result = subprocess.run(
-            command, cwd=cwd, stderr=subprocess.PIPE, text=True, timeout=timeout
+            command, cwd=run_cwd, stderr=subprocess.PIPE, text=True, timeout=timeout
         )
 
         if result.stderr:
@@ -85,16 +132,45 @@ If you are finished with experiments, respond with 'ALL_COMPLETED'."""
 
 
 # RUN PLOTTING
-def run_plotting(folder_name, timeout=600):
+def run_plotting(
+    folder_name: str,
+    timeout: int = 600,
+    use_docker: bool = False,
+    docker_image: str = "ai-scientist:latest",
+):
+    """Run ``plot.py`` either locally or inside a Docker container."""
     cwd = osp.abspath(folder_name)
-    # LAUNCH COMMAND
-    command = [
-        "python",
-        "plot.py",
-    ]
+    if use_docker and shutil.which("docker") is None:
+        raise EnvironmentError("Docker executable not found. Cannot use --docker")
+    if use_docker:
+        command = [
+            "docker",
+            "run",
+            "--rm",
+            "--cpus",
+            "1",
+            "--memory",
+            "2g",
+            "--network",
+            "none",
+            "-v",
+            f"{cwd}:/workspace",
+            "--workdir",
+            "/workspace",
+            docker_image,
+            "python",
+            "plot.py",
+        ]
+        run_cwd = None
+    else:
+        command = [
+            "python",
+            "plot.py",
+        ]
+        run_cwd = cwd
     try:
         result = subprocess.run(
-            command, cwd=cwd, stderr=subprocess.PIPE, text=True, timeout=timeout
+            command, cwd=run_cwd, stderr=subprocess.PIPE, text=True, timeout=timeout
         )
 
         if result.stderr:
@@ -113,7 +189,15 @@ def run_plotting(folder_name, timeout=600):
 
 
 # PERFORM EXPERIMENTS
-def perform_experiments(idea, folder_name, coder, baseline_results) -> bool:
+def perform_experiments(
+    idea,
+    folder_name,
+    coder,
+    baseline_results,
+    *,
+    use_docker: bool = False,
+    docker_image: str = "ai-scientist:latest",
+) -> bool:
     ## RUN EXPERIMENT
     current_iter = 0
     run = 1
@@ -131,7 +215,12 @@ def perform_experiments(idea, folder_name, coder, baseline_results) -> bool:
         print(coder_out)
         if "ALL_COMPLETED" in coder_out:
             break
-        return_code, next_prompt = run_experiment(folder_name, run)
+        return_code, next_prompt = run_experiment(
+            folder_name,
+            run,
+            use_docker=use_docker,
+            docker_image=docker_image,
+        )
         if return_code == 0:
             run += 1
             current_iter = 0
@@ -152,7 +241,11 @@ We will be running the command `python plot.py` to generate the plots.
 """
     while True:
         _ = coder.run(next_prompt)
-        return_code, next_prompt = run_plotting(folder_name)
+        return_code, next_prompt = run_plotting(
+            folder_name,
+            use_docker=use_docker,
+            docker_image=docker_image,
+        )
         current_iter += 1
         if return_code == 0 or current_iter >= MAX_ITERS:
             break
