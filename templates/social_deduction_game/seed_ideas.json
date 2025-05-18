@@ -1,0 +1,16 @@
+{
+    "ideas": [
+        {
+            "Title": "Example Experiment 1",
+            "Experiment": "This is an example experiment idea. Replace with your specific experiment description.",
+            "Baseline": "Describe the baseline experiment here",
+            "Expected_Outcome": "Describe what you expect to achieve with this experiment"
+        },
+        {
+            "Title": "Example Experiment 2",
+            "Experiment": "Another example experiment idea. Replace with your specific experiment description.",
+            "Baseline": "Describe the baseline experiment here",
+            "Expected_Outcome": "Describe what you expect to achieve with this experiment"
+        }
+    ]
+}   

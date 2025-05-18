@@ -1,0 +1,113 @@
+[
+  {
+    "event": "game_start",
+    "players": [
+      "P1",
+      "P2",
+      "P3",
+      "P5"
+    ],
+    "roles": {
+      "P1": "VILLAGER",
+      "P2": "VILLAGER",
+      "P3": "VILLAGER",
+      "P4": "WEREWOLF",
+      "P5": "VILLAGER"
+    },
+    "rules": {
+      "num_players": 5,
+      "language": "en",
+      "vote_interval": 2
+    },
+    "gm_message": "GM: Game started with 5 players. Roles have been assigned."
+  },
+  {
+    "event": "phase_start",
+    "turn": 1,
+    "phase": "day",
+    "alive": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5"
+    ],
+    "gm_message": "GM: Day phase begins."
+  },
+  {
+    "turn": 1,
+    "speaker": "P4",
+    "msg": "P4: Hello everyone! It's great to start this game with you all. Let's get to know each other a bit and try to figure out who might be suspicious. I'd suggest we share some initial thoughts or observations. Does anyone have any hunches or strategies they want to discuss? Let's work together to keep our village safe!",
+    "bids": {
+      "P1": 0.5,
+      "P2": 0.5,
+      "P3": 0.5,
+      "P4": 0.7,
+      "P5": 0.45
+    }
+  },
+  {
+    "event": "phase_start",
+    "turn": 2,
+    "phase": "voting",
+    "alive": [
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5"
+    ],
+    "gm_message": "GM: Voting phase begins."
+  },
+  {
+    "turn": 2,
+    "speaker": "P4",
+    "msg": "P4: Hey everyone! It's early, so it's hard to pinpoint who's suspicious, but I think we should focus on who seems eager to accuse others without much evidence. Sometimes, the real threat is the one pushing us to vote hastily. Let's stay calm and gather more information before making any decisions.",
+    "bids": {
+      "P1": 0.5,
+      "P2": 0.5,
+      "P3": 0.3,
+      "P4": 0.7,
+      "P5": 0.3
+    }
+  },
+  {
+    "event": "vote",
+    "turn": 2,
+    "alive": [
+      "P1",
+      "P2",
+      "P3",
+      "P5"
+    ],
+    "tallies": {
+      "P4": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ]
+    },
+    "gm_message": "GM: P4 is executed."
+  },
+  {
+    "event": "victory",
+    "winner": "VILLAGERS",
+    "final_state": {
+      "alive": [
+        "P1",
+        "P2",
+        "P3",
+        "P5"
+      ],
+      "roles": {
+        "P1": "VILLAGER",
+        "P2": "VILLAGER",
+        "P3": "VILLAGER",
+        "P5": "VILLAGER"
+      }
+    },
+    "gm_message": "GM: VILLAGERS win!"
+  }
+]
