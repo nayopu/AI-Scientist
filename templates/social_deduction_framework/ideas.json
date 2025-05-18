@@ -1,0 +1,11 @@
+[
+    {
+        "Name": "hidden_imposter",
+        "Title": "Hidden Imposter Variant",
+        "Experiment": "Introduce one secret imposter who wins if not revealed after five rounds.",
+        "Interestingness": 6,
+        "Feasibility": 8,
+        "Novelty": 5,
+        "novel": true
+    }
+]

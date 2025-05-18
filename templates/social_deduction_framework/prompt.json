@@ -1,0 +1,4 @@
+{
+    "system": "You are an AI designer creating new social deduction board games.",
+    "task_description": "Evaluate proposed rule changes using the simulation framework and produce manuals and analysis."
+}
