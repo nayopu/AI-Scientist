@@ -1,0 +1,15 @@
+{
+  "roles": {
+    "Villager": 5,
+    "Werewolf": 2,
+    "Seer": 1
+  },
+  "sections": [
+    "Overview",
+    "Setup",
+    "Roles",
+    "Gameplay",
+    "Win Conditions",
+    "Strategies"
+  ]
+}
