@@ -1,12 +1,10 @@
 #!/usr/bin/env python
-"""flex_social_deduction.py  ─ フル汎用 SD ゲームエンジン（GM 指示＋山札管理）
+"""flex_social_deduction.py  ─ フル汎用 SD ゲームエンジン（GM 指示管理）
 
 Highlights
 ----------
 * **meta 辞書** は *完全フリー*。LLM‑GM もプラグインも自由に
-  `state["meta"]["…"]` にカウンタ／フラグ／デッキを置ける。
-* **山札／タイル API** は Python 側で実装し、
-  データは `meta[deck_name]` に保存。
+  `state["meta"]["…"]` にカウンタ／フラグを置ける。
 * **gm_directive phase** – LLM‑GM が状況を見て
   1) 公開メッセージ 2) meta 更新 3) 次に実行すべき *phase タグ*
   を JSON で返す。コードはそれを即実行するだけ。
@@ -32,7 +30,7 @@ class PublicState(TypedDict):
     messages: List[BaseMessage]
     turn: int
     alive: List[str]
-    meta: Dict[str, Any]  # free area (decks / counters / flags)
+    meta: Dict[str, Any]  # free area (counters / flags)
 
 class PrivateState(TypedDict):
     role: str
@@ -48,9 +46,7 @@ class BaseMetaUpdate(BaseModel):
 
 class BaseEngineCommand(BaseModel):
     """基本的なエンジンコマンドモデル"""
-    op: str = Field(..., description="Operation to perform (e.g. 'draw', 'shuffle')")
-    deck: str = Field(..., description="Name of the deck to operate on")
-    n: Optional[int] = Field(None, description="Optional number of cards to draw")
+    op: str = Field(..., description="Operation to perform")
 
 class SimplifiedGMDirective(BaseModel):
     """シンプル化したゲームマスターの指示モデル"""
@@ -101,29 +97,6 @@ def ability(name: str):
         return fn
     return _wrap
 
-# ───────────────────── deck helpers ─────────────────────
-def shuffle_deck(state: PublicState, deck_name: str):
-    """Shuffle a deck in meta."""
-    if deck_name not in state["meta"]:
-        print(f"Warning: Deck '{deck_name}' not found in meta state")
-        return
-    random.shuffle(state["meta"][deck_name])
-
-def draw(state: PublicState, deck_name: str, n: int = 1) -> List[str]:
-    """Draw n cards from a deck in meta."""
-    if deck_name not in state["meta"]:
-        print(f"Warning: Deck '{deck_name}' not found in meta state")
-        return []
-    drawn, state["meta"][deck_name] = (
-        state["meta"][deck_name][:n],
-        state["meta"][deck_name][n:],
-    )
-    return drawn
-
-def discard(state: PublicState, deck_name: str, cards: List[str]):
-    """Discard cards to a deck's discard pile in meta."""
-    state["meta"].setdefault(f"{deck_name}_discard", []).extend(cards)
-
 # ───────────────────── prompt builders ──────────────────
 def build_player_chain(llm: ChatOpenAI, *, role: str, team: str, abilities: List[str], rules: str, lang: str, player_name: str):
     sys_pub  = rules + f"\n(You must speak in {lang}.) You must speak ONLY as yourself, not as other players."
@@ -155,10 +128,7 @@ You may speak once (≤128 tokens). Compose your message. """)
 
 # ─ GM 指示フェーズ ---------------------------------------------------------
 GM_SYSTEM = """
-You are the Game-Master. You control phase flow, deck operations, and hidden info.
-You can use the following commands:
-1. Draw cards: {{"op": "draw", "deck": "action_deck", "n": 1}}
-2. Shuffle deck: {{"op": "shuffle", "deck": "action_deck"}}
+You are the Game-Master. You control phase flow and hidden info.
 """
 
 @phase("gm_directive")
@@ -205,23 +175,6 @@ def _ph_gm(state: PublicState, priv: Dict[str, PrivateState], llm: ChatOpenAI, _
             "meta_update": {},
             "engine_cmd": None
         }
-
-    # ENGINE-sideコマンドを先に実行
-    if js_dict["engine_cmd"]:
-        try:
-            cmd = js_dict["engine_cmd"]
-            op = cmd["op"]
-            deck = cmd["deck"]
-            n = cmd.get("n", 1)
-            
-            if op == "draw":
-                cards = draw(state, deck, n)
-                # カードを GM に返す（meta などに保存させる）
-                state["meta"]["gm_last_draw"] = cards
-            elif op == "shuffle":
-                shuffle_deck(state, deck)
-        except Exception as e:
-            print(f"Error executing engine command: {e}")
 
     # 公開メッセージ
     state["messages"].append(AIMessage(content=js_dict["public_msg"]))
@@ -344,7 +297,7 @@ def main():
     ap.add_argument("--rule", default="rules.md")
     ap.add_argument("--plugin", action="append", default=[])
     ap.add_argument("--model", default="gpt-4o-mini")
-    ap.add_argument("--log", default="public_log.json")
+    ap.add_argument("--log", default="game_log.json")
     args = ap.parse_args()
 
     spec = json.loads(Path(args.spec).read_text())

@@ -52,25 +52,12 @@ class BloodClockTowerMeta(BaseModel):
         default_factory=lambda: ["demon_kill", "poison", "empath_ping", "undertaker_reveal", "slayer_shot"],
         description="Order of night actions"
     )
-    action_deck: List[str] = Field(
-        default_factory=lambda: ["kill", "poison", "investigate", "reveal", "slay"],
-        description="Deck of action cards"
-    )
-    role_deck: List[str] = Field(
-        default_factory=lambda: [
-            "Imp", "Poisoner", "Empath", "Undertaker", "Slayer",
-            "Villager", "Villager", "Villager", "Villager"
-        ],
-        description="Deck of role cards"
-    )
     last_killed_night: Optional[str] = Field(None, description="Player killed during the last night")
 
 # ─────────────────── EngineCommandTypes for Blood on the Clocktower ─────────────
 class BloodClockTowerEngineCommand(BaseModel):
     """Engine commands for Blood Clocktower."""
-    op: str = Field(..., description="Operation to perform (e.g. 'draw', 'shuffle')")
-    deck: str = Field(..., description="Name of the deck to operate on")
-    n: Optional[int] = Field(None, description="Optional number of cards to draw")
+    op: str = Field(..., description="Operation to perform")
 
 # Register the models to be imported by the engine
 MODEL_REGISTRY = {
@@ -78,7 +65,7 @@ MODEL_REGISTRY = {
     "engine_cmd": BloodClockTowerEngineCommand
 }
 
-from flex_social_deduction import ability, phase, draw, shuffle_deck
+from flex_social_deduction import ability, phase
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import AIMessage
@@ -124,13 +111,6 @@ SPEC_JSON: Dict = {
             "empath_ping",
             "undertaker_reveal",
             "slayer_shot"
-        ],
-        # Initialize decks
-        "action_deck": ["kill", "poison", "investigate", "reveal", "slay"],  # Basic actions
-        "role_deck": [  # All possible roles
-            "Imp", "Poisoner",
-            "Empath", "Undertaker", "Slayer",
-            "Villager", "Villager", "Villager", "Villager"
         ]
     }
 }
@@ -328,7 +308,7 @@ A *Drunk* or *Poisoned* player's ability is ineffective, but they **still appear
 
 ## 10 ▪ GM Guidance
 * You may alter, withhold, or invent information to keep the game balanced.  
-* Maintain `meta.decks` if you introduce physical decks or tokens.  
+* Maintain meta information if needed.
 * Use `meta.timer` freely (`{{"timer": N, "_timer_init": N}}`) to extend/shorten discussions or special phases.  
 * If contradictory rules arise, character ability text supersedes this sheet.
 
