@@ -44,4 +44,4 @@ def main():
         json.dump(final_info, f, indent=2)
 
 if __name__ == "__main__":
-    main() 
+    main()

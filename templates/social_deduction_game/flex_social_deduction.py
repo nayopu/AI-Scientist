@@ -4,9 +4,7 @@
 Highlights
 ----------
 * **meta 辞書** は *完全フリー*。LLM‑GM もプラグインも自由に
-  `state["meta"]["…"]` にカウンタ／フラグ／デッキを置ける。
-* **山札／タイル API** (`init_deck()`, `draw_cards()`) は Python 側で実装し、
-  データは `meta["decks"][name]` に保存。
+  `state["meta"]["…"]` にカウンタ／フラグを置ける。
 * **gm_directive phase** – LLM‑GM が状況を見て
   1) 公開メッセージ 2) meta 更新 3) 次に実行すべき *phase タグ*
   を JSON で返す。コードはそれを即実行するだけ。
@@ -27,7 +25,7 @@ class PublicState(TypedDict):
     messages: List[BaseMessage]
     turn: int
     alive: List[str]
-    meta: dict  # free area (decks / counters / flags)
+    meta: dict  # free area (counters / flags)
 
 class PrivateState(TypedDict):
     role: str
@@ -52,20 +50,6 @@ def ability(name: str):
         ability_handlers[name] = fn
         return fn
     return _wrap
-
-# ───────────────────── deck helpers ─────────────────────
-
-def _decks(state: PublicState):
-    return state["meta"].setdefault("decks", {})
-
-def init_deck(state: PublicState, name: str, cards: List[str], *, shuffle: bool = True):
-    _decks(state)[name] = random.sample(cards, len(cards)) if shuffle else list(cards)
-
-def draw_cards(state: PublicState, name: str, n: int = 1) -> List[str]:
-    deck = _decks(state).get(name, [])
-    drawn, remain = deck[:n], deck[n:]
-    _decks(state)[name] = remain
-    return drawn
 
 # ───────────────────── prompt builders ──────────────────
 
@@ -225,7 +209,6 @@ def _ab_inspect(state, priv, users, llm, _):
     state["meta"].setdefault("inspections", {}).setdefault(u, []).append({"target": tgt, "team": result})
 
 # ──────────────────────────────────────────────── 勝利判定 DSL
-
 def check_victory(state: PublicState, priv: Dict[str, PrivateState], spec: dict):
     counts: Dict[str, int] = {}
     for p in state["alive"]:

@@ -1,6 +1,6 @@
 """Blood on the Clocktower – minimal but *play‑complete* plugin & spec
 ====================================================================
-This file contains **(1) a full JSON spec** matching the Trouble Brewing
+This file contains **(1) a full JSON spec** matching the Trouble Brewing
 script and **(2) plugin abilities** needed for the game.  Copy it next to
 `flex_social_deduction.py` and run:
 
@@ -39,7 +39,7 @@ import argparse, json, random
 from pathlib import Path
 from typing import Dict, List
 
-from flex_social_deduction import ability, phase, draw_cards, init_deck
+from flex_social_deduction import ability, phase
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import AIMessage
