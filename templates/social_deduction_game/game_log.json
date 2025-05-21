@@ -15127,5 +15127,1942 @@
   {
     "phase": "end",
     "winner": "WEREWOLVES"
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.6,
+    "msg": "Hi everyone! Small village—likely just one wolf among us. Let’s each share first impressions or gut reads so we have something to work with before the vote. I’m happy to start but want to hear from you two as well.",
+    "to": "ALL",
+    "reason": "Open Day 1 discussion; prompt others for thoughts so we can start getting reads."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.6,
+    "msg": "Hey folks – only three of us, so it’d be good to hear everyone’s opening thoughts before we rush into voting. Any gut feelings yet?",
+    "to": "ALL",
+    "reason": "Start conversation, gather reads, appear helpful"
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.55,
+    "msg": "Hey everyone. Let’s start simple: gut feelings on who might be the wolf and why? We only get one execution today, so the more we talk the better.",
+    "to": "ALL",
+    "reason": "Kick-off day-1 discussion to gather reads."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 1.0,
+    "msg": "GM: Discussion phase begins. Feel free to talk.",
+    "to": "ALL",
+    "reason": "Start of Discussion phase"
+  },
+  {
+    "turn": 1,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 1.0
+  },
+  {
+    "turn": 1,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Discussion phase begins. Feel free to talk."
+  },
+  {
+    "turn": 1,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.45,
+    "msg": "Hey all! Quiet table so far. Any first impressions or ideas on how we want to approach the first vote? I’d love to hear from both of you.",
+    "to": "ALL",
+    "reason": "Open discussion to gather info from others."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.4,
+    "msg": "Hey everybody, only three of us so info is scarce. Still, a day-1 lynch has a 1-in-3 shot to hit a wolf, so we probably shouldn’t skip. Anyone have a gut read or want to start with questions?",
+    "to": "ALL",
+    "reason": "Engage early discussion without dominating; encourage others to share thoughts."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "Hey everyone. With just three of us, today is do-or-die: if we mis-execute, the wolf wins tonight. I’m a vanilla villager. Could each of you state your claimed role (obviously you’ll say Villager if you’re town) and give your current lean on who you’d execute and why? Let’s get some reasoning on the table.",
+    "to": "ALL",
+    "reason": "Want to kick-off discussion—day 1 mis-lynch means auto-loss, so we need info fast."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Waiting for players to discuss"
+  },
+  {
+    "turn": 2,
+    "phase": "selection",
+    "selected_speaker": "P3",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 2,
+    "phase": "message",
+    "speaker": "P3",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "Hey everyone. With just three of us, today is do-or-die: if we mis-execute, the wolf wins tonight. I’m a vanilla villager. Could each of you state your claimed role (obviously you’ll say Villager if you’re town) and give your current lean on who you’d execute and why? Let’s get some reasoning on the table."
+  },
+  {
+    "turn": 2,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.6,
+    "msg": "I’m vanilla villager as well. At the moment I’m leaning wolf = P2 simply because they haven’t said anything yet, while P3 at least opened discussion (though initiative alone isn’t alignment-proof). P2, what’s your claim and who would you execute right now? P3, I’d like to hear how you’re sorting me vs P2 too.",
+    "to": "ALL",
+    "reason": "Need to give my claim & prompt P2 to speak before time runs"
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.8,
+    "msg": "I’m also just a vanilla villager. With only one mis-lynch left, we can’t stall. Right now I’m leaning P1 = wolf because they’ve been completely silent so far: no attempt to open discussion or give a read. P3 at least kicked things off, which feels towny. P1, what’s your role and who would you execute? Unless you can convince me otherwise, my vote is going there.",
+    "to": "ALL",
+    "reason": "Need to claim and set narrative early; push for P1 response."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.3,
+    "msg": "Passing the mic—waiting on your role claims and thoughts, P1 and P2.",
+    "to": "ALL",
+    "reason": "I want to keep the floor open but still ensure someone talks if they stall."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Waiting for P1 and P2 to speak before ending discussion."
+  },
+  {
+    "turn": 3,
+    "phase": "selection",
+    "selected_speaker": "P2",
+    "max_bid": 0.8
+  },
+  {
+    "turn": 3,
+    "phase": "message",
+    "speaker": "P2",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I’m also just a vanilla villager. With only one mis-lynch left, we can’t stall. Right now I’m leaning P1 = wolf because they’ve been completely silent so far: no attempt to open discussion or give a read. P3 at least kicked things off, which feels towny. P1, what’s your role and who would you execute? Unless you can convince me otherwise, my vote is going there."
+  },
+  {
+    "turn": 3,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.92,
+    "msg": "Apologies for the slow entrance—different time-zone, just got here. I’m vanilla villager. Quick wagoning a silent slot is the easiest wolf play, and P2 did it instantly before giving me a chance to respond. That feels agenda-driven.  \nP3’s opener looks genuinely information-seeking: asking both of us to lay out roles + preferred execution. That leans town to me.  \nCurrent read: P2 most likely wolf. I’m open to hear more, but unless something changes I’ll be voting there.  \nP2, besides my silence, what else points to me being wolf?  \nP3, thoughts on P2’s quick push?",
+    "to": "ALL",
+    "reason": "I’m being painted as autolynch target; must speak now to defend and give reads."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.4,
+    "msg": "P1, time’s running out. If you’re town you need to speak up and give us a read right now; silence only helps the wolf. Unless you give me a solid reason otherwise, my vote’s on you. P3, any reservations about that plan?",
+    "to": "ALL",
+    "reason": "Keep pressure on P1 but leave room for them to speak"
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.3,
+    "msg": "Still waiting on P1. With so few of us, silence is basically a confession. P1, please claim and give your read; otherwise you’re getting my vote.",
+    "to": "ALL",
+    "reason": "Encourage P1 to speak before we lock reads; no urgent new info."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Let players continue discussion; waiting for P1 or more messages before ending phase."
+  },
+  {
+    "turn": 4,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.92
+  },
+  {
+    "turn": 4,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "Apologies for the slow entrance—different time-zone, just got here. I’m vanilla villager. Quick wagoning a silent slot is the easiest wolf play, and P2 did it instantly before giving me a chance to respond. That feels agenda-driven.  \nP3’s opener looks genuinely information-seeking: asking both of us to lay out roles + preferred execution. That leans town to me.  \nCurrent read: P2 most likely wolf. I’m open to hear more, but unless something changes I’ll be voting there.  \nP2, besides my silence, what else points to me being wolf?  \nP3, thoughts on P2’s quick push?"
+  },
+  {
+    "turn": 4,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.55,
+    "msg": "Quick summary of where I’m at: \n• P2 opened with a hard push on me for mere silence – feels like seizing low-hanging fruit rather than solving. \n• P3’s opener was to request claims/reads from both of us, which I read as pro-town.\n\nQuestions:\nP2 – apart from my slow arrival, do you have ANY other reason to wolf-read me? And what’s your read on P3?\nP3 – who looks more genuine so far and why? If we had to vote right now, which way are you leaning? \n\nI’m willing to re-evaluate but currently plan to vote P2 unless something changes.",
+    "to": "ALL",
+    "reason": "Want to keep momentum and press both players for specifics before we enter voting."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.8,
+    "msg": "P1, I wasn’t \"quick-wagoning\" so much as breaking silence in what’s essentially MYLO; letting hours of dead air pass only helps the wolf. No PRs to out, no extra info to wait for—pressure is the only tool we have. \nYour counter feels performative: instead of giving ANY reason I’m a wolf besides \"speed\", you just mirrored my read on you and pocket-leaned P3. That’s classic deflection.\nLook at yesterday: you led discussion early, today you lurked until prodded—shift in activity that lines up with being the last wolf facing elimination.\nP3, you started the right conversation and haven’t thrown shade either way; that still reads town to me. I’m voting P1 unless something concrete changes.\nP1, if you’ve got a real case on me, lay it out. Otherwise this feels like wolf panic.",
+    "to": "ALL",
+    "reason": "Need to answer P1’s push & present case before P3 decides. Crucial turning point."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.65,
+    "msg": "Both of you have called me town, which puts the decision squarely on my shoulders. I’m not voting until I hear fuller worlds from each of you.\n\n1️⃣ Walk me through the wolf’s POV this morning.  If you’re town, what would *you* do as the lone wolf here?  Explain how the *other* player’s posts fit (or don’t) with that plan.\n\n2️⃣ P1: Roughly when did you first check the thread?  Your defence hinges on time-zone; help me gauge whether P2’s “too quick” accusation is fair.\n\n3️⃣ P2: Suppose you’re wrong and P1 flips town.  What do you expect to happen tonight and how would that inform to-morrow’s autopsy?  (Yes, we lose if we’re wrong, but humour me.)\n\nGive me concrete reasoning, not just “feels”.  After I get both answers, I’ll commit to a vote.",
+    "to": "ALL",
+    "reason": "Need to press both on specifics before vote; I’m the swing."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 1.0,
+    "msg": "GM: Vote phase. DM me exactly one name.",
+    "to": "ALL",
+    "reason": "All players have spoken"
+  },
+  {
+    "turn": 5,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 1.0
+  },
+  {
+    "turn": 5,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Vote phase. DM me exactly one name."
+  },
+  {
+    "turn": 5,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "vote"
+    },
+    "reason": "Move from discussion to voting as requested by GM"
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.9,
+    "msg": "P2",
+    "to": "GM",
+    "reason": "I must ensure my vote reaches the GM this turn."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.6,
+    "msg": "P3, before we all DM our votes, I’d really like your take.\n\nMy early prod on P1 wasn’t a \"quick wagon\"—it was the only way to get the last silent slot to talk when one mis-yeet loses the game. Wolves love silence; forcing content is the only weapon town has here.\n\nLook at P1’s entrance: they instantly pocket you as “genuinely towny” while tunnelling me and offering zero alternative worldview where you might be the wolf. Scum know exactly who’s town and who isn’t, so they build a 2-v-1 narrative fast.\n\nIf I were the wolf, I’d stay quiet, wait for confusion, maybe push a baseless tie. Instead I poked the inactive slot and got exactly the hyper-defensive reaction you’d expect from scum caught napping.\n\nI’m voting P1 unless you can show me something I’ve missed. Where are you leaning?",
+    "to": "ALL",
+    "reason": "Need to speak publicly to influence P3 before votes lock in"
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "I’m currently leaning P2 as the wolf, but I haven’t locked anything in yet. \n\nP2 – your whole case on P1 is basically “they were silent early.” We’d only been talking for a couple minutes. Anything else actually wolfy?  \n\nP1 – aside from P2’s quick push, do you see any other slips or agenda-driven logic from them?  \n\nIf either of you think *I’m* wolf, spell it out now. Day ends with today’s vote, so please give concrete reasons before we lock our ballots.",
+    "to": "ALL",
+    "reason": "Need more info before locking vote; want both players to present additional reasoning since today is LyLo"
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Waiting for players to DM their votes during the vote phase."
+  },
+  {
+    "turn": 6,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.9
+  },
+  {
+    "turn": 6,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "GM"
+    ],
+    "is_dm": true,
+    "msg": "P2"
+  },
+  {
+    "turn": 6,
+    "phase": "meta_update",
+    "update_pub": {
+      "votes": {
+        "P1": "P2"
+      }
+    },
+    "reason": "Record P1's vote for P2 in the public metadata."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.7,
+    "msg": "I’ve already locked my vote on P2. Here’s why I think that’s the safest path:\n1) Instant wagon: Before I’d even spoken, P2 publicly committed to executing me. Wolves often jump on the easiest mis-eliminate (the quiet slot) when there’s no room for error.\n2) Lack of alternate reasoning: After I posted, P2 never addressed my counterpoints or gave ANY other evidence—just sat on the tunnel. Town typically re-evaluate when new info arrives.\n3) Tone/context: P3 opened with a pro-town question set. Wolves rarely volunteer structure that forces them to give verifiable reasoning. P2 instead tried to shortcut the day.\nIf I’m wrong and P2 is town, they should be able to walk us through a coherent case on me beyond \"he was silent\". So far they haven’t.\nP3, the game ends tonight if we miss here. Please weigh the above and, if you see what I see, send P2 as your vote.\n@P2: If you’re really town, convince us—why should we not see your quick push as wolfy?",
+    "to": "ALL",
+    "reason": "Crucial moment—want to lay out my case on P2 so P3 can decide with full info."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.55,
+    "msg": "P3, my push on P1 wasn’t *only* about the brief silence. Wolves in a 3-handed endgame benefit from staying low-key until someone else takes the spotlight; that fit P1’s entrance perfectly. Now that they’re under pressure, their first move is to paint my vote as “agenda-driven” without offering an alternative wolf narrative besides me = wolf. That’s classic deflection.\n\nIf I were the wolf, the safer route would be to let you two butt heads and hope for a tie. Instead I’m openly pushing to resolve the slot I think is scum. All three of us claim vanilla, so it’s pure behavioral reads. To me:\n• P1: late, reactive, immediately throws shade back.\n• P3: opened discussion, asked good questions.\n• Me (P2): proactive, trying to sort.\n\nI’m sending my vote to P1. If you’re town, join me and we seal the game. If we mis-execute, wolf wins tonight — I don’t want that resting on us.\n\nThoughts?",
+    "to": "ALL",
+    "reason": "Need to address P1’s counter-push and sway P3 before votes lock."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "I’m leaning P2 wolf because the first post tried to park the only mis-lynch we can afford on an absent slot, but I haven’t locked anything yet. P2 – apart from P1’s silence, what else points you there? P1 – besides P2’s quick push, do you have any concrete concerns? Please give me your best 1–2-sentence closing case; then I’ll cast my vote.",
+    "to": "ALL",
+    "reason": "Need more info before locking vote in lylo"
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Awaiting votes from P2 and P3"
+  },
+  {
+    "turn": 7,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 7,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I’ve already locked my vote on P2. Here’s why I think that’s the safest path:\n1) Instant wagon: Before I’d even spoken, P2 publicly committed to executing me. Wolves often jump on the easiest mis-eliminate (the quiet slot) when there’s no room for error.\n2) Lack of alternate reasoning: After I posted, P2 never addressed my counterpoints or gave ANY other evidence—just sat on the tunnel. Town typically re-evaluate when new info arrives.\n3) Tone/context: P3 opened with a pro-town question set. Wolves rarely volunteer structure that forces them to give verifiable reasoning. P2 instead tried to shortcut the day.\nIf I’m wrong and P2 is town, they should be able to walk us through a coherent case on me beyond \"he was silent\". So far they haven’t.\nP3, the game ends tonight if we miss here. Please weigh the above and, if you see what I see, send P2 as your vote.\n@P2: If you’re really town, convince us—why should we not see your quick push as wolfy?"
+  },
+  {
+    "turn": 7,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.2,
+    "msg": "I’m set for the moment—looking forward to P2’s response and P3’s decision. Don’t forget to get your vote in privately.",
+    "to": "ALL",
+    "reason": "Just nudge the others; I’ve already laid out my case."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.82,
+    "msg": "P3, let me answer P1 point-by-point and lay out why I still think he’s the wolf.\n\n1️⃣  “Instant wagon on a quiet slot” — With three players and one mis-elimination left, we can’t afford a silent day. My FIRST post explicitly asked P1 for his role + preferred elim, forcing him to speak. That’s pressure, not sheeping.\n\n2️⃣  “No re-evaluation” — After P1 finally spoke, I asked him to give more than “P2 bad.” He hasn’t offered a single thought on YOU besides calling your opener “towny.” Wolves love 1-vs-1 tunnels; it keeps the third player passive.\n\n3️⃣  Risk profile — I hard-committed to a solve early, knowing that if I’m wrong village loses. Wolves usually hedge until they see which way the wind blows. P1 instead waited, saw my vote, then counter-tunneled me. Convenient.\n\nWhy P1 is the likely wolf:\n• Shows up after pressure applied, immediately frames it as wolfy.\n• Provides zero analysis of you, the swing vote.\n• Win-con math: If he gets ME executed, it’s game over tonight. His play is perfectly aligned with that.\n\nI’m voting P1. If you’re town, we win right now by agreeing. If you’re still unsure, hit me with questions — I’ll answer everything. Don’t let “quick push” buzzwords distract you; look at who is actively trying to solve both other slots (me) and who isn’t (P1).",
+    "to": "ALL",
+    "reason": "Need to rebut P1 and persuade P3 while votes are still open. Critical for my survival."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.55,
+    "msg": "I’m still weighing both sides. P2, besides P1’s early silence, what else makes you confident they’re the wolf? Please walk me through your full read and address P1’s points. P1, if there’s anything beyond the quick wagon that nails P2, feel free to add it. I’ll lock my vote after I hear P2’s response.",
+    "to": "ALL",
+    "reason": "Need more information before committing my vote; want P2 to answer P1’s critique so I can decide."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Awaiting the remaining votes (P2, P3). No action needed yet."
+  },
+  {
+    "turn": 8,
+    "phase": "selection",
+    "selected_speaker": "P2",
+    "max_bid": 0.82
+  },
+  {
+    "turn": 8,
+    "phase": "message",
+    "speaker": "P2",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "P3, let me answer P1 point-by-point and lay out why I still think he’s the wolf.\n\n1️⃣  “Instant wagon on a quiet slot” — With three players and one mis-elimination left, we can’t afford a silent day. My FIRST post explicitly asked P1 for his role + preferred elim, forcing him to speak. That’s pressure, not sheeping.\n\n2️⃣  “No re-evaluation” — After P1 finally spoke, I asked him to give more than “P2 bad.” He hasn’t offered a single thought on YOU besides calling your opener “towny.” Wolves love 1-vs-1 tunnels; it keeps the third player passive.\n\n3️⃣  Risk profile — I hard-committed to a solve early, knowing that if I’m wrong village loses. Wolves usually hedge until they see which way the wind blows. P1 instead waited, saw my vote, then counter-tunneled me. Convenient.\n\nWhy P1 is the likely wolf:\n• Shows up after pressure applied, immediately frames it as wolfy.\n• Provides zero analysis of you, the swing vote.\n• Win-con math: If he gets ME executed, it’s game over tonight. His play is perfectly aligned with that.\n\nI’m voting P1. If you’re town, we win right now by agreeing. If you’re still unsure, hit me with questions — I’ll answer everything. Don’t let “quick push” buzzwords distract you; look at who is actively trying to solve both other slots (me) and who isn’t (P1)."
+  },
+  {
+    "turn": 8,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.8,
+    "msg": "P3, quick clarifications before you lock: \n\n1️⃣ “Pressure, not sheeping.”  In a 3-handed LYLO the *wolf* wants an easy mis-elim.  Declaring a vote on the only silent slot *before* we even spoke gives them that.\n\n2️⃣ “P1 ignores P3.”  False—my very first post town-read your opener for actively seeking info.  P2, meanwhile, still hasn’t given a single alignment take on you: town? wolf? fence-sit?  That’s classic buddying.\n\n3️⃣ Early hard-commit ≠ town.  A wolf *must* push mis-elim D1; committing early builds fake ‘conviction’ cred.  Town usually re-assess once new info (my post) arrives—P2 never blinked.\n\nAsk yourself: Who’s engaging with *both* other slots and who’s laser-tunnelling one target?  Who’s providing reasons vs. re-hashing “he was quiet”?  I’m the former; P2’s the latter.\n\nIf I were the wolf, I’d need *you* gone, not P2—because wolves win tonight after a mis-lynch.  Yet my entire focus has been exposing P2’s agenda, not shading you.  That’s villager perspective.\n\nI stay on P2.  If you’re town, we end the game safely now.  Any doubts or questions, shoot—happy to answer.",
+    "to": "ALL",
+    "reason": "Need to rebut P2’s latest post before P3 decides the final vote."
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.85,
+    "msg": "P1",
+    "to": "GM",
+    "reason": "Must lock in my vote this turn to ensure it counts before discussion ends."
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.9,
+    "msg": "P1",
+    "to": "GM",
+    "reason": "LyLo vote – must lock in my choice with certainty."
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 1.0,
+    "msg": "GM: P1, please DM your vote to me instead of posting it publicly. All living players, DM me exactly one player name for your vote.",
+    "to": "ALL",
+    "reason": "Rule enforcement – public vote disclosure"
+  },
+  {
+    "turn": 9,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 1.0
+  },
+  {
+    "turn": 9,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: P1, please DM your vote to me instead of posting it publicly. All living players, DM me exactly one player name for your vote."
+  },
+  {
+    "turn": 9,
+    "phase": "meta_update",
+    "update_pub": {
+      "votes": {}
+    },
+    "reason": "P1’s publicly posted vote is not valid; all votes must be DM’d to the GM, so the public votes list should be cleared."
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.8,
+    "msg": "P2",
+    "to": "GM",
+    "reason": "Casting my vote to GM as required."
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.0,
+    "msg": "P1",
+    "to": "GM",
+    "reason": "Secret vote to GM"
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.8,
+    "msg": "P1",
+    "to": "GM",
+    "reason": "Submitting my vote to the GM"
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.6,
+    "msg": "GM: Awaiting votes from P2 and P3. Please DM me exactly one player name.",
+    "to": "ALL",
+    "reason": "Collect remaining votes"
+  },
+  {
+    "turn": 10,
+    "phase": "selection",
+    "selected_speaker": "P3",
+    "max_bid": 0.8
+  },
+  {
+    "turn": 10,
+    "phase": "message",
+    "speaker": "P3",
+    "to": [
+      "GM"
+    ],
+    "is_dm": true,
+    "msg": "P1"
+  },
+  {
+    "turn": 10,
+    "phase": "meta_update",
+    "update_pub": {
+      "votes": {
+        "P3": "P1"
+      }
+    },
+    "reason": "P3 cast a vote for P1, so the public vote tally needs to be updated."
+  },
+  {
+    "turn": 11,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 1.0,
+    "msg": "P2",
+    "to": "GM",
+    "reason": "Submitting my vote privately to GM as required"
+  },
+  {
+    "turn": 11,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.8,
+    "msg": "P1",
+    "to": "GM",
+    "reason": "Submit my vote to GM"
+  },
+  {
+    "turn": 11,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "After a full reread I’ve switched my vote to P2 and have DM’d that to the GM.\n\nKey points:\n1️⃣  P2’s very first post hard-pushed the only silent slot. When you *know* that slot is town, that’s the easiest mis-elim to arrange in 3-player LyLo.\n2️⃣  In #8 P2 says he \"asked P1 for more than ‘P2 bad’ *after* P1 spoke\"—but that request never happened until that same #8 post. That’s a mis-representation.\n3️⃣  The claim that \"committing early is automatically towny\" doesn’t hold water; a wolf can hard-commit when he already knows his target is innocent.\n\nI see a lot more agenda in P2’s posts than in P1’s. If I’m wrong, GG to the wolf, but this is the best shot I see for village.",
+    "to": "ALL",
+    "reason": "Locking in vote and rationale"
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I think we should discuss our thoughts on who might be the Werewolves based on any patterns or behaviors we've noticed. Any ideas?",
+    "to": "ALL",
+    "reason": "I want to engage in discussion and hear what others think about the current state of the game."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "Hey everyone, any thoughts on who we should be cautious about this round?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion casually without drawing too much attention."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I think it's important to discuss who we suspect might be a Werewolf. What do you all think about the last voting round? Any thoughts on potential clues or behaviors?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and gather thoughts from others."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "GM: Discussion phase begins. Feel free to talk.",
+    "to": "ALL",
+    "reason": "Starting the discussion phase to allow players to converse."
+  },
+  {
+    "turn": 1,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 1,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Discussion phase begins. Feel free to talk."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "Let's discuss who we think might be a werewolf. Any suspicions?",
+    "to": "ALL",
+    "reason": "I want to participate in the discussion but don't have any critical information yet."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "Let's consider how we can identify the Werewolves in our group. We need to watch how each other speaks and votes.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion but I don't have critical information right now."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I think we should discuss our thoughts on who might be a danger to us as villagers. It's important to share any suspicions.",
+    "to": "ALL",
+    "reason": "Want to participate in discussion without dominating."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Waiting for players' DMs."
+  },
+  {
+    "turn": 1,
+    "phase": "selection",
+    "selected_speaker": "P3",
+    "max_bid": 0.5
+  },
+  {
+    "turn": 1,
+    "phase": "message",
+    "speaker": "P3",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I think we should discuss our thoughts on who might be a danger to us as villagers. It's important to share any suspicions."
+  },
+  {
+    "turn": 1,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "reason": ""
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.6,
+    "msg": "I agree with P3. Let's discuss our suspicions. I think it's crucial for us to figure out who might be hiding among us as a Werewolf.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion about potential dangers and share my thoughts."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I agree with P3. We should consider who might pose a danger. I have my suspicions, but I'd like to hear what others think first.",
+    "to": "ALL",
+    "reason": "It's important to contribute to the discussion and share my thoughts on potential threats to the villagers."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "It's crucial to identify who we think could be more dangerous to us as villagers. I have a feeling that one of us might be a threat. Let's share our thoughts.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion about potential threats without dominating the conversation."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "I agree with P3. It's crucial for us to voice our suspicions and observations about each other. It helps us identify potential threats. Let's share our thoughts!",
+    "to": "ALL",
+    "reason": "Encouraging discussion among players."
+  },
+  {
+    "turn": 2,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 2,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I agree with P3. It's crucial for us to voice our suspicions and observations about each other. It helps us identify potential threats. Let's share our thoughts!"
+  },
+  {
+    "turn": 2,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "reason": ""
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I agree with P3 and GM. Sharing our thoughts is essential. I feel like we should also consider any behavior that seems odd during the game.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and share my thoughts, but I don't have any critical information yet."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.6,
+    "msg": "I agree with the importance of sharing our thoughts. I haven't noticed anything specific yet, but I'm curious to hear what suspicions others might have.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and share my observations while letting the others speak too."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I think we should also consider who has been more vocal in defending themselves. Sometimes over-explaining can be a sign of guilt. What do you both think?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion without dominating it too much."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "I encourage everyone to share their thoughts and suspicions. Let's make the most of this discussion phase to work together as villagers!",
+    "to": "ALL",
+    "reason": "Prompting players to engage in discussion about suspicions."
+  },
+  {
+    "turn": 3,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 3,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I encourage everyone to share their thoughts and suspicions. Let's make the most of this discussion phase to work together as villagers!"
+  },
+  {
+    "turn": 3,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "reason": ""
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.7,
+    "msg": "I agree with P3 and GM. It's essential to communicate our thoughts and suspicions about who might be a werewolf. I haven't noticed anything specific yet, but I think we should remain vigilant and observe each other's behaviors closely.",
+    "to": "ALL",
+    "reason": "I want to share my thoughts on potential threats and contribute to the discussion as a villager."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I agree with P3 and the GM. We should analyze each other's behavior and share any suspicions we might have regarding who could be a Werewolf.",
+    "to": "ALL",
+    "reason": "I want to participate in the discussion and share my thoughts without being overly dominant."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.7,
+    "msg": "While discussing potential threats, I think we should consider who has been quieter than usual. Sometimes, those who don't speak up might be hiding something. What do you both think about that?",
+    "to": "ALL",
+    "reason": "I want to engage in the discussion and share my insights on potential suspects among the villagers."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "I encourage everyone to be open about their thoughts and observations. This is crucial for our strategy as villagers.",
+    "to": "ALL",
+    "reason": "Encouraging discussion among players."
+  },
+  {
+    "turn": 4,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 4,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I encourage everyone to be open about their thoughts and observations. This is crucial for our strategy as villagers."
+  },
+  {
+    "turn": 4,
+    "phase": "meta_update",
+    "update_pub": {
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "reason": ""
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I agree with the sentiments shared by P3 and the GM. It's important to analyze our interactions and see if there are any patterns or suspicions we can identify. Does anyone have specific players they're concerned about?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and share my observations about potential threats."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I agree with P3 and the GM. It's essential for us to share our suspicions openly. I think we should focus on behaviors that stand out or seem suspicious during the discussion.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion about potential threats and help identify werewolves."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I believe we should analyze each other's behaviors and any inconsistencies we've noticed. Let's share our observations and see if anyone stands out as suspicious.",
+    "to": "ALL",
+    "reason": "It's a good time to contribute to the discussion and gauge the others' thoughts."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Waiting for players' thoughts in the discussion phase."
+  },
+  {
+    "turn": 5,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.5
+  },
+  {
+    "turn": 5,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I agree with the sentiments shared by P3 and the GM. It's important to analyze our interactions and see if there are any patterns or suspicions we can identify. Does anyone have specific players they're concerned about?"
+  },
+  {
+    "turn": 5,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "reason": ""
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "Has anyone noticed any specific behavior from any player that raises suspicion? It might help us pinpoint any potential threats.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion while allowing others to share their thoughts first."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I think it's important to analyze P1 and P3's comments. Their focus on sharing suspicions can indicate a cooperative mindset, but we should remain cautious about their motives.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and share my thoughts without taking over the conversation."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "I think we should closely observe how P1 and P2 respond to our discussions. Their actions might give us clues about their roles. Any thoughts on who we should keep an eye on?",
+    "to": "ALL",
+    "reason": "I want to share my thoughts on potential threats while keeping it general."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "I agree with P1 about looking for specific players we might be suspicious of. Let's share who we think might be dangerous or acting unusually.",
+    "to": "ALL",
+    "reason": "Encouraging discussion on specific suspicions among players."
+  },
+  {
+    "turn": 6,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 6,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I agree with P1 about looking for specific players we might be suspicious of. Let's share who we think might be dangerous or acting unusually."
+  },
+  {
+    "turn": 6,
+    "phase": "meta_update",
+    "update_pub": {
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "reason": ""
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.7,
+    "msg": "I think we should closely observe our interactions from earlier. It's essential to note if anyone seems to deflect suspicion or behaves differently. What do you all think of P2's comments? Any particular instincts about their role?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion about potential threats and express my thoughts."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I think we should consider everyone's behavior closely. It might help us spot inconsistencies. Does anyone have specific observations they want to share?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and share my thoughts without dominating the conversation."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I think we should keep an eye on how P1 and P2 respond to each other's suspicions. Their interactions could reveal more about their loyalties.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion while allowing others to express their thoughts as well."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "Let's continue our discussion. Who do you all think might be hiding something?",
+    "to": "ALL",
+    "reason": "Encouraging further discussion among players about their suspicions."
+  },
+  {
+    "turn": 7,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 7,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "Let's continue our discussion. Who do you all think might be hiding something?"
+  },
+  {
+    "turn": 7,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "reason": ""
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.7,
+    "msg": "I think sharing our specific suspicions could greatly help. If we have concerns about P2 or P3, now is the time to voice them. Does anyone have particular players they're worried about?",
+    "to": "ALL",
+    "reason": "I want to encourage further discussion about the suspicions we all have and to see if anyone else is feeling uneasy about specific players."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I believe it's crucial for us to examine each other's behaviors during the game. I don't have specific suspicions yet, but I'm keeping an eye on both of you. Have either of you noticed anything unusual that we should discuss?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and share my thoughts on potential threats."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.7,
+    "msg": "I think it's interesting that P1 is very focused on analyzing interactions. It could indicate that they're truly trying to find the wolves or perhaps deflect attention from themselves. What do you all think of P1's approach?",
+    "to": "ALL",
+    "reason": "I want to share observations but not dominate the discussion."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "Let's share any observations we have so far. Has anyone noticed anything suspicious during the last day's discussions?",
+    "to": "ALL",
+    "reason": "I want to discuss strategies and gather information from other players to identify potential werewolves."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "Hey everyone, who do you suspect might be a werewolf so far? It's critical we collaborate and share suspicions.",
+    "to": "ALL",
+    "reason": "I want to discuss initial suspicions and hear from others on their thoughts regarding who might be a werewolf."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "Hey everyone, do we have any clues on who might be the werewolf?",
+    "to": "ALL",
+    "reason": "I want to sow suspicion among the villagers during the discussion phase."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.6,
+    "msg": "GM: Discussion phase begins. Feel free to talk.",
+    "to": "ALL",
+    "reason": "Announcement to let players know they can start discussing."
+  },
+  {
+    "turn": 1,
+    "phase": "selection",
+    "selected_speaker": "P3",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 1,
+    "phase": "message",
+    "speaker": "P3",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "Hey everyone, do we have any clues on who might be the werewolf?"
+  },
+  {
+    "turn": 1,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "It's tough to say without more information, but we should try to share anything suspicious anyone has noticed.",
+    "to": "ALL",
+    "reason": "Participate in general discussion and try to gather information."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I haven't picked up any specific clues yet, but we should consider if anyone's behavior has been unusual. What do you think, P1?",
+    "to": "ALL",
+    "reason": "Participating in the discussion about potential werewolves."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "Well, it's tough to find clues so early on, but maybe we should look into who's been acting a bit more suspicious or hesitant in their responses?",
+    "to": "ALL",
+    "reason": "I want to join the discussion and steer it away from finding a werewolf too directly, as I'm a werewolf."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.5,
+    "msg": "Feel free to share your thoughts or suspicions. Let's try to gather more information.",
+    "to": "ALL",
+    "reason": "Encouraging players to participate more in the discussion phase."
+  },
+  {
+    "turn": 2,
+    "phase": "selection",
+    "selected_speaker": "P2",
+    "max_bid": 0.5
+  },
+  {
+    "turn": 2,
+    "phase": "message",
+    "speaker": "P2",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I haven't picked up any specific clues yet, but we should consider if anyone's behavior has been unusual. What do you think, P1?"
+  },
+  {
+    "turn": 2,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I think it's a bit early to pick up on any specific unusual behavior, but it's good to stay alert. I'm observing how we're all interacting for now. Any thoughts on what might characterize unusual behavior?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion and share my perspective on the current situation. It's still early in the game, but I think it's important to start analyzing behaviors."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "Maybe we should each share our thoughts on who seems most suspicious and why, so we can gather more perspectives before voting.",
+    "to": "ALL",
+    "reason": "I want to propose a plan for how we can gather more information from each other."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "It's tricky without clear clues, but I wonder if anyone might inadvertently reveal something by pushing too hard during the discussion.",
+    "to": "ALL",
+    "reason": "Maintain involvement in the discussion and steer conversation to avoid suspicion."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "GM: Don't forget that in order to win, Villagers need to eliminate every Werewolf. Feel free to share your suspicions or observations.",
+    "to": "ALL",
+    "reason": "Encourage discussion in order to identify potential Werewolves."
+  },
+  {
+    "turn": 3,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 3,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Don't forget that in order to win, Villagers need to eliminate every Werewolf. Feel free to share your suspicions or observations."
+  },
+  {
+    "turn": 3,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I haven't noticed any unusual behavior yet, but P3 has been quiet. P2, what are your thoughts?",
+    "to": "ALL",
+    "reason": "I want to engage in the discussion to examine any unusual behavior or inconsistencies further."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "It's tough without concrete evidence, but maybe we could discuss if anyone's behavior seems off? We need to be careful in our judgments.",
+    "to": "ALL",
+    "reason": "I want to encourage discussion on any unusual behavior or clues without pushing too hard."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I think it's important we focus on observations from previous rounds. Has anyone noticed any patterns or inconsistencies in what others have said?",
+    "to": "ALL",
+    "reason": "Engage in discussion to gather more information."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.7,
+    "msg": "GM: Discussion phase continues. Please share any theories or suspicions you might have.",
+    "to": "ALL",
+    "reason": "Encouraging players to participate and share thoughts during the discussion phase."
+  },
+  {
+    "turn": 4,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 4,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Discussion phase continues. Please share any theories or suspicions you might have."
+  },
+  {
+    "turn": 4,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": "No changes needed. All players have spoken during the discussion phase. It's time to proceed to the vote phase, but no meta updates are required before making the phase announcement."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I'm observing that we don't have much to go on yet, but we should pay close attention to any subtle hints or behavior changes going forward. Does anyone have a gut feeling on who might act suspiciously?",
+    "to": "ALL",
+    "reason": "I want to engage in the discussion and see if others have any suspicions or theories to share."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.6,
+    "msg": "Since there are only three of us, it might be useful to reflect on how everyone acted last round. P3, you were quite eager to start the discussion. Anything specific you were trying to uncover?",
+    "to": "ALL",
+    "reason": "I have a general observation and want to continue the conversation about unusual behavior."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "Honestly, it's pretty hard to say at the moment. Everyone seems to be acting normal. Maybe we should vote based on intuition this round?",
+    "to": "ALL",
+    "reason": "I want to gauge the conversation and subtly divert suspicion."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.6,
+    "msg": "GM: P1, do you have any thoughts or suspicions to share with the group?",
+    "to": "ALL",
+    "reason": "Encouraging P1 to participate to move the discussion forward and possibly gather more insights for the game."
+  },
+  {
+    "turn": 5,
+    "phase": "selection",
+    "selected_speaker": "P2",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 5,
+    "phase": "message",
+    "speaker": "P2",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "Since there are only three of us, it might be useful to reflect on how everyone acted last round. P3, you were quite eager to start the discussion. Anything specific you were trying to uncover?"
+  },
+  {
+    "turn": 5,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.6,
+    "msg": "It's really hard to say with such limited information, but P3's eagerness could be because they are trying to engage and seem helpful. However, that could be a tactic to gain trust. We need to hear more from everyone. P2, do you have any particular angle you're considering?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion by expressing my observations about player behaviors and encourage sharing more thoughts on suspicion."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.6,
+    "msg": "I agree, the eagerness could suggest something or maybe it's just a desire for transparency. P1, how do you feel about the situation? Any thoughts on the activity so far?",
+    "to": "ALL",
+    "reason": "I want to add to the discussion by addressing both peers, as it's crucial to analyze their responses for hints."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "Just trying to get the conversation going, P2. We don't have much room for error, so it's crucial to talk and figure out who might not be trustworthy.",
+    "to": "ALL",
+    "reason": "I want to steer the discussion away from myself and possibly implicate someone else slightly."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.5,
+    "msg": "GM: P1 has not responded yet. Please share your thoughts when you're ready.",
+    "to": "ALL",
+    "reason": "Ensure all players have participated to advance to the vote phase."
+  },
+  {
+    "turn": 6,
+    "phase": "selection",
+    "selected_speaker": "P2",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 6,
+    "phase": "message",
+    "speaker": "P2",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I agree, the eagerness could suggest something or maybe it's just a desire for transparency. P1, how do you feel about the situation? Any thoughts on the activity so far?"
+  },
+  {
+    "turn": 6,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": ""
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I've been observing both of you, and I think it's important that we don't rush to conclusions without more evidence. The eagerness from P3 could be genuine, but we should still be cautious. What if we discuss any odd behaviors we've noticed so far?",
+    "to": "ALL",
+    "reason": "I want to continue the discussion and share my thoughts on the current situation."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I find it interesting how quiet P1 has been during this discussion. P1, do you have any insights or observations you'd like to share with us?",
+    "to": "ALL",
+    "reason": "I want to continue the discussion and see if we can gather more insights into identifying the werewolf among us."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I was just trying to stimulate some constructive conversation to find the werewolf. With only three of us, sharing observations quickly seems wise. P1, what's your take?",
+    "to": "ALL",
+    "reason": "I want to respond to P2's observation about my eagerness in the previous discussion and keep the conversation going without raising suspicion."
+  },
+  {
+    "turn": 7,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 1.0,
+    "msg": "GM: Vote phase. DM me exactly one name.",
+    "to": "ALL",
+    "reason": "All players have spoken and more than 5 messages have been exchanged, time to move to the Vote phase."
+  },
+  {
+    "turn": 7,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 1.0
+  },
+  {
+    "turn": 7,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Vote phase. DM me exactly one name."
+  },
+  {
+    "turn": 7,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "vote"
+    },
+    "reason": "The announcement for the vote phase has been made, transitioning the game from discussion to vote phase."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.6,
+    "msg": "It's tough to say at this point. P3's eagerness to start the discussion could be seen as suspicious, but it might also be just a way to ensure we share our opinions openly. P2 has been asking questions, which could either mean they're trying to gather information or possibly deflect suspicion. We need to be careful and think strategically about our votes.",
+    "to": "ALL",
+    "reason": "I want to discuss suspicions and get others' opinions before voting."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.1,
+    "msg": "P3",
+    "to": "GM",
+    "reason": "I want to submit my vote conspicuously but not interrupt any urgent revelations others might have."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "P2",
+    "to": "GM",
+    "reason": "I need to vote strategically as a Werewolf and I want to make sure my vote aligns with the fellow Wolves."
+  },
+  {
+    "turn": 8,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "",
+    "reason": "Waiting for players to DM their votes during the vote phase."
+  },
+  {
+    "turn": 8,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 8,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "It's tough to say at this point. P3's eagerness to start the discussion could be seen as suspicious, but it might also be just a way to ensure we share our opinions openly. P2 has been asking questions, which could either mean they're trying to gather information or possibly deflect suspicion. We need to be careful and think strategically about our votes."
+  },
+  {
+    "turn": 8,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": "No change required as the current phase is vote and no voting result has been determined yet."
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.8,
+    "msg": "I'll vote for P3, as their eagerness could be interpreted as an attempt to mislead us.",
+    "to": "GM",
+    "reason": "To cast my vote considering the current state and discussions."
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.8,
+    "msg": "P3",
+    "to": "GM",
+    "reason": "It's important to cast my vote now so we can proceed with the game phase."
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 1.0,
+    "msg": "P2",
+    "to": "GM",
+    "reason": "I am a Werewolf and it's vital to control the voting process by casting my vote strategically."
+  },
+  {
+    "turn": 9,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "",
+    "reason": "Waiting for players to DM their votes; no need to initiate further conversation at the moment."
+  },
+  {
+    "turn": 9,
+    "phase": "selection",
+    "selected_speaker": "P3",
+    "max_bid": 1.0
+  },
+  {
+    "turn": 9,
+    "phase": "message",
+    "speaker": "P3",
+    "to": [
+      "GM"
+    ],
+    "is_dm": true,
+    "msg": "P2"
+  },
+  {
+    "turn": 9,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": "No changes needed at this point. The vote phase is still ongoing and waiting for inputs from P1 and P2."
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.4,
+    "msg": "P3",
+    "to": "GM",
+    "reason": "I want to vote without drawing too much attention, supporting strategic and balanced consideration at this phase."
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.6,
+    "msg": "P3",
+    "to": "GM",
+    "reason": "I want to cast my vote and express my observations to the GM."
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.0,
+    "msg": "",
+    "to": "GM",
+    "reason": "I have already submitted my vote for this phase."
+  },
+  {
+    "turn": 10,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "",
+    "reason": "Waiting for P1 and P2 to submit their votes via DM as it is currently the vote phase."
+  },
+  {
+    "turn": 10,
+    "phase": "selection",
+    "selected_speaker": "P2",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 10,
+    "phase": "message",
+    "speaker": "P2",
+    "to": [
+      "GM"
+    ],
+    "is_dm": true,
+    "msg": "P3"
+  },
+  {
+    "turn": 10,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": "The vote phase is still ongoing and P1 has not voted yet. No changes are needed to the meta until all players have submitted their votes."
+  },
+  {
+    "turn": 11,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "Considering our previous discussions, both P2 and P3 could be trying to manipulate the situation in their favor. I think it's crucial that we make a careful and educated vote this round. Any slight suspicion could tip the scale, so let's be thoughtful about who to trust.",
+    "to": "ALL",
+    "reason": "It's important to discuss voting strategies and ensure transparent communication to avoid werewolf manipulation. My observations on the current situation could help us make a strategic vote."
+  },
+  {
+    "turn": 11,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.0,
+    "msg": "",
+    "to": "GM",
+    "reason": "I've already submitted my vote this round and don't have more to add."
+  },
+  {
+    "turn": 11,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.0,
+    "msg": "",
+    "to": "GM",
+    "reason": "I've already cast my vote and don't need to send any further messages during the vote phase."
+  },
+  {
+    "turn": 11,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.3,
+    "msg": "GM: Please vote by sending me DM with exactly one player name.",
+    "to": "P1",
+    "reason": "Reminder to P1 to submit their vote via DM since they haven't yet."
+  },
+  {
+    "turn": 11,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.5
+  },
+  {
+    "turn": 11,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "Considering our previous discussions, both P2 and P3 could be trying to manipulate the situation in their favor. I think it's crucial that we make a careful and educated vote this round. Any slight suspicion could tip the scale, so let's be thoughtful about who to trust."
+  },
+  {
+    "turn": 11,
+    "phase": "meta_update",
+    "update_pub": {},
+    "reason": "The vote phase is still ongoing and P1 has not yet voted. No changes to the meta are needed until all votes are submitted and resolved."
+  },
+  {
+    "turn": 12,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.4,
+    "msg": "I vote for P3.",
+    "to": "GM",
+    "reason": "I want to provide my vote to the GM."
+  },
+  {
+    "turn": 12,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.0,
+    "msg": "",
+    "to": "GM",
+    "reason": "I've already placed my vote, and now it's up to the GM to handle the resolution of the vote phase. No further public statement is needed from me at this moment."
+  },
+  {
+    "turn": 12,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.0,
+    "msg": "",
+    "to": "GM",
+    "reason": "I've already cast my vote and it's the vote phase, so further speaking isn't necessary for strategy."
+  },
+  {
+    "turn": 12,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "I am waiting for P1 to cast their vote via DM before proceeding to announce the execution result."
+  },
+  {
+    "turn": 12,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.4
+  },
+  {
+    "turn": 12,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "GM"
+    ],
+    "is_dm": true,
+    "msg": "I vote for P3."
+  },
+  {
+    "turn": 12,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "night",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": [
+        "P3"
+      ]
+    },
+    "reason": "P3 received the majority of the votes and is executed during the vote phase."
+  },
+  {
+    "turn": 13,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "It's currently the night phase, and I'm a Villager without any night actions. I don't have any input to provide at this stage."
+  },
+  {
+    "turn": 13,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "It's currently the night phase, where werewolves select a target. I have no action to perform or crucial information to share."
+  },
+  {
+    "turn": 13,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.6,
+    "msg": "",
+    "to": "P1,P2",
+    "reason": "I need to coordinate with my fellow Werewolf in private to choose our nightly victim and since we're in the Night phase, this is essential for our strategy."
+  },
+  {
+    "turn": 13,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 1.0,
+    "msg": "P3 was killed during the night.",
+    "to": "ALL",
+    "reason": "Announcing the night result as required by the phase sequence and updating players on the game status."
+  },
+  {
+    "turn": 13,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 1.0
+  },
+  {
+    "turn": 13,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "P3 was killed during the night."
+  },
+  {
+    "turn": 13,
+    "phase": "meta_update",
+    "update_pub": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2"
+      ],
+      "dead": [
+        "P3"
+      ]
+    },
+    "reason": "The night phase has ended with P3 being killed, who was initially misreported as being killed 'during the night,' but P3 was executed by votes. As all Werewolves are dead (since P3 was a Werewolf), the game should conclude with a victory for the Villagers. The surviving players are P1 and P2, to proceed into the discussion phase if needed."
+  },
+  {
+    "phase": "end",
+    "winner": "VILLAGERS"
   }
 ]
