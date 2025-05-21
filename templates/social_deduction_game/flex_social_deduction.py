@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""flex_social_deduction.py  ─ フル汎用 SD ゲームエンジン（GM 指示＋山札管理）
+"""flex_social_deduction.py  ─ フル汎用 SD ゲームエンジン（GM 指示管理）
 
 Highlights
 ----------
@@ -46,9 +46,7 @@ class BaseMetaUpdate(BaseModel):
 
 class BaseEngineCommand(BaseModel):
     """基本的なエンジンコマンドモデル"""
-    op: str = Field(..., description="Operation to perform (e.g. 'draw', 'shuffle')")
-    deck: str = Field(..., description="Name of the deck to operate on")
-    n: Optional[int] = Field(None, description="Optional number of cards to draw")
+    op: str = Field(..., description="Operation to perform")
 
 class SimplifiedGMDirective(BaseModel):
     """シンプル化したゲームマスターの指示モデル"""
@@ -130,10 +128,7 @@ You may speak once (≤128 tokens). Compose your message. """)
 
 # ─ GM 指示フェーズ ---------------------------------------------------------
 GM_SYSTEM = """
-You are the Game-Master. You control phase flow, deck operations, and hidden info.
-You can use the following commands:
-1. Draw cards: {{"op": "draw", "deck": "action_deck", "n": 1}}
-2. Shuffle deck: {{"op": "shuffle", "deck": "action_deck"}}
+You are the Game-Master. You control phase flow and hidden info.
 """
 
 @phase("gm_directive")
@@ -180,23 +175,6 @@ def _ph_gm(state: PublicState, priv: Dict[str, PrivateState], llm: ChatOpenAI, _
             "meta_update": {},
             "engine_cmd": None
         }
-
-    # ENGINE-sideコマンドを先に実行
-    if js_dict["engine_cmd"]:
-        try:
-            cmd = js_dict["engine_cmd"]
-            op = cmd["op"]
-            deck = cmd["deck"]
-            n = cmd.get("n", 1)
-            
-            if op == "draw":
-                cards = draw(state, deck, n)
-                # カードを GM に返す（meta などに保存させる）
-                state["meta"]["gm_last_draw"] = cards
-            elif op == "shuffle":
-                shuffle_deck(state, deck)
-        except Exception as e:
-            print(f"Error executing engine command: {e}")
 
     # 公開メッセージ
     state["messages"].append(AIMessage(content=js_dict["public_msg"]))
@@ -319,7 +297,7 @@ def main():
     ap.add_argument("--rule", default="rules.md")
     ap.add_argument("--plugin", action="append", default=[])
     ap.add_argument("--model", default="gpt-4o-mini")
-    ap.add_argument("--log", default="public_log.json")
+    ap.add_argument("--log", default="game_log.json")
     args = ap.parse_args()
 
     spec = json.loads(Path(args.spec).read_text())

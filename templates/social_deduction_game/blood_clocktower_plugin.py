@@ -86,13 +86,6 @@ SPEC_JSON: Dict = {
             "empath_ping",
             "undertaker_reveal",
             "slayer_shot"
-        ],
-        # Initialize decks
-        "action_deck": ["kill", "poison", "investigate", "reveal", "slay"],  # Basic actions
-        "role_deck": [  # All possible roles
-            "Imp", "Poisoner",
-            "Empath", "Undertaker", "Slayer",
-            "Villager", "Villager", "Villager", "Villager"
         ]
     }
 }
@@ -290,7 +283,7 @@ A *Drunk* or *Poisoned* player's ability is ineffective, but they **still appear
 
 ## 10 ▪ GM Guidance
 * You may alter, withhold, or invent information to keep the game balanced.  
-* Maintain `meta.decks` if you introduce physical decks or tokens.  
+* Maintain meta information if needed.
 * Use `meta.timer` freely (`{{"timer": N, "_timer_init": N}}`) to extend/shorten discussions or special phases.  
 * If contradictory rules arise, character ability text supersedes this sheet.
 

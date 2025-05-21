@@ -18,6 +18,23 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "cwd": "${workspaceFolder}/templates/social_deduction_game"
+        },
+        {
+            "name": "Run Werewolf Game",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/templates/social_deduction_game/sdg_core.py",
+            "args": [
+                "--rules",
+                "werewolf_rules",
+                "--players",
+                "3",
+                "--model",
+                "gpt-4"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}/templates/social_deduction_game"
         }
     ]
 }
