@@ -2,12 +2,13 @@
 """
 Social-Deduction Engine v3
 --------------------------
-変更点
-* bid と talk を 1 回の呼び出しで同時に返す
-* 会話履歴のみを mem_log に保管
-* 公開メタから status / winner を削除
-* DM の内容もログとして表示、保存
-* Agent と GameMaster を分離
+Changes
+* Combine bid and talk into a single call
+* Store only conversation history in mem_log
+* Remove status/winner from public meta
+* Display and save DM contents in logs
+* Separate Agent and GameMaster
+* Implement LLM reasoning for GM meta updates
 """
 
 from __future__ import annotations
@@ -113,27 +114,29 @@ class GameMaster(Player):
 
         # GM用のメタ更新チェーン
         self.meta_chain = ChatPromptTemplate.from_messages([
-            ("system",
-             "You are the hidden reasoning engine for the GM.\n"
+            SystemMessage(content=sys_prompt),
+            ("human",
+             "=== RECENT CONVERSATIONS ===\n{history}\n"
+             "=== PUBLIC META ===\n{meta_pub}\n"
+             "=== PRIVATE META ===\n{meta_priv}\n"
+             "Message history format is <turn>: <sender>▶<recipient>: <message>\n"
              "Given the latest public message and current meta, "
-             "decide whether the public meta needs to change.\n" 
+             "decide whether the public and private meta needs to change.\n" 
+             "Public meta is visible to all players and the GM, while private meta is only visible to the GM.\n"
              "Return ONLY valid JSON:\n"
              "{{\"update_pub\": {{...}}, \"update_priv\": {{...}}, "
-             "\"reason\": <why change or '' if none>}}"),
-            ("human",
-             "LATEST PUBLIC MESSAGE:\n{last_msg}\n"
-             "META_PUB:\n{meta_pub}\nMETA_PRIV:\n{meta_priv}")
+             "\"reason\": <why change or '' if none>}}")
         ]) | llm | parser
 
-    def get_meta_updates(self, speaker: str, msg: str,
-                     meta_pub: Dict, meta_priv: Dict,
-                     pub_log) -> dict:
+    def get_meta_updates(self, meta_pub: Dict, meta_priv: Dict) -> dict:
         """
-        GM の LLM 思考でメタを編集する。
-        返り値: dict {"update_pub": {...}, "update_priv": {...}, "reason": "..."}
+        Edit meta using GM's LLM reasoning.
+        Returns: dict {"update_pub": {...}, "update_priv": {...}, "reason": "..."}
         """
+        history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
+                    for turn, sender, recv, txt in self.mem_log[-30:])
         return self.meta_chain.invoke({
-            "last_msg": f"{speaker}: {msg}",
+            "history": history,
             "meta_pub": json.dumps(meta_pub, ensure_ascii=False),
             "meta_priv": json.dumps(meta_priv, ensure_ascii=False)
         })
@@ -263,10 +266,7 @@ def main():
             })
 
         # ❸ GM のメタ更新（LLM reasoning）
-        meta_updates = agents["GM"].get_meta_updates(
-            speaker, utter,
-            meta_pub, meta_priv,
-            public_log)
+        meta_updates = agents["GM"].get_meta_updates(meta_pub, meta_priv)
 
         # GM更新をログに記録
         append_to_log({
