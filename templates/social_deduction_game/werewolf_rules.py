@@ -18,6 +18,18 @@ VICTORY
   • Villagers win when every Werewolf is dead.  
 • Werewolves win once Werewolves ≥ Villagers.
 
+POSSIBLE ROLES
+• **Villager**: Basic role with no special abilities. Can participate in discussions and vote to eliminate suspicious players.
+• **Werewolf**: Evil role that works with other wolves. Each night, wolves must agree on one player to kill. Wolves know each other's identities.
+• **Seer**: Town role that can investigate one player each night. The GM will tell them if that player is a Werewolf or not.
+• **Doctor**: Town role that can protect one player each night from being killed by wolves. Cannot protect the same player two nights in a row.
+• **Hunter**: Town role with a final revenge ability. When killed (by vote or night kill), can immediately eliminate one other player.
+
+• **Witch**: Town role with two special potions:
+  - Save potion: Can save the wolf's victim once
+  - Kill potion: Can eliminate any player once
+  Can only use one potion per night.
+
 PHASE SEQUENCE
 1. **Discussion** – open conversation.  
 2. **Vote** – each living player secretly submits ONE name to the GM.  
@@ -71,9 +83,7 @@ SPECIAL ROLE HANDLING
 • Witch: Show victim to Witch, ask if they want to save or kill someone.
 
 WHEN TO END DISCUSSION  
-End the Discussion phase (and start Vote) by your announcement as soon as  
-  • every living player has spoken at least once, **or**  
-  • 5 public messages have been posted – whichever comes first.
+End the Discussion phase (and start Vote) by your announcement as soon as sufficient discussion has taken place
 
 RULE ENFORCEMENT GUIDELINES
 • If a player votes without specifying a name: "GM: Please vote by sending me DM with exactly one player name."
@@ -83,6 +93,30 @@ RULE ENFORCEMENT GUIDELINES
 • If a player tries to vote during discussion: "GM: Voting is only allowed during the vote phase."
 • If a player tries to discuss during night: "GM: No discussion is allowed during the night phase."
 =====================================================================
+""",
+    "system_guideline": """You are the SYSTEM agent managing the game state for Werewolf.
+
+Your responsibilities:
+1. Update meta information based on game events
+2. Check win conditions after each turn
+
+Meta update rules:
+- When GM announces "Vote phase", update phase to "vote"
+- When GM announces vote results, remove executed player from alive list and add to dead list
+- When GM announces "Night phase", update phase to "night"
+- When GM announces night kill results, remove killed player from alive list and add to dead list
+- When GM announces "Discussion phase", update phase to "discussion"
+- Track special role actions in meta_priv (seer investigations, doctor protections, witch potions)
+
+Win condition rules:
+- VILLAGERS win when ALL Werewolves are dead (no werewolves in alive list)
+- WEREWOLVES win when Werewolves >= non-Werewolves among living players
+
+Always respond with valid JSON containing:
+- update_pub: public meta changes (phase, alive, dead)
+- update_priv: private meta changes (special role states)
+- winner: null or "VILLAGERS" or "WEREWOLVES"
+- reason: explanation of updates/win
 """
 }
 
@@ -136,17 +170,7 @@ def gm_sys_prompt(lang: str) -> str:
     return (f"{RULEBOOK['common']}\n{RULEBOOK['gm_guideline']}\n"
             f"You are the GM. Speak in {lang}.")
 
-# ---------- 終了判定 ----------
-def check_end(meta_pub, meta_priv) -> str | None:
-    wolves = [p for p in meta_pub["alive"]
-              if meta_priv["roles"].get(p) == "WEREWOLF"]
-    # All non-werewolf roles are on the villager team
-    non_wolves = [p for p in meta_pub["alive"]
-                  if meta_priv["roles"].get(p) != "WEREWOLF"]
-    
-    if not wolves:
-        return "VILLAGERS"
-    if len(wolves) >= len(non_wolves):
-        return "WEREWOLVES"
-    return None
-
+def system_sys_prompt() -> str:
+    # system agent prompt for handling meta updates and win condition checks
+    return (f"{RULEBOOK['common']}\n{RULEBOOK['system_guideline']}\n"
+            f"You are the game system agent managing the game state.")
