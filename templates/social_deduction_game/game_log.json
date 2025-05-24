@@ -3,163 +3,468 @@
     "turn": 1,
     "phase": "bid",
     "agent": "P1",
-    "bid": 0.5,
-    "msg": "I’m paying close attention to the behavior of everyone. Let’s keep the discussion transparent and try to gather clues. Any observations on unusual defendings or shifts in opinions?",
+    "bid": 0.6,
+    "msg": "ALL: Hey everyone, I haven't noticed anything overtly suspicious yet, but let's share any observations we have. Who do you think has been acting a bit off? Let's stay alert.",
     "to": "ALL",
-    "reason": "I'm contributing to public discussion to share my general thoughts without disclosing my Seer ability during discussion phase."
+    "reason": "I'm initiating discussion as a Villager to gather observations on behavior and see if anyone seems off."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P2",
     "bid": 0.5,
-    "msg": "I'm closely watching everyone's behavior. Let's share any suspicions so we can make informed decisions during voting.",
+    "msg": "I haven't noticed any clear patterns yet, but I'm curious about P3's behavior. They seem a bit off to me—maybe we should watch them more closely. What do you all think?",
     "to": "ALL",
-    "reason": "Engaging in discussion with other players as the Doctor. It's important to gather insights before the night phase."
+    "reason": "General discussion to gauge suspicions and steer focus away from me."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P3",
     "bid": 0.5,
-    "msg": "I'm noticing that P4 hasn't been engaging as much. Maybe we should keep an eye on them? What do you all think?",
+    "msg": "Hello everyone, I'm still observing and don't have any concrete suspicions yet. Let's all share what we notice – sometimes small details can give us the bigger picture.",
     "to": "ALL",
-    "reason": "I want to contribute to the discussion without drawing too much attention, subtly nudging suspicion towards someone else."
+    "reason": "I have some initial thoughts and want to gauge suspicions without making overt accusations."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P4",
     "bid": 0.5,
-    "msg": "Hi everyone, I'm P4. I'm keeping an eye on everyone. Does anyone have any thoughts or suspicions about who might be acting strangely?",
+    "msg": "I haven't noticed anything conclusive yet, but I do find P3's recent comments a bit off. What does everyone else think? Let's all share our thoughts to narrow down any suspicious behavior.",
     "to": "ALL",
-    "reason": "General discussion as a villager, expressing thoughts and asking for insights."
+    "reason": "I'm participating in the discussion phase to share observations and encourage team communication."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P5",
     "bid": 0.5,
-    "msg": "Hi everyone, I'm keeping an eye on the conversation. So far, nothing too suspicious stands out, but we should be cautious. What does everyone think about the behavior we've noticed?",
+    "msg": "I'm leaning towards a cautious approach. Let's observe everyone’s behavior a bit more before making any hasty decisions.",
     "to": "ALL",
-    "reason": "I want to contribute to the discussion as a villager and express my thoughts."
+    "reason": "I want to share some general thoughts in the discussion phase as a Seer while keeping my investigation under wraps."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "GM",
-    "bid": 0.4,
-    "msg": "GM: Discussion phase is ongoing. Feel free to chat and share your thoughts. Remember to use the discussion phase as you prepare your strategies—you can remind me when you're ready to move to the vote phase.",
+    "bid": 1.0,
+    "msg": "GM: Discussion phase begins. Feel free to talk.",
     "to": "ALL",
-    "reason": "Encouraging players to discuss during the discussion phase"
+    "reason": "Announcing start of discussion phase."
   },
   {
     "turn": 1,
     "phase": "selection",
-    "selected_speaker": "P5",
-    "max_bid": 0.5
+    "selected_speaker": "GM",
+    "max_bid": 1.0
   },
   {
     "turn": 1,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Discussion phase begins. Feel free to talk."
+  },
+  {
+    "turn": 1,
+    "phase": "system_update",
+    "update_pub": {},
+    "update_priv": {},
+    "winner": null,
+    "reason": "The game remains in the Discussion phase with no actions leading to state changes. No win conditions met."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "Hi everyone, I'm keeping my eyes on the conversation. Let's try to share our thoughts openly to spot any inconsistencies. What do you all think?",
+    "to": "ALL",
+    "reason": "I'm here to contribute to the discussion and see if any behavior stands out among the remaining players."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I'm not seeing any strong signs yet. Let's keep our eyes open and listen carefully. I'm curious if anyone's noticed someone being overly quiet or too pushy. What are your thoughts?",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion without drawing attention, keeping my strategies subtle as we gather insights."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "Hey everyone, I'm just keeping an eye on our conversation. Has anyone noticed any unusual behavior or inconsistencies? Let's share our thoughts to help figure out who might be suspicious.",
+    "to": "ALL",
+    "reason": "I want to engage in discussion and hear other players' viewpoints."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P4",
+    "bid": 0.5,
+    "msg": "Let's all stay alert and carefully watch each other's actions. Who do you think is behaving suspiciously so far?",
+    "to": "ALL",
+    "reason": "I'm contributing to the discussion phase as the Doctor, encouraging us to share observations and be cautious."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "P5",
+    "bid": 0.5,
+    "msg": "I haven't seen any telltale signs yet, but everyone should stay observant. Let's try to piece together any inconsistencies in our conversations.",
+    "to": "ALL",
+    "reason": "Engaging in general discussion as the Seer while staying cautious."
+  },
+  {
+    "turn": 2,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "",
+    "to": "ALL",
+    "reason": "Waiting for players' discussion input during the discussion phase."
+  },
+  {
+    "turn": 2,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.5
+  },
+  {
+    "turn": 2,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "Hi everyone, I'm keeping my eyes on the conversation. Let's try to share our thoughts openly to spot any inconsistencies. What do you all think?"
+  },
+  {
+    "turn": 2,
+    "phase": "system_update",
+    "update_pub": {},
+    "update_priv": {},
+    "winner": null,
+    "reason": "No updates needed; the game remains in the discussion phase with no events that change public or private meta information."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.7,
+    "msg": "I agree with keeping a close eye on the discussion. Let's all share any observations or suspicions we have. How are you all feeling about the conversation so far?",
+    "to": "ALL",
+    "reason": "I want to actively engage in discussion to observe behavior and inconsistencies among players."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "Hey everyone, I'm just keeping an eye on the flow of the conversation. I think it's good that we're all sharing our thoughts openly. I haven't seen anything suspicious yet, but sometimes the quiet players might be hiding something. Let's stay attentive and see how things develop.",
+    "to": "ALL",
+    "reason": "Joining public discussion with a neutral tone while subtly observing behavior."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "Hi everyone, I'm keeping a close eye as well. So far, nothing seems too off, but we need to be vigilant. Let's listen carefully to everyone and see if any story doesn't add up. Cooperation is key!",
+    "to": "ALL",
+    "reason": "I'm engaging in discussion as a plain Villager, sharing thoughts while observing everyone's behavior."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P4",
+    "bid": 0.5,
+    "msg": "I'm keeping an open mind as well. Everyone's thoughts seem valuable so far—let's stay cautious and share any recent observations if something feels off.",
+    "to": "ALL",
+    "reason": "Continuing discussion phase by sharing general observations to build trust among players."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "P5",
+    "bid": 0.5,
+    "msg": "Hello everyone, I'm listening closely. Let’s share our observations carefully to understand who might be acting suspiciously.",
+    "to": "ALL",
+    "reason": "I'm using this discussion phase to gather inputs and gauge the dynamics among players without revealing my ability yet."
+  },
+  {
+    "turn": 3,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "GM: The discussion phase is ongoing. Everyone, please continue sharing your thoughts.",
+    "to": "ALL",
+    "reason": "No phase change; continuing discussion activity."
+  },
+  {
+    "turn": 3,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.7
+  },
+  {
+    "turn": 3,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I agree with keeping a close eye on the discussion. Let's all share any observations or suspicions we have. How are you all feeling about the conversation so far?"
+  },
+  {
+    "turn": 3,
+    "phase": "system_update",
+    "update_pub": {},
+    "update_priv": {},
+    "winner": null,
+    "reason": "No updates needed"
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.6,
+    "msg": "I haven't noticed any solid evidence pointing to someone being a Werewolf yet. Let's keep our eyes open and continue sharing perspectives; it's important to stick with concrete observations rather than premature accusations.",
+    "to": "ALL",
+    "reason": "Continuing general discussion to share observations as a Villager."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I'm keeping a close eye on the conversation too. So far, I haven't noticed any definite inconsistencies. Let's continue sharing our thoughts and see if anyone stands out across the debates.",
+    "to": "ALL",
+    "reason": "Contributing to the discussion while remaining inconspicuous."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "Hi everyone, I'm P3. As a regular villager, I’m just following the conversation closely. I haven't noticed anything glaring yet, so I'm listening and observing. Let's try to stay sharp and share any detailed observations if something seems off.",
+    "to": "ALL",
+    "reason": "I'm contributing my thoughts as a regular villager, trying to encourage open discussion and see if there's any emerging suspicion."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P4",
+    "bid": 0.3,
+    "msg": "I'm keeping a careful eye on the discussion. Let's stay observant and patient—sometimes appearances can be deceiving.",
+    "to": "ALL",
+    "reason": "I want to participate in the discussion phase as a Doctor without revealing my role."
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "P5",
+    "bid": 0.5,
+    "msg": "I'm observing the dynamics here and keeping an open mind. Let's all be cautious and share any specific suspicions if they arise. Awareness now can lead to a better night phase decision later.",
+    "to": "ALL",
+    "reason": "I want to contribute to the discussion phase with general observations without revealing my seer role"
+  },
+  {
+    "turn": 4,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.3,
+    "msg": "GM: The discussion phase is still active. Feel free to continue sharing your thoughts, suspicions, and questions. Make sure everyone has a chance to speak!",
+    "to": "ALL",
+    "reason": "Encouraging continued discussion during the discussion phase."
+  },
+  {
+    "turn": 4,
+    "phase": "selection",
+    "selected_speaker": "P1",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 4,
+    "phase": "message",
+    "speaker": "P1",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I haven't noticed any solid evidence pointing to someone being a Werewolf yet. Let's keep our eyes open and continue sharing perspectives; it's important to stick with concrete observations rather than premature accusations."
+  },
+  {
+    "turn": 4,
+    "phase": "system_update",
+    "update_pub": {},
+    "update_priv": {},
+    "winner": null,
+    "reason": "No updates needed"
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I'm still watching the discussion closely. I haven't seen a clear sign of any werewolf behavior yet, but it might be useful if we keep an eye on any contradictions or shifts in tone. Has anyone seen any behavior or noticed patterns that might hint at hidden roles? Let's continue sharing observations.",
+    "to": "ALL",
+    "reason": "Continuing the discussion phase and encouraging further observations from others."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.5,
+    "msg": "I'm just keeping an eye on things. We haven't seen anything truly suspicious yet, so let's continue calmly and note anyone making unexpected moves.",
+    "to": "ALL",
+    "reason": "I'm contributing to discussion without drawing too much attention."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "I haven't noticed any glaring inconsistencies either. I think we should observe those who seem to be over-eager or overly quiet as the discussion unfolds.",
+    "to": "ALL",
+    "reason": "As a villager, I want to add a neutral comment to the discussion without drawing too much attention."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P4",
+    "bid": 0.5,
+    "msg": "I'm just gathering thoughts for now. Let's keep the discussion flowing and pay attention to any inconsistencies.",
+    "to": "ALL",
+    "reason": "I'm engaging in discussion without revealing my Doctor role; staying observant."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "P5",
+    "bid": 0.6,
+    "msg": "I'm closely watching everyone's thoughts. It seems like a calm start, but we should remain observant and be ready to call out any unusual patterns. What are your views on possible targets or suspicions so far?",
+    "to": "ALL",
+    "reason": "I'm engaging in the public discussion since it's the discussion phase."
+  },
+  {
+    "turn": 5,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.0,
+    "msg": "GM: The discussion phase remains open. Everyone, feel free to continue sharing your thoughts and suspicions. I'll announce the vote phase when it's time to move on.",
+    "to": "ALL",
+    "reason": "Encouraging continued discussion during the current phase."
+  },
+  {
+    "turn": 5,
+    "phase": "selection",
+    "selected_speaker": "P5",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 5,
     "phase": "message",
     "speaker": "P5",
     "to": [
       "ALL"
     ],
     "is_dm": false,
-    "msg": "Hi everyone, I'm keeping an eye on the conversation. So far, nothing too suspicious stands out, but we should be cautious. What does everyone think about the behavior we've noticed?"
+    "msg": "I'm closely watching everyone's thoughts. It seems like a calm start, but we should remain observant and be ready to call out any unusual patterns. What are your views on possible targets or suspicions so far?"
   },
   {
-    "turn": 1,
+    "turn": 5,
     "phase": "system_update",
-    "update_pub": {
-      "phase": "discussion",
-      "alive": [
-        "P1",
-        "P2",
-        "P3",
-        "P4",
-        "P5"
-      ],
-      "dead": []
-    },
-    "update_priv": {
-      "roles": {
-        "P1": "SEER",
-        "P2": "DOCTOR",
-        "P3": "WEREWOLF",
-        "P4": "VILLAGER",
-        "P5": "VILLAGER"
-      },
-      "witch_potions": {
-        "save": true,
-        "kill": true
-      },
-      "protected": null,
-      "seer_results": {}
-    },
+    "update_pub": {},
+    "update_priv": {},
     "winner": null,
-    "reason": "No public or private game events have occurred that require updates. The game remains in the discussion phase with no win conditions met."
+    "reason": "No updates needed"
   },
   {
-    "turn": 1,
-    "phase": "meta_change",
-    "before": {
-      "public_meta": {
-        "phase": "discussion",
-        "alive": [
-          "P1",
-          "P2",
-          "P3",
-          "P4",
-          "P5"
-        ],
-        "dead": []
-      },
-      "private_meta": {
-        "roles": {
-          "P1": "SEER",
-          "P2": "DOCTOR",
-          "P3": "WEREWOLF",
-          "P4": "VILLAGER",
-          "P5": "VILLAGER"
-        },
-        "witch_potions": {
-          "save": true,
-          "kill": true
-        },
-        "protected": null,
-        "seer_results": {}
-      }
-    },
-    "after": {
-      "public_meta": {
-        "phase": "discussion",
-        "alive": [
-          "P1",
-          "P2",
-          "P3",
-          "P4",
-          "P5"
-        ],
-        "dead": []
-      },
-      "private_meta": {
-        "roles": {
-          "P1": "SEER",
-          "P2": "DOCTOR",
-          "P3": "WEREWOLF",
-          "P4": "VILLAGER",
-          "P5": "VILLAGER"
-        },
-        "witch_potions": {
-          "save": true,
-          "kill": true
-        },
-        "protected": null,
-        "seer_results": {}
-      }
-    },
-    "reason": "No public or private game events have occurred that require updates. The game remains in the discussion phase with no win conditions met."
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.5,
+    "msg": "I'm still observing the conversation and haven't noticed anything striking yet. It's too early for concrete suspicions, but let's remain vigilant and keep sharing our insights as things develop.",
+    "to": "ALL",
+    "reason": "I want to share a cautious perspective and encourage further discussion."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.6,
+    "msg": "I'm keeping a close eye too. Nothing too suspicious so far, but it's important we continue to share thoughts and be cautious. Let's see if any particular behavior stands out.",
+    "to": "ALL",
+    "reason": "I'm participating in the discussion while staying careful not to reveal my intentions as a Werewolf."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.3,
+    "msg": "I haven't noticed any glaring inconsistencies. I'm keeping a close watch on our conversation and will share if I spot something unusual. Let's keep our analysis sharp and ensure we follow the facts.",
+    "to": "ALL",
+    "reason": "Contributing general thoughts as a villager without firm suspicions yet"
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P4",
+    "bid": 0.3,
+    "msg": "I'm watching the conversation carefully, too. So far, I haven't seen any strong leads. Let's keep discussing and note any inconsistencies. Stay alert, everyone!",
+    "to": "ALL",
+    "reason": "Offering a general observation in the discussion phase."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "P5",
+    "bid": 0.5,
+    "msg": "I'm interested to see if anyone shows any erratic behavior. Let's try to keep our statements clear and stick to observable facts. I'm keeping an open mind for now.",
+    "to": "ALL",
+    "reason": "I want to contribute to general discussion without revealing my special role."
+  },
+  {
+    "turn": 6,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 0.5,
+    "msg": "GM: The discussion phase is still ongoing. Feel free to continue sharing your thoughts and suspicions. Remember, once we've reached a consensus or sufficient discussion, I'll announce the vote phase and invite your votes. Let's keep the conversation active and focused.",
+    "to": "ALL",
+    "reason": "Updating players that discussion phase remains active"
+  },
+  {
+    "turn": 6,
+    "phase": "selection",
+    "selected_speaker": "P2",
+    "max_bid": 0.6
+  },
+  {
+    "turn": 6,
+    "phase": "message",
+    "speaker": "P2",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "I'm keeping a close eye too. Nothing too suspicious so far, but it's important we continue to share thoughts and be cautious. Let's see if any particular behavior stands out."
+  },
+  {
+    "turn": 6,
+    "phase": "system_update",
+    "update_pub": {},
+    "update_priv": {},
+    "winner": null,
+    "reason": "Discussion phase is ongoing with no vote or night events; game state remains unchanged."
   }
 ]

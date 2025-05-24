@@ -251,7 +251,12 @@ Based on the conversation history and current game state:
 
 Return ONLY valid JSON with the following structure:
 {{"update_pub": {{...}}, "update_priv": {{...}}, 
-"winner": null|"TEAM_NAME", "reason": "explanation"}}"""
+"winner": null|"TEAM_NAME", "reason": "explanation"}}
+
+Note: Only include fields that have changes. For example:
+- If only public meta changes: {{"update_pub": {{...}}, "reason": "..."}}
+- If only winner changes: {{"winner": "TEAM_NAME", "reason": "..."}}
+- If nothing changes: {{"reason": "No updates needed"}}"""
         )]) | llm | SimpleJsonOutputParser()
     
     def process_game_state(self, meta_pub: Dict, meta_priv: Dict) -> dict:
@@ -269,11 +274,11 @@ Return ONLY valid JSON with the following structure:
             })
             if not response or not isinstance(response, dict):
                 print(f"Warning: Invalid response from System: {response}")
-                return {"update_pub": {}, "update_priv": {}, "winner": None, "reason": "Invalid system response"}
+                return {}
             return response
         except Exception as e:
             print(f"Warning: Error in System processing: {e}")
-            return {"update_pub": {}, "update_priv": {}, "winner": None, "reason": f"Error: {str(e)}"}
+            return {}
 
 # ---------- LLM Factory ----------
 def create_llm(api_source: str, model_name: str) -> ChatOpenAI:
