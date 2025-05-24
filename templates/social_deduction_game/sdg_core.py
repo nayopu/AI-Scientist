@@ -9,18 +9,35 @@ Changes
 * Display and save DM contents in logs
 * Separate Agent and GameMaster
 * Implement LLM reasoning for GM meta updates
+* Add support for different API sources (OpenAI/OpenRouter)
+* Allow different model names for GM and players
 """
 
 from __future__ import annotations
 import argparse, importlib, json, random, sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Tuple, Any
+import os
 
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import SystemMessage
 from langchain.output_parsers.json import SimpleJsonOutputParser
+from langchain.callbacks.manager import CallbackManager
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
+from pydantic import BaseModel, Field
+import warnings
 
+# Suppress Pydantic warnings
+warnings.filterwarnings("ignore", category=UserWarning, module="pydantic")
+
+class AgentResponse(BaseModel):
+    bid: float = Field(ge=0.0, le=1.0)
+    msg: str
+    to: str
+    reason: str = ""
 
 # ---------- エージェント ----------
 class Agent:
@@ -30,16 +47,51 @@ class Agent:
         self.llm = llm
         self.mem_log: List[Tuple[int, str, str, str]] = []   # (turn, sender, recipients, text)
 
+    async def decide_async(self, turn: int, meta_pub, public_log) -> dict:
+        # Create history string from mem_log
+        history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
+                           for turn, sender, recv, txt in self.mem_log[-30:])
+        
+        try:
+            js = await self.main_chain.ainvoke({
+                "meta": json.dumps(meta_pub, ensure_ascii=False),
+                "history": history
+            })
+            # Validate and clean the response
+            response = AgentResponse(**js)
+            return response.model_dump()
+        except Exception as e:
+            print(f"Warning: Error in agent {self.name}'s response: {e}")
+            # Return a safe default response
+            return {
+                "bid": 0.0,
+                "msg": "",
+                "to": "ALL",
+                "reason": "Error in response generation"
+            }
+
     def decide(self, turn: int, meta_pub, public_log) -> dict:
         # Create history string from mem_log
         history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
                            for turn, sender, recv, txt in self.mem_log[-30:])
         
-        js = self.main_chain.invoke({
-            "meta": json.dumps(meta_pub, ensure_ascii=False),
-            "history": history
-        })
-        return js
+        try:
+            js = self.main_chain.invoke({
+                "meta": json.dumps(meta_pub, ensure_ascii=False),
+                "history": history
+            })
+            # Validate and clean the response
+            response = AgentResponse(**js)
+            return response.model_dump()
+        except Exception as e:
+            print(f"Warning: Error in agent {self.name}'s response: {e}")
+            # Return a safe default response
+            return {
+                "bid": 0.0,
+                "msg": "",
+                "to": "ALL",
+                "reason": "Error in response generation"
+            }
 
 class Player(Agent):
     def __init__(self, name: str, role: str | None,
@@ -52,24 +104,30 @@ class Player(Agent):
              "=== PUBLIC META ===\n{meta}\n"
              "=== RECENT CONVERSATIONS ===\n{history}\n"
              "Message history format is <turn>: <sender>▶<recipient>: <message>\n"
-             "Bid to speak (0-1) and *optionally* send a message.\n"
+             "Bid to speak (0-1) and *optionally* send a message.\n\n"
              "Important mechanics:\n"
              "- All players and GM bid simultaneously in each turn\n"
              "- Only the highest bidder's message will be used\n"
              "- The conversation follows a strict pattern: bid → speak → bid → speak ...\n"
              "- This applies to both public messages and DMs\n"
              "- Even if you want to send a DM, you must win the bid first\n\n"
+             "GM Phase Management:\n"
+             "- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),\n"
+             "  you should bid high (0.8-1.0) and speak to ALL to remind the GM\n"
+             "- This is especially important if you need to use your ability or vote\n"
+             "- Example: \"GM, we haven't had the night phase yet for abilities\"\n"
+             "- The GM will then correct the phase sequence\n\n"
              "Bidding guidelines:\n"
              "Higher bids indicate stronger desire to speak.\n"
              "Consider your role, the current phase, and game state when bidding.\n"
              "Use 1.0 bids sparingly - only when you believe you have critical information or a strong strategic reason to speak.\n"
              "Lower bids (0.3-0.7) are appropriate for general discussion or when others should speak first.\n"
-             "Use 0.0 bids when you don't want to speak or you finished your voting or ability.\n"
-             "When sending messages:\n"
+             "Use 0.0 bids when you don't want to speak or you finished your voting or ability.\n\n"
+             "Message guidelines:\n"
              "- Use \"to\": \"ALL\" for public messages visible to everyone\n"
              "- Use \"to\": \"GM\" for private messages only visible to the GM (use this for voting or your ability)\n"
              "- Use \"to\": \"P1,P2,...\" to send DMs to specific players\n"
-             "Remember that DMs are only visible to the specified recipients.\n"
+             "Remember that DMs are only visible to the specified recipients.\n\n"
              "Respond ONLY JSON:\n"
              "{{\"bid\": <0.0-1.0 (float)>, \"reason\": <free text>, \"msg\": <string>, \"to\": \"ALL\"|\"GM\"|\"P1,P2,...\"}}"),
         ])
@@ -86,14 +144,20 @@ class GameMaster(Player):
              "=== PUBLIC META ===\n{meta}\n"
              "=== RECENT CONVERSATIONS ===\n{history}\n"
              "Message history format is <turn>: <sender>▶<recipient>: <message>\n"
-             "Bid to speak (0-1) and *optionally* send a message.\n"
+             "Bid to speak (0-1) and *optionally* send a message.\n\n"
              "Important mechanics:\n"
              "- All players and GM bid simultaneously in each turn\n"
              "- Only the highest bidder's message will be used\n"
              "- The conversation follows a strict pattern: bid → speak → bid → speak ...\n"
              "- This applies to both public messages and DMs\n"
-             "- Even if you want to send a DM, you must win the bid first\n\n"
-             "- PUBLIC META is automatically updated based on the conversation, if it is necessary\n" 
+             "- Even if you want to send a DM, you must win the bid first\n"
+             "- PUBLIC META is automatically updated based on the conversation, if it is necessary\n\n"
+             "GM Phase Management:\n"
+             "- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),\n"
+             "  you should bid high (0.8-1.0) and speak to ALL to remind the GM\n"
+             "- This is especially important if you need to use your ability or vote\n"
+             "- Example: \"GM, we haven't had the night phase yet for abilities\"\n"
+             "- The GM will then correct the phase sequence\n\n"
              "Bidding guidelines:\n"
              "Higher bids indicate stronger desire to speak.\n"
              "Consider the current phase and game state when bidding.\n"
@@ -101,14 +165,13 @@ class GameMaster(Player):
              "- Announcing phase changes (e.g., starting vote phase, night phase)\n"
              "- Enforcing rules or correcting player behavior\n"
              "Use lower bids (0.3-0.7) for general game management and responses.\n"
-             "Use 0.0 bids when you don't need to talk or you are waiting players' DMs.\n"
-             "When sending messages:\n"
+             "Use 0.0 bids when you don't need to talk or you are waiting players' DMs.\n\n"
+             "Message guidelines:\n"
              "- Use \"to\": \"ALL\" for public messages visible to everyone\n"
              "- Use \"to\": \"P1,P2,...\" to send DMs to specific players\n"
-             "Remember that DMs are only visible to the specified recipients.\n"
+             "Remember that DMs are only visible to the specified recipients.\n\n"
              "Respond ONLY JSON:\n"
-             "{{\"bid\": <0.0-1.0 (float)>, \"msg\": <string>, "
-             "\"to\": \"ALL\"|\"P1,P2,...\", \"reason\": <free text>}}"),
+             "{{\"bid\": <0.0-1.0 (float)>, \"msg\": <string>, \"to\": \"ALL\"|\"P1,P2,...\", \"reason\": <free text>}}"),
         ])
         self.main_chain = prompt | llm | parser
 
@@ -141,153 +204,273 @@ class GameMaster(Player):
             "meta_priv": json.dumps(meta_priv, ensure_ascii=False)
         })
 
+# ---------- LLM Factory ----------
+def create_llm(api_source: str, model_name: str) -> ChatOpenAI:
+    """
+    Create an LLM instance based on the specified API source and model name.
+    
+    Args:
+        api_source: Either "openai" or "openrouter"
+        model_name: The name of the model to use
+        
+    Returns:
+        A configured ChatOpenAI instance
+        
+    Raises:
+        ValueError: If API source is invalid or required API key is missing
+    """
+    api_source = api_source.lower()
+    
+    if api_source == "openai":
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            raise ValueError("OPENAI_API_KEY environment variable is required for OpenAI API")
+        return ChatOpenAI(
+            model_name=model_name,
+            openai_api_key=api_key
+        )
+    elif api_source == "openrouter":
+        api_key = os.environ.get("OPENROUTER_API_KEY")
+        if not api_key:
+            raise ValueError("OPENROUTER_API_KEY environment variable is required for OpenRouter API")
+        return ChatOpenAI(
+            model_name=model_name,
+            openai_api_base="https://openrouter.ai/api/v1",
+            openai_api_key=api_key,
+            default_headers={
+                "HTTP-Referer": "https://github.com/your-repo",  # Required by OpenRouter
+                "X-Title": "Social Deduction Game"  # Optional but helpful
+            }
+        )
+    else:
+        raise ValueError(f"Unsupported API source: {api_source}. Must be 'openai' or 'openrouter'")
+
+async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, public_log) -> Tuple[Dict[str, float], Dict[str, dict]]:
+    """
+    Execute bidding phase in parallel for all agents.
+    Returns tuple of (bids dict, packages dict)
+    """
+    tasks = []
+    for agent in agents.values():
+        tasks.append(agent.decide_async(turn, meta_pub, public_log))
+    
+    results = await asyncio.gather(*tasks)
+    
+    bids = {}
+    pkgs = {}
+    for agent, result in zip(agents.values(), results):
+        bids[agent.name] = float(result["bid"])
+        pkgs[agent.name] = result
+    
+    return bids, pkgs
+
 # ---------- メインループ ----------
-def main():
+async def main_async():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rules", required=True)
     ap.add_argument("--players", type=int, default=5)
-    ap.add_argument("--model", default="gpt-4o-mini")
+    ap.add_argument("--api", choices=["openai", "openrouter"], default="openai",
+                    help="API source to use (OpenAI or OpenRouter)")
+    ap.add_argument("--model", default="gpt-4o-mini",
+                    help="Model name for players")
+    ap.add_argument("--gm-model", default=None,
+                    help="Model name for GM (if different from players)")
     ap.add_argument("--lang", default="en")
     ap.add_argument("--out", default="game_log.json")
     args = ap.parse_args()
 
-    rules = importlib.import_module(args.rules)
-    names = [f"P{i+1}" for i in range(args.players)]
+    try:
+        rules = importlib.import_module(args.rules)
+        names = [f"P{i+1}" for i in range(args.players)]
 
-    meta_pub = rules.init_meta_pub(names)     # phase / alive / dead など
-    meta_priv = rules.init_meta_priv(names)   # 役職など
-
-    llm = ChatOpenAI(model_name=args.model)
-    agents: Dict[str, Player] = {}
-
-    # プレイヤー
-    for n in names:
-        role = rules.assign_role(n, meta_priv)
-        agents[n] = Player(n, role,
-                          rules.player_sys_prompt(n, role, args.lang),
-                          llm)
-    # GM
-    agents["GM"] = GameMaster("GM",
-                             rules.gm_sys_prompt(args.lang), llm)
-
-    # ログ
-    public_log: List[Tuple[int, str]] = []  # [(turn, text)]
-    dm_log: List[Tuple[int, str, str, str]] = []  # [(turn, sender, receiver, text)]
-    full_json_log = []
-    turn = 0
-    winner: str | None = None
-    
-    # JSONログファイルが存在するか確認し、存在しなければ空の配列で初期化
-    log_path = Path(args.out)
-    if log_path.exists():
-        try:
-            with open(log_path, 'r', encoding='utf-8') as f:
-                full_json_log = json.load(f)
-        except json.JSONDecodeError:
-            # ファイルが壊れている場合は新規作成
-            full_json_log = []
-    
-    # JSONログを追記する関数
-    def append_to_log(entry):
-        full_json_log.append(entry)
-        with open(log_path, 'w', encoding='utf-8') as f:
-            json.dump(full_json_log, ensure_ascii=False, indent=2, fp=f)
-
-    while winner is None:
-        turn += 1
-        # ❶ 各エージェントが bid+msg を同時提出
-        bids, pkgs = {}, {}
-        for a in agents.values():
-            pkgs[a.name] = pkg = a.decide(turn, meta_pub, public_log)
-            bids[a.name] = float(pkg["bid"])
-            
-            # 全エージェントの出力をログに追加
-            log_entry = {
-                "turn": turn,
-                "phase": "bid",
-                "agent": a.name,
-                "bid": float(pkg["bid"]),
-                "msg": pkg["msg"].strip(),
-                "to": pkg["to"],
-                "reason": pkg.get("reason", "")
-            }
-            append_to_log(log_entry)
-
-        # ❷ 最高 bid のメッセージを採用
-        max_bid = max(bids.values())
-        speaker = random.choice([n for n, b in bids.items() if b == max_bid])
-        pkg = pkgs[speaker]
-        utter = pkg["msg"].strip()
+        # JSONログファイルが存在するか確認し、存在しなければ空の配列で初期化
+        log_path = Path(args.out)
+        if log_path.exists():
+            try:
+                with open(log_path, 'r', encoding='utf-8') as f:
+                    full_json_log = json.load(f)
+            except json.JSONDecodeError:
+                # ファイルが壊れている場合は新規作成
+                full_json_log = []
         
-        # Convert to "ALL" if all players are recipients
-        recipients = [x.strip() for x in pkg["to"].split(",")]
-        if all(name in recipients for name in names):
-            recipients = ["ALL"]
+        # JSONログを追記する関数
+        def append_to_log(entry):
+            full_json_log.append(entry)
+            with open(log_path, 'w', encoding='utf-8') as f:
+                json.dump(full_json_log, ensure_ascii=False, indent=2, fp=f)
 
-        # 選択結果をログに記録
-        append_to_log({
-            "turn": turn,
-            "phase": "selection",
-            "selected_speaker": speaker,
-            "max_bid": max_bid
-        })
+        meta_pub = rules.init_meta_pub(names)     # phase / alive / dead など
+        meta_priv = rules.init_meta_priv(names)   # 役職など
 
-        if utter:
-            # 公開ログ更新
-            if "ALL" in recipients:
-                public_log.append((turn, f"{speaker}: {utter}"))
-                print(f"[{turn:02}] {speaker}▶ALL: {utter}")
+        # Create LLM instances
+        try:
+            player_llm = create_llm(args.api, args.model)
+            gm_llm = create_llm(args.api, args.gm_model or args.model)
+        except ValueError as e:
+            print(f"Error: {e}")
+            print("\nPlease set the required API key environment variable:")
+            if args.api == "openai":
+                print("export OPENAI_API_KEY='your-api-key'")
             else:
-                # DMの場合
-                for recipient in recipients:
-                    dm_log.append((turn, speaker, recipient, utter))
-                recipients_str = ",".join(recipients)
-                print(f"[{turn:02}] {speaker}▶DM({recipients_str}): {utter}")
-            
-            # 各エージェントの private memory に追加
-            if "ALL" in recipients:
-                for agent in agents.values():
-                    agent.mem_log.append((turn, speaker, "ALL", utter))
-            else:
-                # 発言者のログに記録
-                agents[speaker].mem_log.append((turn, speaker, ",".join(recipients), utter))
-                # 受信者のログに記録
-                for r in recipients:
-                    agents[r].mem_log.append((turn, speaker, r, utter))
-            
-            # メッセージ実行をログに記録
+                print("export OPENROUTER_API_KEY='your-api-key'")
+            sys.exit(1)
+
+        agents: Dict[str, Player] = {}
+
+        # プレイヤー
+        for n in names:
+            role = rules.assign_role(n, meta_priv)
+            agents[n] = Player(n, role,
+                              rules.player_sys_prompt(n, role, args.lang),
+                              player_llm)
+            # Log role assignment
+            print(f"Role Assignment: {n} → {role}")
             append_to_log({
-                "turn": turn, 
-                "phase": "message",
-                "speaker": speaker,
-                "to": recipients, 
-                "is_dm": "ALL" not in recipients,
-                "msg": utter
+                "phase": "role_assignment",
+                "player": n,
+                "role": role
+            })
+        # GM
+        agents["GM"] = GameMaster("GM",
+                                 rules.gm_sys_prompt(args.lang), gm_llm)
+
+        # ログ
+        public_log: List[Tuple[int, str]] = []  # [(turn, text)]
+        dm_log: List[Tuple[int, str, str, str]] = []  # [(turn, sender, receiver, text)]
+        full_json_log = []
+        turn = 0
+        winner: str | None = None
+        
+        while winner is None:
+            turn += 1
+            # ❶ 各エージェントが bid+msg を同時提出 (並列処理)
+            bids, pkgs = await parallel_bidding(agents, turn, meta_pub, public_log)
+                
+            # 全エージェントの出力をログに追加
+            for agent_name, pkg in pkgs.items():
+                log_entry = {
+                    "turn": turn,
+                    "phase": "bid",
+                    "agent": agent_name,
+                    "bid": float(pkg["bid"]),
+                    "msg": pkg["msg"].strip(),
+                    "to": pkg["to"],
+                    "reason": pkg.get("reason", "")
+                }
+                append_to_log(log_entry)
+
+            # ❷ 最高 bid のメッセージを採用
+            max_bid = max(bids.values())
+            speaker = random.choice([n for n, b in bids.items() if b == max_bid])
+            pkg = pkgs[speaker]
+            utter = pkg["msg"].strip()
+            
+            # Convert to "ALL" if all players are recipients
+            recipients = [x.strip() for x in pkg["to"].split(",")]
+            if all(name in recipients for name in names):
+                recipients = ["ALL"]
+
+            # 選択結果をログに記録
+            append_to_log({
+                "turn": turn,
+                "phase": "selection",
+                "selected_speaker": speaker,
+                "max_bid": max_bid
             })
 
-        # ❸ GM のメタ更新（LLM reasoning）
-        meta_updates = agents["GM"].get_meta_updates(meta_pub, meta_priv)
+            if utter:
+                # 公開ログ更新
+                if "ALL" in recipients:
+                    public_log.append((turn, f"{speaker}: {utter}"))
+                    print(f"[{turn:02}] {speaker}▶ALL: {utter}")
+                else:
+                    # DMの場合
+                    for recipient in recipients:
+                        dm_log.append((turn, speaker, recipient, utter))
+                    recipients_str = ",".join(recipients)
+                    print(f"[{turn:02}] {speaker}▶DM({recipients_str}): {utter}")
+                
+                # 各エージェントの private memory に追加
+                if "ALL" in recipients:
+                    for agent in agents.values():
+                        agent.mem_log.append((turn, speaker, "ALL", utter))
+                else:
+                    # 発言者のログに記録
+                    agents[speaker].mem_log.append((turn, speaker, ",".join(recipients), utter))
+                    # 受信者のログに記録
+                    for r in recipients:
+                        agents[r].mem_log.append((turn, speaker, r, utter))
+                
+                # メッセージ実行をログに記録
+                append_to_log({
+                    "turn": turn, 
+                    "phase": "message",
+                    "speaker": speaker,
+                    "to": recipients, 
+                    "is_dm": "ALL" not in recipients,
+                    "msg": utter
+                })
 
-        # GM更新をログに記録
-        append_to_log({
-            "turn": turn,
-            "phase": "meta_update",
-            "update_pub": meta_updates.get("update_pub", {}),
-            "reason": meta_updates.get("reason", "")
-        })
+            # ❸ GM のメタ更新（LLM reasoning）
+            meta_updates = agents["GM"].get_meta_updates(meta_pub, meta_priv)
 
-        # 返って来た dict でメタを書き換え
-        meta_pub.update(meta_updates.get("update_pub", {}))
-        meta_priv.update(meta_updates.get("update_priv", {}))
+            # GM更新をログに記録
+            append_to_log({
+                "turn": turn,
+                "phase": "meta_update",
+                "update_pub": meta_updates.get("update_pub", {}),
+                "reason": meta_updates.get("reason", "")
+            })
 
-        # ❹ 終了判定
-        winner = rules.check_end(meta_pub, meta_priv)
+            # 返って来た dict でメタを書き換え
+            update_pub = meta_updates.get("update_pub", {})
+            update_priv = meta_updates.get("update_priv", {})
+            
+            if update_pub or update_priv:
+                # Store before state
+                meta_pub_before = meta_pub.copy()
+                meta_priv_before = meta_priv.copy()
+                
+                # Apply updates
+                meta_pub.update(update_pub)
+                meta_priv.update(update_priv)
+                
+                # Log meta information changes
+                print(f"\nMETA UPDATE [Turn {turn}]")
+                if update_pub:
+                    print(f"Public: {meta_pub_before} → {meta_pub}")
+                if update_priv:
+                    print(f"Private: {meta_priv_before} → {meta_priv}")
+                
+                append_to_log({
+                    "turn": turn,
+                    "phase": "meta_update",
+                    "before": {
+                        "public_meta": meta_pub_before,
+                        "private_meta": meta_priv_before
+                    },
+                    "after": {
+                        "public_meta": meta_pub,
+                        "private_meta": meta_priv
+                    },
+                    "reason": meta_updates.get("reason", "")
+                })
 
-    print(f"*** Game End. Winner = {winner} ***")
-    
-    # ゲーム終了をログに記録
-    append_to_log({"phase": "end", "winner": winner})
-    print("log →", args.out)
+            # ❹ 終了判定
+            winner = rules.check_end(meta_pub, meta_priv)
+
+        print(f"*** Game End. Winner = {winner} ***")
+        
+        # ゲーム終了をログに記録
+        append_to_log({"phase": "end", "winner": winner})
+        print("log →", args.out)
+
+    except Exception as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
+def main():
+    asyncio.run(main_async())
 
 if __name__ == "__main__":
     sys.exit(main())
