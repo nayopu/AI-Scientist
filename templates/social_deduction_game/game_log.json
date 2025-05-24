@@ -3,396 +3,106 @@
     "turn": 1,
     "phase": "bid",
     "agent": "P1",
-    "bid": 0.3,
-    "msg": "Not much to go on yet. Anyone have any suspicions?",
+    "bid": 0.5,
+    "msg": "I’m paying close attention to the behavior of everyone. Let’s keep the discussion transparent and try to gather clues. Any observations on unusual defendings or shifts in opinions?",
     "to": "ALL",
-    "reason": "Blend in by participating without drawing attention"
+    "reason": "I'm contributing to public discussion to share my general thoughts without disclosing my Seer ability during discussion phase."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P2",
     "bid": 0.5,
-    "msg": "Let's start sharing our thoughts. Any early suspicions or observations?",
+    "msg": "I'm closely watching everyone's behavior. Let's share any suspicions so we can make informed decisions during voting.",
     "to": "ALL",
-    "reason": "Encourage discussion to gather initial thoughts without appearing too aggressive."
+    "reason": "Engaging in discussion with other players as the Doctor. It's important to gather insights before the night phase."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P3",
     "bid": 0.5,
-    "msg": "First day discussions are always tricky. Anyone have any early observations or gut feelings we should consider?",
+    "msg": "I'm noticing that P4 hasn't been engaging as much. Maybe we should keep an eye on them? What do you all think?",
     "to": "ALL",
-    "reason": "Encourage initial discussion without revealing role"
+    "reason": "I want to contribute to the discussion without drawing too much attention, subtly nudging suspicion towards someone else."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P4",
     "bid": 0.5,
-    "msg": "First day's always tricky. Let's share observations – anyone notice odd behavior yet?",
+    "msg": "Hi everyone, I'm P4. I'm keeping an eye on everyone. Does anyone have any thoughts or suspicions about who might be acting strangely?",
     "to": "ALL",
-    "reason": "Encourage discussion without dominating"
+    "reason": "General discussion as a villager, expressing thoughts and asking for insights."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "P5",
-    "bid": 0.0,
-    "msg": "",
+    "bid": 0.5,
+    "msg": "Hi everyone, I'm keeping an eye on the conversation. So far, nothing too suspicious stands out, but we should be cautious. What does everyone think about the behavior we've noticed?",
     "to": "ALL",
-    "reason": "No immediate need to speak during initial discussion phase. Observing others first."
+    "reason": "I want to contribute to the discussion as a villager and express my thoughts."
   },
   {
     "turn": 1,
     "phase": "bid",
     "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: Discussion phase begins. Feel free to talk.",
-    "to": "ALL",
-    "reason": "Initiating first discussion phase as per game rules"
-  },
-  {
-    "turn": 1,
-    "phase": "selection",
-    "selected_speaker": "GM",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 1,
-    "phase": "message",
-    "speaker": "GM",
-    "to": [
-      "ALL"
-    ],
-    "is_dm": false,
-    "msg": "GM: Discussion phase begins. Feel free to talk."
-  },
-  {
-    "turn": 1,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "No game state changes during ongoing discussion phase. Werewolves (1) do not yet outnumber villagers (4)."
-  },
-  {
-    "turn": 2,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 0.3,
-    "msg": "It's still early, but we should start sharing our thoughts. Anyone noticed anything unusual yet?",
-    "to": "ALL",
-    "reason": "Blend in as villager by contributing neutrally without drawing attention"
-  },
-  {
-    "turn": 2,
-    "phase": "bid",
-    "agent": "P2",
     "bid": 0.4,
-    "msg": "First day, not much info yet. Let's share observations. Anyone notice anything suspicious?",
+    "msg": "GM: Discussion phase is ongoing. Feel free to chat and share your thoughts. Remember to use the discussion phase as you prepare your strategies—you can remind me when you're ready to move to the vote phase.",
     "to": "ALL",
-    "reason": "Encourage discussion without being overbearing"
+    "reason": "Encouraging players to discuss during the discussion phase"
   },
   {
-    "turn": 2,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.3,
-    "msg": "",
-    "to": "ALL",
-    "reason": "No information yet, observing others first"
-  },
-  {
-    "turn": 2,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.6,
-    "msg": "Let's start discussing. Does anyone have any suspicions or observations to share?",
-    "to": "ALL",
-    "reason": "Encourage initial discussion to gather information"
-  },
-  {
-    "turn": 2,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "No immediate need to speak during initial discussion phase; observe others first."
-  },
-  {
-    "turn": 2,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "No immediate action needed; waiting for players to initiate discussion."
-  },
-  {
-    "turn": 2,
+    "turn": 1,
     "phase": "selection",
-    "selected_speaker": "P4",
-    "max_bid": 0.6
-  },
-  {
-    "turn": 2,
-    "phase": "message",
-    "speaker": "P4",
-    "to": [
-      "ALL"
-    ],
-    "is_dm": false,
-    "msg": "Let's start discussing. Does anyone have any suspicions or observations to share?"
-  },
-  {
-    "turn": 2,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "No game state changes detected. Discussion phase continues with all players alive. Werewolf (P1) remains hidden among 4 villagers. Win conditions not yet met."
-  },
-  {
-    "turn": 3,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 0.3,
-    "msg": "I agree with P4. Let's hear from everyone. Any observations so far?",
-    "to": "ALL",
-    "reason": "Encourage others to share without drawing attention"
-  },
-  {
-    "turn": 3,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 0.5,
-    "msg": "Since it's the first day with no information yet, we should all share observations and watch for suspicious behavior patterns. Let's hear from everyone.",
-    "to": "ALL",
-    "reason": "Encourage initial discussion without strong accusations"
-  },
-  {
-    "turn": 3,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.3,
-    "msg": "Agreed, P4. Let's hear from everyone. Has anyone noticed anything unusual so far?",
-    "to": "ALL",
-    "reason": "Encourage discussion without drawing attention"
-  },
-  {
-    "turn": 3,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.5,
-    "msg": "Since it's the first day, does anyone have any initial hunches or observations they want to share? Even small suspicions could help us spot inconsistencies later.",
-    "to": "ALL",
-    "reason": "Encourage others to share initial thoughts to gather information"
-  },
-  {
-    "turn": 3,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 0.3,
-    "msg": "Agreed. We should all share any suspicions we have. Let's pay attention to voting patterns as well.",
-    "to": "ALL",
-    "reason": "Encourage discussion without drawing attention"
-  },
-  {
-    "turn": 3,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "Allowing players to continue discussion without GM interruption"
-  },
-  {
-    "turn": 3,
-    "phase": "selection",
-    "selected_speaker": "P2",
+    "selected_speaker": "P5",
     "max_bid": 0.5
   },
   {
-    "turn": 3,
+    "turn": 1,
     "phase": "message",
-    "speaker": "P2",
+    "speaker": "P5",
     "to": [
       "ALL"
     ],
     "is_dm": false,
-    "msg": "Since it's the first day with no information yet, we should all share observations and watch for suspicious behavior patterns. Let's hear from everyone."
+    "msg": "Hi everyone, I'm keeping an eye on the conversation. So far, nothing too suspicious stands out, but we should be cautious. What does everyone think about the behavior we've noticed?"
   },
   {
-    "turn": 3,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Game remains in discussion phase with no completed votes or night actions. Current alive count: 5 players (1 Werewolf vs 4 Villagers). No win conditions met."
-  },
-  {
-    "turn": 4,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 0.3,
-    "msg": "I agree with P2. Let's all share our thoughts but avoid rash accusations until we have more information.",
-    "to": "ALL",
-    "reason": "Blend in as helpful villager without drawing attention"
-  },
-  {
-    "turn": 4,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 0.4,
-    "msg": "P5 and P1, what are your initial thoughts? Early input helps identify patterns.",
-    "to": "ALL",
-    "reason": "Encourage participation from silent players"
-  },
-  {
-    "turn": 4,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.4,
-    "msg": "Agreed with P2. Since it's the first day, we should observe voting patterns and avoid random eliminations. Let's share any subtle behavioral cues we notice.",
-    "to": "ALL",
-    "reason": "Encourage cautious discussion without revealing role"
-  },
-  {
-    "turn": 4,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.5,
-    "msg": "P1, P3, P5 - we haven't heard from you yet. Any initial thoughts or observations to contribute?",
-    "to": "ALL",
-    "reason": "Encourage remaining players to share thoughts to gather initial impressions"
-  },
-  {
-    "turn": 4,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 0.3,
-    "msg": "Agree with P2. Let's share observations and avoid random votes. Any small details could help.",
-    "to": "ALL",
-    "reason": "Encourage cautious discussion without drawing attention"
-  },
-  {
-    "turn": 4,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "No immediate action needed; allowing discussion to continue."
-  },
-  {
-    "turn": 4,
-    "phase": "selection",
-    "selected_speaker": "P4",
-    "max_bid": 0.5
-  },
-  {
-    "turn": 4,
-    "phase": "message",
-    "speaker": "P4",
-    "to": [
-      "ALL"
-    ],
-    "is_dm": false,
-    "msg": "P1, P3, P5 - we haven't heard from you yet. Any initial thoughts or observations to contribute?"
-  },
-  {
-    "turn": 4,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Game remains in discussion phase with no votes or night actions processed yet. Werewolf count (1) < Villager count (4)."
-  },
-  {
-    "turn": 5,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 0.5,
-    "msg": "I don't have any strong suspicions yet, but maybe we should look for anyone avoiding the conversation. What do others think?",
-    "to": "ALL",
-    "reason": "Respond to P4's prompt to avoid suspicion while maintaining a low profile"
-  },
-  {
-    "turn": 5,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 0.5,
-    "msg": "P1, P3, P5 - since we're all villagers here, your input is crucial. Even if you don't have strong suspicions yet, sharing your perspective helps establish trust. What's your read on the group so far?",
-    "to": "ALL",
-    "reason": "Encourage participation from silent players to gather more information"
-  },
-  {
-    "turn": 5,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.3,
-    "msg": "I agree we should all participate. No concrete suspicions yet, but observing patterns will be key. Let's hear more perspectives.",
-    "to": "ALL",
-    "reason": "Responding to P4's prompt while maintaining low profile as Seer"
-  },
-  {
-    "turn": 5,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.6,
-    "msg": "P1, P3, P5 - even if you don't have strong suspicions yet, sharing your perspective helps us establish baselines. Silence can sometimes draw unnecessary suspicion.",
-    "to": "ALL",
-    "reason": "Encourage silent players to contribute"
-  },
-  {
-    "turn": 5,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 0.5,
-    "msg": "Since it's the first day with limited information, I think we should pay close attention to voting patterns and any inconsistencies in people's arguments. Let's avoid random voting.",
-    "to": "ALL",
-    "reason": "Contribute to discussion without drawing too much attention"
-  },
-  {
-    "turn": 5,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: Vote phase. DM me exactly one name.",
-    "to": "ALL",
-    "reason": "End discussion phase and initiate voting as per procedural guidelines"
-  },
-  {
-    "turn": 5,
-    "phase": "selection",
-    "selected_speaker": "GM",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 5,
-    "phase": "message",
-    "speaker": "GM",
-    "to": [
-      "ALL"
-    ],
-    "is_dm": false,
-    "msg": "GM: Vote phase. DM me exactly one name."
-  },
-  {
-    "turn": 5,
+    "turn": 1,
     "phase": "system_update",
     "update_pub": {
-      "phase": "vote"
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "dead": []
     },
-    "update_priv": {},
+    "update_priv": {
+      "roles": {
+        "P1": "SEER",
+        "P2": "DOCTOR",
+        "P3": "WEREWOLF",
+        "P4": "VILLAGER",
+        "P5": "VILLAGER"
+      },
+      "witch_potions": {
+        "save": true,
+        "kill": true
+      },
+      "protected": null,
+      "seer_results": {}
+    },
     "winner": null,
-    "reason": "Phase changed to vote after GM announcement"
+    "reason": "No public or private game events have occurred that require updates. The game remains in the discussion phase with no win conditions met."
   },
   {
-    "turn": 5,
+    "turn": 1,
     "phase": "meta_change",
     "before": {
       "public_meta": {
@@ -408,11 +118,11 @@
       },
       "private_meta": {
         "roles": {
-          "P1": "WEREWOLF",
-          "P2": "VILLAGER",
-          "P3": "SEER",
+          "P1": "SEER",
+          "P2": "DOCTOR",
+          "P3": "WEREWOLF",
           "P4": "VILLAGER",
-          "P5": "DOCTOR"
+          "P5": "VILLAGER"
         },
         "witch_potions": {
           "save": true,
@@ -424,598 +134,7 @@
     },
     "after": {
       "public_meta": {
-        "phase": "night",
-        "alive": [
-          "P1",
-          "P2",
-          "P3",
-          "P4"
-        ],
-        "dead": [
-          "P5"
-        ]
-      },
-      "private_meta": {
-        "roles": {
-          "P1": "WEREWOLF",
-          "P2": "VILLAGER",
-          "P3": "SEER",
-          "P4": "VILLAGER",
-          "P5": "DOCTOR"
-        },
-        "witch_potions": {
-          "save": true,
-          "kill": true
-        },
-        "protected": null,
-        "seer_results": {}
-      }
-    },
-    "reason": "Phase changed to vote after GM announcement"
-  },
-  {
-    "turn": 6,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 1.0,
-    "msg": "P4",
-    "to": "GM",
-    "reason": "Sending vote to GM during vote phase"
-  },
-  {
-    "turn": 6,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Submitting vote for P5 due to inactivity"
-  },
-  {
-    "turn": 6,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Submit vote for P5 due to inactivity"
-  },
-  {
-    "turn": 6,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Cast vote for P5 due to inactivity"
-  },
-  {
-    "turn": 6,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 1.0,
-    "msg": "P1",
-    "to": "GM",
-    "reason": "Ensure vote submission during vote phase"
-  },
-  {
-    "turn": 6,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "No message needed; waiting for players to submit votes via DM."
-  },
-  {
-    "turn": 6,
-    "phase": "selection",
-    "selected_speaker": "P3",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 6,
-    "phase": "message",
-    "speaker": "P3",
-    "to": [
-      "GM"
-    ],
-    "is_dm": true,
-    "msg": "P5"
-  },
-  {
-    "turn": 6,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Vote phase ongoing - GM has not announced vote results yet. No meta changes until execution is resolved."
-  },
-  {
-    "turn": 7,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Submit vote for P5 to eliminate a potential threat quietly without drawing attention"
-  },
-  {
-    "turn": 7,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Submitting vote to GM"
-  },
-  {
-    "turn": 7,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote to GM"
-  },
-  {
-    "turn": 7,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 1.0,
-    "msg": "P1",
-    "to": "GM",
-    "reason": "Submit vote for P1 due to lack of participation"
-  },
-  {
-    "turn": 7,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 1.0,
-    "msg": "P3",
-    "to": "GM",
-    "reason": "Ensure my vote is submitted during the vote phase"
-  },
-  {
-    "turn": 7,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: Reminder - All living players must submit their vote via DM. Please send exactly one player name.",
-    "to": "ALL",
-    "reason": "Enforce voting participation per rules"
-  },
-  {
-    "turn": 7,
-    "phase": "selection",
-    "selected_speaker": "GM",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 7,
-    "phase": "message",
-    "speaker": "GM",
-    "to": [
-      "ALL"
-    ],
-    "is_dm": false,
-    "msg": "GM: Reminder - All living players must submit their vote via DM. Please send exactly one player name."
-  },
-  {
-    "turn": 7,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Vote phase ongoing - no executions or night actions have occurred yet. Current alive players: 5 (1 werewolf). Werewolves need ≥3 players to win, villagers need to eliminate P1."
-  },
-  {
-    "turn": 8,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Critical to submit vote before phase ends"
-  },
-  {
-    "turn": 8,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Need to submit vote for P5 due to inactivity"
-  },
-  {
-    "turn": 8,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5, no further action needed"
-  },
-  {
-    "turn": 8,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Need to submit vote before phase ends"
-  },
-  {
-    "turn": 8,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "Error in response generation"
-  },
-  {
-    "turn": 8,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: Reminder - All living players must submit their vote via DM. Please send exactly one player name.",
-    "to": "ALL",
-    "reason": "Ensure all votes are collected before resolving execution"
-  },
-  {
-    "turn": 8,
-    "phase": "selection",
-    "selected_speaker": "GM",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 8,
-    "phase": "message",
-    "speaker": "GM",
-    "to": [
-      "ALL"
-    ],
-    "is_dm": false,
-    "msg": "GM: Reminder - All living players must submit their vote via DM. Please send exactly one player name."
-  },
-  {
-    "turn": 8,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Vote phase still ongoing - no executions or deaths yet. Werewolves (1) still outnumbered by Villagers (4)."
-  },
-  {
-    "turn": 9,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 1.0,
-    "msg": "P4",
-    "to": "GM",
-    "reason": "Submit vote for P4 to eliminate active town member"
-  },
-  {
-    "turn": 9,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Submitting vote for P5 due to inactivity"
-  },
-  {
-    "turn": 9,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5 during vote phase"
-  },
-  {
-    "turn": 9,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Need to submit vote for P5 due to inactivity"
-  },
-  {
-    "turn": 9,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 1.0,
-    "msg": "P3",
-    "to": "GM",
-    "reason": "Critical to submit vote during vote phase"
-  },
-  {
-    "turn": 9,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: Reminder - All living players must submit their vote via DM. Please send exactly one player name.",
-    "to": "ALL",
-    "reason": "Enforcing vote participation as per rules"
-  },
-  {
-    "turn": 9,
-    "phase": "selection",
-    "selected_speaker": "P4",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 9,
-    "phase": "message",
-    "speaker": "P4",
-    "to": [
-      "GM"
-    ],
-    "is_dm": true,
-    "msg": "P5"
-  },
-  {
-    "turn": 9,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Vote phase still ongoing - waiting for all votes to be submitted. No game state changes until GM announces vote results."
-  },
-  {
-    "turn": 10,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 1.0,
-    "msg": "P3",
-    "to": "GM",
-    "reason": "Submit vote for P3 to avoid suspicion on quiet player"
-  },
-  {
-    "turn": 10,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Submit vote to GM"
-  },
-  {
-    "turn": 10,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5, no further action needed in vote phase"
-  },
-  {
-    "turn": 10,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5"
-  },
-  {
-    "turn": 10,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 1.0,
-    "msg": "P1",
-    "to": "GM",
-    "reason": "Submitting vote for P1 due to inactivity"
-  },
-  {
-    "turn": 10,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: Reminder - All living players must submit their vote via DM. Please send exactly one player name.",
-    "to": "ALL",
-    "reason": "Ensure all players vote"
-  },
-  {
-    "turn": 10,
-    "phase": "selection",
-    "selected_speaker": "P1",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 10,
-    "phase": "message",
-    "speaker": "P1",
-    "to": [
-      "GM"
-    ],
-    "is_dm": true,
-    "msg": "P3"
-  },
-  {
-    "turn": 10,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Vote phase ongoing - votes submitted but not yet resolved. No game state changes until GM announces vote results."
-  },
-  {
-    "turn": 11,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P3, no need to speak further during vote phase."
-  },
-  {
-    "turn": 11,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 1.0,
-    "msg": "P5",
-    "to": "GM",
-    "reason": "Submit vote to GM"
-  },
-  {
-    "turn": 11,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5 in vote phase, no further action needed."
-  },
-  {
-    "turn": 11,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5 in turn 9, no further action needed"
-  },
-  {
-    "turn": 11,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 1.0,
-    "msg": "P3",
-    "to": "GM",
-    "reason": "Submit vote to GM as required in vote phase"
-  },
-  {
-    "turn": 11,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: P5 is executed.",
-    "to": "ALL",
-    "reason": "Announce vote result as highest vote count"
-  },
-  {
-    "turn": 11,
-    "phase": "selection",
-    "selected_speaker": "P2",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 11,
-    "phase": "message",
-    "speaker": "P2",
-    "to": [
-      "GM"
-    ],
-    "is_dm": true,
-    "msg": "P5"
-  },
-  {
-    "turn": 11,
-    "phase": "system_update",
-    "update_pub": {},
-    "update_priv": {},
-    "winner": null,
-    "reason": "Vote phase still ongoing - no resolution yet. Waiting for GM to announce vote results and execute highest-vote player."
-  },
-  {
-    "turn": 12,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P3, no need to speak further."
-  },
-  {
-    "turn": 12,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5, no further action needed"
-  },
-  {
-    "turn": 12,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5 during Vote phase"
-  },
-  {
-    "turn": 12,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Already submitted vote for P5, no further action needed"
-  },
-  {
-    "turn": 12,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 1.0,
-    "msg": "P3",
-    "to": "GM",
-    "reason": "Submitting vote for P3"
-  },
-  {
-    "turn": 12,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: P5 is executed.",
-    "to": "ALL",
-    "reason": "Announce vote result as P5 received majority votes"
-  },
-  {
-    "turn": 12,
-    "phase": "selection",
-    "selected_speaker": "GM",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 12,
-    "phase": "message",
-    "speaker": "GM",
-    "to": [
-      "ALL"
-    ],
-    "is_dm": false,
-    "msg": "GM: P5 is executed."
-  },
-  {
-    "turn": 12,
-    "phase": "system_update",
-    "update_pub": {
-      "phase": "night",
-      "alive": [
-        "P1",
-        "P2",
-        "P3",
-        "P4"
-      ],
-      "dead": [
-        "P5"
-      ]
-    },
-    "update_priv": {},
-    "winner": null,
-    "reason": "P5 (Doctor) was executed by vote. Game enters Night phase with 1 Werewolf (P1) vs 3 Villagers/Seer. No team meets win condition yet."
-  },
-  {
-    "turn": 12,
-    "phase": "meta_change",
-    "before": {
-      "public_meta": {
-        "phase": "vote",
+        "phase": "discussion",
         "alive": [
           "P1",
           "P2",
@@ -1027,11 +146,11 @@
       },
       "private_meta": {
         "roles": {
-          "P1": "WEREWOLF",
-          "P2": "VILLAGER",
-          "P3": "SEER",
+          "P1": "SEER",
+          "P2": "DOCTOR",
+          "P3": "WEREWOLF",
           "P4": "VILLAGER",
-          "P5": "DOCTOR"
+          "P5": "VILLAGER"
         },
         "witch_potions": {
           "save": true,
@@ -1041,105 +160,6 @@
         "seer_results": {}
       }
     },
-    "after": {
-      "public_meta": {
-        "phase": "night",
-        "alive": [
-          "P1",
-          "P2",
-          "P3",
-          "P4"
-        ],
-        "dead": [
-          "P5"
-        ]
-      },
-      "private_meta": {
-        "roles": {
-          "P1": "WEREWOLF",
-          "P2": "VILLAGER",
-          "P3": "SEER",
-          "P4": "VILLAGER",
-          "P5": "DOCTOR"
-        },
-        "witch_potions": {
-          "save": true,
-          "kill": true
-        },
-        "protected": null,
-        "seer_results": {}
-      }
-    },
-    "reason": "P5 (Doctor) was executed by vote. Game enters Night phase with 1 Werewolf (P1) vs 3 Villagers/Seer. No team meets win condition yet."
-  },
-  {
-    "turn": 13,
-    "phase": "bid",
-    "agent": "P1",
-    "bid": 1.0,
-    "msg": "P2",
-    "to": "GM",
-    "reason": "As a Werewolf, need to submit night kill target to GM"
-  },
-  {
-    "turn": 13,
-    "phase": "bid",
-    "agent": "P2",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "As a Villager during night phase, no actions available"
-  },
-  {
-    "turn": 13,
-    "phase": "bid",
-    "agent": "P3",
-    "bid": 1.0,
-    "msg": "P1",
-    "to": "GM",
-    "reason": "Need to use Seer ability to check P1"
-  },
-  {
-    "turn": 13,
-    "phase": "bid",
-    "agent": "P4",
-    "bid": 0.0,
-    "msg": "",
-    "to": "ALL",
-    "reason": "As a Villager, no night action available. Wait for next phase."
-  },
-  {
-    "turn": 13,
-    "phase": "bid",
-    "agent": "P5",
-    "bid": 0.0,
-    "msg": "",
-    "to": "GM",
-    "reason": "Dead players cannot act"
-  },
-  {
-    "turn": 13,
-    "phase": "bid",
-    "agent": "GM",
-    "bid": 1.0,
-    "msg": "GM: Night phase. Werewolves, DM me one victim.",
-    "to": "ALL",
-    "reason": "Announce night phase and prompt Werewolves to submit kill target as per procedure"
-  },
-  {
-    "turn": 13,
-    "phase": "selection",
-    "selected_speaker": "P1",
-    "max_bid": 1.0
-  },
-  {
-    "turn": 13,
-    "phase": "message",
-    "speaker": "P1",
-    "to": [
-      "GM"
-    ],
-    "is_dm": true,
-    "msg": "P2"
+    "reason": "No public or private game events have occurred that require updates. The game remains in the discussion phase with no win conditions met."
   }
 ]

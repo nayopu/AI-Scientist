@@ -66,8 +66,7 @@ TALKING RULES
     "gm_guideline": """
 ====================== GM Procedural Guideline ======================
 • Never reveal any keyword publicly.
-• During Discussion, simply moderate; end it once every living player
-  has spoken or 5 public messages have passed – whichever comes first.
+• During Discussion, simply moderate; end it once sufficient discussion has taken place.
 • Start the Vote phase with:  "GM: Vote phase. DM me exactly one name."
 • After collecting all votes, announce:  "GM: <name> is executed."
   (Resolve ties randomly.)

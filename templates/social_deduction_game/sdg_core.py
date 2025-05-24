@@ -47,15 +47,16 @@ class Agent:
         self.llm = llm
         self.mem_log: List[Tuple[int, str, str, str]] = []   # (turn, sender, recipients, text)
 
-    async def decide_async(self, turn: int, meta_pub, public_log) -> dict:
+    async def decide_async(self, turn: int, meta_pub, meta_priv, public_log) -> dict:
         # Create history string from mem_log
         history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
                            for turn, sender, recv, txt in self.mem_log[-30:])
         
         try:
             js = await self.main_chain.ainvoke({
-                "meta": json.dumps(meta_pub, ensure_ascii=False),
-                "history": history
+                "history": history,
+                "meta_pub": json.dumps(meta_pub, ensure_ascii=False),
+                "meta_priv": json.dumps(meta_priv, ensure_ascii=False) if isinstance(self, GameMaster) else {},
             })
             # Validate and clean the response
             response = AgentResponse(**js)
@@ -65,19 +66,20 @@ class Agent:
             # Return a safe default response
             return {
                 "bid": 0.0,
-                "msg": "",
+                "msg": "", 
                 "to": "ALL",
                 "reason": "Error in response generation"
             }
 
-    def decide(self, turn: int, meta_pub, public_log) -> dict:
+    def decide(self, turn: int, meta_pub, meta_priv, public_log) -> dict:
         # Create history string from mem_log
         history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
                            for turn, sender, recv, txt in self.mem_log[-30:])
         
         try:
             js = self.main_chain.invoke({
-                "meta": json.dumps(meta_pub, ensure_ascii=False),
+                "meta_pub": json.dumps(meta_pub, ensure_ascii=False),
+                "meta_priv": json.dumps(meta_priv, ensure_ascii=False) if isinstance(self, GameMaster) else {},
                 "history": history
             })
             # Validate and clean the response
@@ -100,44 +102,53 @@ class Player(Agent):
         parser = SimpleJsonOutputParser()
         prompt = ChatPromptTemplate.from_messages([
             SystemMessage(content=sys_prompt),
-            ("human",
-             "=== PUBLIC META ===\n{meta}\n"
-             "=== RECENT CONVERSATIONS ===\n{history}\n"
-             "Message history format is <turn>: <sender>▶<recipient>: <message>\n"
-             "Bid to speak (0-1) and *optionally* send a message.\n\n"
-             "TURN STRUCTURE:\n"
-             "Each turn follows this exact sequence:\n"
-             "1. **Bidding Phase**: All players and GM submit bids simultaneously\n"
-             "2. **Speaking Phase**: Only the highest bidder's message is used\n"
-             "3. **System Update**: The system automatically updates game state and checks win conditions\n"
-             "This cycle repeats until a winner is determined.\n\n"
-             "Important mechanics:\n"
-             "- All players and GM bid simultaneously in each turn\n"
-             "- Only the highest bidder's message will be used\n"
-             "- The conversation follows a strict pattern: bid → speak → system update → bid → speak → system update ...\n"
-             "- This applies to both public messages and DMs\n"
-             "- Even if you want to send a DM, you must win the bid first\n"
-             "- You cannot speak outside of this turn structure\n\n"
-             "GM Phase Management:\n"
-             "- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),\n"
-             "  you should bid high (0.8-1.0) and speak to ALL to remind the GM\n"
-             "- This is especially important if you need to use your ability or vote\n"
-             "- Example: \"GM, we haven't had the night phase yet for abilities\"\n"
-             "- The GM will then correct the phase sequence\n\n"
-             "Bidding guidelines:\n"
-             "Higher bids indicate stronger desire to speak.\n"
-             "Consider your role, the current phase, and game state when bidding.\n"
-             "Use 1.0 bids sparingly - only when you believe you have critical information or a strong strategic reason to speak.\n"
-             "Lower bids (0.3-0.7) are appropriate for general discussion or when others should speak first.\n"
-             "Use 0.0 bids when you don't want to speak or you finished your voting or ability.\n\n"
-             "Message guidelines:\n"
-             "- Use \"to\": \"ALL\" for public messages visible to everyone\n"
-             "- Use \"to\": \"GM\" for private messages only visible to the GM (use this for voting or your ability)\n"
-             "- Use \"to\": \"P1,P2,...\" to send DMs to specific players\n"
-             "Remember that DMs are only visible to the specified recipients.\n\n"
-             "Respond ONLY JSON:\n"
-             "{{\"bid\": <0.0-1.0 (float)>, \"reason\": <free text>, \"msg\": <string>, \"to\": \"ALL\"|\"GM\"|\"P1,P2,...\"}}"),
-        ])
+            ("human", """
+=== RECENT CONVERSATIONS (<turn>: <sender>▶<recipient>: <message>) ===
+{history}
+=== PUBLIC META ===
+{meta_pub}
+=== PRIVATE META ===
+{meta_priv}
+
+TURN STRUCTURE:
+Each turn follows this exact sequence:
+1. **Bidding Phase**: All players and GM submit bids simultaneously
+2. **Speaking Phase**: Only the highest bidder's message is used
+3. **System Update**: The system automatically updates game state and checks win conditions
+This cycle repeats until a winner is determined.
+
+Important mechanics:
+- All players and GM bid simultaneously in each turn
+- Only the highest bidder's message will be used
+- The conversation follows a strict pattern: bid → speak → system update → bid → speak → system update ...
+- This applies to both public messages and DMs
+- **You must win the bid first to send a DM, otherwise your DM will be ignored.**
+- You cannot speak outside of this turn structure
+
+GM Phase Management:
+- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),
+  you should bid high (0.8-1.0) and speak to ALL to remind the GM
+- This is especially important if you need to use your ability or vote
+- Example: "GM, we haven't had the night phase yet for abilities"
+- The GM will then correct the phase sequence
+
+Bidding guidelines:
+- Bid to speak (0-1) and *optionally* send a message.
+- Higher bids indicate stronger desire to speak.
+- Consider your role, the current phase, and game state when bidding.
+- Use 1.0 bids sparingly - only when you believe you have critical information, a strong strategic reason to speak, or you need to DM the GM to finish your voting or ability.
+- Lower bids (0.3-0.7) are appropriate for general discussion or when others should - speak first.
+- Use 0.0 bids when you don't want to speak or you finished your voting or ability.
+
+Message guidelines:
+- Use "to": "ALL" for public messages visible to everyone
+- Use "to": "GM" for private messages only visible to the GM (use this for voting or your ability)
+- Use "to": "P1,P2,..." to send DMs to specific players
+Remember that DMs are only visible to the specified recipients.
+
+Respond ONLY JSON:
+{{"bid": <0.0-1.0 (float)>, "reason": <free text>, "msg": <string>, "to": "ALL"|"GM"|"P1,P2,..."}}
+""")])
         self.main_chain = prompt | llm | parser
 
 
@@ -148,44 +159,55 @@ class GameMaster(Player):
         prompt = ChatPromptTemplate.from_messages([
             SystemMessage(content=sys_prompt),
             ("human",
-             "=== PUBLIC META ===\n{meta}\n"
-             "=== RECENT CONVERSATIONS ===\n{history}\n"
-             "Message history format is <turn>: <sender>▶<recipient>: <message>\n"
-             "Bid to speak (0-1) and *optionally* send a message.\n\n"
-             "TURN STRUCTURE:\n"
-             "Each turn follows this exact sequence:\n"
-             "1. **Bidding Phase**: All players and GM submit bids simultaneously\n"
-             "2. **Speaking Phase**: Only the highest bidder's message is used\n"
-             "3. **System Update**: The system automatically updates game state and checks win conditions\n"
-             "This cycle repeats until a winner is determined.\n\n"
-             "Important mechanics:\n"
-             "- All players and GM bid simultaneously in each turn\n"
-             "- Only the highest bidder's message will be used\n"
-             "- The conversation follows a strict pattern: bid → speak → system update → bid → speak → system update ...\n"
-             "- This applies to both public messages and DMs\n"
-             "- Even if you want to send a DM, you must win the bid first\n"
-             "- PUBLIC META is automatically updated by the system after each turn\n"
-             "- You do NOT update the meta directly - the system handles this\n\n"
-             "GM Phase Management:\n"
-             "- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),\n"
-             "  you should bid high (0.8-1.0) and speak to ALL to remind the GM\n"
-             "- This is especially important if you need to use your ability or vote\n"
-             "- Example: \"GM, we haven't had the night phase yet for abilities\"\n"
-             "- The GM will then correct the phase sequence\n\n"
-             "Bidding guidelines:\n"
-             "Higher bids indicate stronger desire to speak.\n"
-             "Consider the current phase and game state when bidding.\n"
-             "Use 1.0 bids only when:\n"
-             "- Announcing phase changes (e.g., starting vote phase, night phase)\n"
-             "- Enforcing rules or correcting player behavior\n"
-             "Use lower bids (0.3-0.7) for general game management and responses.\n"
-             "Use 0.0 bids when you don't need to talk or you are waiting players' DMs.\n\n"
-             "Message guidelines:\n"
-             "- Use \"to\": \"ALL\" for public messages visible to everyone\n"
-             "- Use \"to\": \"P1,P2,...\" to send DMs to specific players\n"
-             "Remember that DMs are only visible to the specified recipients.\n\n"
-             "Respond ONLY JSON:\n"
-             "{{\"bid\": <0.0-1.0 (float)>, \"msg\": <string>, \"to\": \"ALL\"|\"P1,P2,...\", \"reason\": <free text>}}"),
+             """
+=== RECENT CONVERSATIONS (<turn>: <sender>▶<recipient>: <message>) ===
+{history}
+=== PUBLIC META ===
+{meta_pub}
+=== PRIVATE META ===
+{meta_priv}
+
+TURN STRUCTURE:
+Each turn follows this exact sequence:
+1. **Bidding Phase**: All players and GM submit bids simultaneously
+2. **Speaking Phase**: Only the highest bidder's message is used
+3. **System Update**: The system automatically updates game state and checks win conditions
+This cycle repeats until a winner is determined.
+
+Important mechanics:
+- All players and GM bid simultaneously in each turn
+- Only the highest bidder's message will be used
+- The conversation follows a strict pattern: bid → speak → system update → bid → speak → system update ...
+- This applies to both public messages and DMs
+- Even if you want to send a DM, you must win the bid first
+- PUBLIC META is automatically updated by the system after each turn
+- You do NOT update the meta directly - the system handles this
+
+GM Phase Management:
+- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),
+  - you should bid high (0.8-1.0) and speak to ALL to remind the GM
+- This is especially important if you need to use your ability or vote
+- Example: "GM, we haven't had the night phase yet for abilities"
+- The GM will then correct the phase sequence
+
+Bidding guidelines:
+- Bid to speak (0-1) and *optionally* send a message.
+- Higher bids indicate stronger desire to speak.
+- Consider the current phase and game state when bidding.
+- Use 1.0 bids only when:
+  - Announcing phase changes (e.g., starting vote phase, night phase)
+  - Enforcing rules or correcting player behavior
+- Use lower bids (0.3-0.7) for general game management and responses.
+- Use 0.0 bids when you don't need to talk
+- Use 0.0 when you are waiting players' DMs for their votes, abilities, selections, etc.
+
+Message guidelines:
+- Use "to": "ALL" for public messages visible to everyone
+- Use "to": "P1,P2,..." to send DMs to specific players
+Remember that DMs are only visible to the specified recipients.
+
+Respond ONLY JSON:
+{{"bid": <0.0-1.0 (float)>, "msg": <string>, "to": "ALL"|"P1,P2,...", "reason": <free text>}}"""),
         ])
         self.main_chain = prompt | llm | parser
 
@@ -198,40 +220,47 @@ class GameSystem(Agent):
         self.system_chain = ChatPromptTemplate.from_messages([
             SystemMessage(content=sys_prompt),
             ("human",
-             "=== RECENT CONVERSATIONS ===\n{history}\n"
-             "=== PUBLIC META ===\n{meta_pub}\n"
-             "=== PRIVATE META ===\n{meta_priv}\n"
-             "Message history format is <turn>: <sender>▶<recipient>: <message>\n\n"
-             "TURN STRUCTURE:\n"
-             "You are the SYSTEM agent that executes step 3 of each turn:\n"
-             "1. Bidding Phase: All players and GM submit bids (completed)\n"
-             "2. Speaking Phase: Highest bidder's message is delivered (completed)\n"
-             "3. **System Update Phase (YOUR ROLE)**: Update game state and check win conditions\n\n"
-             "Your responsibilities:\n"
-             "- Analyze the most recent message and all conversation history\n"
-             "- Update public and private meta information based on game events\n"
-             "- Check if any win conditions have been met\n"
-             "- This happens AUTOMATICALLY after each speaking phase\n\n"
-             "Based on the conversation history and current game state:\n"
-             "1. Determine if any meta information needs to be updated\n"
-             "2. Check if any win conditions have been met\n\n"
-             "Return ONLY valid JSON with the following structure:\n"
-             "{{\"update_pub\": {{...}}, \"update_priv\": {{...}}, "
-             "\"winner\": null|\"TEAM_NAME\", \"reason\": \"explanation\"}}")
-        ]) | llm | SimpleJsonOutputParser()
+             """=== RECENT CONVERSATIONS ===
+{history}
+=== PUBLIC META ===
+{meta_pub}
+=== PRIVATE META ===
+{meta_priv}
+Message history format is <turn>: <sender>▶<recipient>: <message>
+
+TURN STRUCTURE:
+You are the SYSTEM agent that executes step 3 of each turn:
+1. Bidding Phase: All players and GM submit bids (completed)
+2. Speaking Phase: Highest bidder's message is delivered (completed)
+3. **System Update Phase (YOUR ROLE)**: Update game state and check win conditions
+
+Meta information you can update:
+- Public meta, which is visible to all players including the GM
+- Private meta, which is visible to the GM
+
+Your responsibilities:
+- Analyze the most recent message and all conversation history
+- Update public meta information ONLY with information that has already been publicly announced or revealed
+- Update private meta information based on game events and private communications 
+- Check if any win conditions have been met
+- This happens AUTOMATICALLY after each speaking phase
+
+Based on the conversation history and current game state:
+1. Determine if any meta information needs to be updated
+2. Check if any win conditions have been met
+
+Return ONLY valid JSON with the following structure:
+{{"update_pub": {{...}}, "update_priv": {{...}}, 
+"winner": null|"TEAM_NAME", "reason": "explanation"}}"""
+        )]) | llm | SimpleJsonOutputParser()
     
-    def process_game_state(self, meta_pub: Dict, meta_priv: Dict, gm_mem_log: List[Tuple[int, str, str, str]]) -> dict:
+    def process_game_state(self, meta_pub: Dict, meta_priv: Dict) -> dict:
         """
         Process game state to update meta and check win conditions.
-        Args:
-            meta_pub: Public meta information
-            meta_priv: Private meta information
-            gm_mem_log: GameMaster's memory log to share the same history
         Returns: dict {"update_pub": {...}, "update_priv": {...}, "winner": null|str, "reason": "..."}
         """
-        # Use GM's memory log instead of system's own mem_log
         history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
-                    for turn, sender, recv, txt in gm_mem_log[-30:])
+                    for turn, sender, recv, txt in self.mem_log[-30:])
         try:
             response = self.system_chain.invoke({
                 "history": history,
@@ -287,14 +316,14 @@ def create_llm(api_source: str, model_name: str) -> ChatOpenAI:
     else:
         raise ValueError(f"Unsupported API source: {api_source}. Must be 'openai' or 'openrouter'")
 
-async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, public_log) -> Tuple[Dict[str, float], Dict[str, dict]]:
+async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, meta_priv, public_log) -> Tuple[Dict[str, float], Dict[str, dict]]:
     """
     Execute bidding phase in parallel for all agents.
     Returns tuple of (bids dict, packages dict)
     """
     tasks = []
     for agent in agents.values():
-        tasks.append(agent.decide_async(turn, meta_pub, public_log))
+        tasks.append(agent.decide_async(turn, meta_pub, meta_priv, public_log))
     
     results = await asyncio.gather(*tasks)
     
@@ -366,13 +395,13 @@ async def main_async():
             agents[n] = Player(n, role,
                               rules.player_sys_prompt(n, role, args.lang),
                               player_llm)
-            # Log role assignment
-            print(f"Role Assignment: {n} → {role}")
-            append_to_log({
-                "phase": "role_assignment",
-                "player": n,
-                "role": role
-            })
+        # Log role assignments
+        role_assignments = {name: agents[name].role for name in names}
+        print(f"\nRole Assignments: {json.dumps(role_assignments, ensure_ascii=False)}")
+        append_to_log({
+            "phase": "role_assignment",
+            "roles": role_assignments
+        })
         # GM
         agents["GM"] = GameMaster("GM",
                                  rules.gm_sys_prompt(args.lang), gm_llm)
@@ -399,7 +428,7 @@ async def main_async():
         while winner is None:
             turn += 1
             # ❶ 各エージェントが bid+msg を同時提出 (並列処理)
-            bids, pkgs = await parallel_bidding(agents, turn, meta_pub, public_log)
+            bids, pkgs = await parallel_bidding(agents, turn, meta_pub, meta_priv, public_log)
                 
             # 全エージェントの出力をログに追加
             for agent_name, pkg in pkgs.items():
@@ -414,12 +443,13 @@ async def main_async():
                 }
                 append_to_log(log_entry)
 
-            # ❷ 最高 bid のメッセージを採用
+            # ❷ 最高 bid のメッセージを採用 (GM が最高 bid の場合は GM が発言)
             max_bid = max(bids.values())
-            speaker = random.choice([n for n, b in bids.items() if b == max_bid])
+            max_bidders = [n for n, b in bids.items() if b == max_bid]
+            # If GM is among max bidders, choose GM. Otherwise random choice
+            speaker = "GM" if "GM" in max_bidders else random.choice(max_bidders)
             pkg = pkgs[speaker]
             utter = pkg["msg"].strip()
-            
             # Convert to "ALL" if all players are recipients
             recipients = [x.strip() for x in pkg["to"].split(",")]
             if all(name in recipients for name in names):
@@ -471,7 +501,7 @@ async def main_async():
                 })
 
             # ❸ GameSystem によるメタ更新と勝利判定
-            system_response = game_system.process_game_state(meta_pub, meta_priv, agents["GM"].mem_log)
+            system_response = game_system.process_game_state(meta_pub, meta_priv)
 
             # System更新をログに記録
             append_to_log({
@@ -497,11 +527,11 @@ async def main_async():
                 meta_priv.update(update_priv)
                 
                 # Log meta information changes
-                print(f"\nMETA UPDATE [Turn {turn}]")
+                print(f"[{turn:02}] System Update:")
                 if update_pub:
-                    print(f"Public: {meta_pub_before} → {meta_pub}")
+                    print(f"  Public: {meta_pub_before} → {meta_pub}")
                 if update_priv:
-                    print(f"Private: {meta_priv_before} → {meta_priv}")
+                    print(f"  Private: {meta_priv_before} → {meta_priv}")
                 
                 append_to_log({
                     "turn": turn,

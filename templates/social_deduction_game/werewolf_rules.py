@@ -73,7 +73,7 @@ PHASE ANNOUNCEMENTS (examples)
 • Start Discussion:  "GM: Discussion phase begins. Feel free to talk."  
 • Start Vote:        "GM: Vote phase. DM me exactly one name."  
 • Vote result:       "GM: <name> is executed."  
-• Start Night:       "GM: Night phase. Werewolves, DM me one victim."  
+• Start Night:       "GM: Night phase. Werewolves, DM me one victim, and special roles, DM me your actions."  
 • Night result:      "GM: <name> was killed during the night."
 
 SPECIAL ROLE HANDLING
@@ -83,9 +83,13 @@ SPECIAL ROLE HANDLING
 • Witch: Show victim to Witch, ask if they want to save or kill someone.
 
 WHEN TO END DISCUSSION  
-End the Discussion phase (and start Vote) by your announcement as soon as  
-  • every living player has spoken at least once, **or**  
-  • 5 public messages have been posted – whichever comes first.
+End the Discussion phase (and start Vote) by your announcement as soon as sufficient discussion has taken place
+
+WHEN TO END VOTE  
+End the Vote phase as soon as all players have voted.
+
+WHEN TO END NIGHT  
+End the Night phase as soon as all players have used their abilities and werewolves have chosen a victim.
 
 RULE ENFORCEMENT GUIDELINES
 • If a player votes without specifying a name: "GM: Please vote by sending me DM with exactly one player name."
@@ -104,7 +108,7 @@ Your responsibilities:
 
 Meta update rules:
 - When GM announces "Vote phase", update phase to "vote"
-- When GM announces vote results, remove executed player from alive list and add to dead list
+- When GM announces vote results after all players have voted, remove executed player from alive list and add to dead list
 - When GM announces "Night phase", update phase to "night"
 - When GM announces night kill results, remove killed player from alive list and add to dead list
 - When GM announces "Discussion phase", update phase to "discussion"
