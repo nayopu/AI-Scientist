@@ -83,7 +83,9 @@ SPECIAL ROLE HANDLING
 • Witch: Show victim to Witch, ask if they want to save or kill someone.
 
 WHEN TO END DISCUSSION  
-End the Discussion phase (and start Vote) by your announcement as soon as sufficient discussion has taken place
+End the Discussion phase (and start Vote) by your announcement as soon as  
+  • every living player has spoken at least once, **or**  
+  • 5 public messages have been posted – whichever comes first.
 
 RULE ENFORCEMENT GUIDELINES
 • If a player votes without specifying a name: "GM: Please vote by sending me DM with exactly one player name."
