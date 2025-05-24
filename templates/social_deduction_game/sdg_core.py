@@ -197,13 +197,14 @@ Bidding guidelines:
 - Use 1.0 bids only when:
   - Announcing phase changes (e.g., starting vote phase, night phase)
   - Enforcing rules or correcting player behavior
+  - DMing specific players or player groups to give secret investigation results
 - Use lower bids (0.3-0.7) for general game management and responses.
 - Use 0.0 bids when you don't need to talk
 - Use 0.0 when you are waiting players' DMs for their votes, abilities, selections, etc.
 
 Message guidelines:
-- Use "to": "ALL" for public messages visible to everyone
-- Use "to": "P1,P2,..." to send DMs to specific players
+- Use "to": "ALL" for public messages visible to everyone (e.g., announcing phase changes, correcting player behavior, etc.)
+- Use "to": "P1,P2,..." to send DMs to specific players (e.g., secret investigation results, ability results, etc.)
 Remember that DMs are only visible to the specified recipients.
 
 Respond ONLY JSON:
@@ -512,10 +513,7 @@ async def main_async():
             append_to_log({
                 "turn": turn,
                 "phase": "system_update",
-                "update_pub": system_response.get("update_pub", {}),
-                "update_priv": system_response.get("update_priv", {}),
-                "winner": system_response.get("winner"),
-                "reason": system_response.get("reason", "")
+                "system_response": system_response,
             })
 
             # 返って来た dict でメタを書き換え
@@ -537,20 +535,6 @@ async def main_async():
                     print(f"  Public: {meta_pub_before} → {meta_pub}")
                 if update_priv:
                     print(f"  Private: {meta_priv_before} → {meta_priv}")
-                
-                append_to_log({
-                    "turn": turn,
-                    "phase": "meta_change",
-                    "before": {
-                        "public_meta": meta_pub_before,
-                        "private_meta": meta_priv_before
-                    },
-                    "after": {
-                        "public_meta": meta_pub,
-                        "private_meta": meta_priv
-                    },
-                    "reason": system_response.get("reason", "")
-                })
 
             # ❹ 勝利判定
             winner = system_response.get("winner")
