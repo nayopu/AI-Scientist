@@ -82,7 +82,10 @@ pip install -r requirements.txt
 
 ### Supported Models and API Keys
 
-We support a wide variety of models, including open-weight and API-only models. In general, we recommend using only frontier models above the capability of the original GPT-4. To see a full list of supported models, see [here](https://github.com/SakanaAI/AI-Scientist/blob/main/ai_scientist/llm.py).
+We support a wide variety of models through multiple APIs. The model specification follows a unified format: `api:model_name`. For example:
+- `openai:gpt-4o-mini`
+- `openrouter:llama-3.1-405b-instruct`
+- `anthropic:claude-3-5-sonnet-20240620`
 
 #### OpenAI API (GPT-4o, GPT-4o-mini, o1 models)
 
@@ -297,17 +300,17 @@ This section provides instructions for setting up each of the three templates us
 ```bash
 conda activate ai_scientist
 # Run traditional scientific research experiments
-python launch_scientist.py --model "gpt-4o-2024-05-13" --experiment nanoGPT_lite --num-ideas 2
-python launch_scientist.py --model "claude-3-5-sonnet-20241022" --experiment nanoGPT_lite --num-ideas 2
+python launch_scientist.py --model "openai:gpt-4o-2024-05-13" --experiment nanoGPT_lite --num-ideas 2
+python launch_scientist.py --model "anthropic:claude-3-5-sonnet-20241022" --experiment nanoGPT_lite --num-ideas 2
 ```
 
 ### Game Design Experiments
 
 ```bash
 # Run social deduction game design with different search APIs
-python launch_scientist.py --model "gpt-4o-2024-05-13" --experiment social_deduction_game --num-ideas 2 --search-api duckduckgo
-python launch_scientist.py --model "claude-3-5-sonnet-20241022" --experiment social_deduction_game --num-ideas 2 --search-api perplexity
-python launch_scientist.py --model "gpt-4o-2024-05-13" --experiment social_deduction_game --num-ideas 2 --search-api openai
+python launch_scientist.py --model "openai:gpt-4o-2024-05-13" --experiment social_deduction_game --num-ideas 2 --search-api duckduckgo
+python launch_scientist.py --model "anthropic:claude-3-5-sonnet-20241022" --experiment social_deduction_game --num-ideas 2 --search-api perplexity
+python launch_scientist.py --model "openai:gpt-4o-2024-05-13" --experiment social_deduction_game --num-ideas 2 --search-api openai
 ```
 
 **Search API Options:**
@@ -487,6 +490,15 @@ We use the Semantic Scholar API to check ideas for novelty and collect citations
 **What if I have problems with web search APIs?**
 
 For game design templates, the system uses web search APIs for novelty checking. DuckDuckGo is always available as a free fallback option. If you have issues with Perplexity or OpenAI APIs, the system will automatically fall back to DuckDuckGo search. For research templates, you can skip literature search phases if needed.
+
+**How do I specify which model and API to use?**
+
+The system now uses a unified model specification format: `api:model_name`. For example:
+- `openai:gpt-4o-mini`
+- `openrouter:llama-3.1-405b-instruct`
+- `anthropic:claude-3-5-sonnet-20240620`
+
+This format is used consistently across all commands and configuration files. Make sure to set the appropriate API key environment variable for your chosen API.
 
 ## Containerization
 
