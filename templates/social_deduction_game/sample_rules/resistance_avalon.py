@@ -185,16 +185,56 @@ def init_meta_pub(players: List[str]) -> Dict:
     )
 
 def init_meta_priv(players: List[str]) -> Dict:
-    roles = _role_distribution(len(players))
-    meta = dict(
-        roles={p: r for p, r in zip(players, roles)},
-        rejected_in_row=0,
-        assassination_used=False
-    )
-    return meta
+    roles_list = _role_distribution(len(players))
+    role_assignments = {p: r for p, r in zip(players, roles_list)}
+    
+    # Find teammates for each faction
+    evil_players = [p for p, r in role_assignments.items() if r in ["MINION", "ASSASSIN", "MORGANA", "MORDRED"]]
+    # Note: Oberon is EVIL but doesn't know other EVIL and they don't know Oberon
+    
+    # Create private meta structure
+    meta_priv_all = {}
+    
+    # GM_SYSTEM private meta (shared by GM and System)
+    meta_priv_all["GM_SYSTEM"] = {
+        "roles": role_assignments,
+        "rejected_in_row": 0,
+        "assassination_used": False
+    }
+    
+    # Each player's private meta
+    for player in players:
+        role = role_assignments[player]
+        player_meta = {
+            "role": role
+        }
+        
+        # Add role-specific private information
+        if role == "MERLIN":
+            # Merlin knows all EVIL except Mordred
+            evil_visible_to_merlin = [p for p, r in role_assignments.items() 
+                                    if r in ["MINION", "ASSASSIN", "MORGANA", "OBERON"]]
+            player_meta["evil_players"] = evil_visible_to_merlin
+        elif role == "PERCIVAL":
+            # Percival sees Merlin and Morgana (can't distinguish)
+            merlin_morgana = [p for p, r in role_assignments.items() 
+                            if r in ["MERLIN", "MORGANA"]]
+            player_meta["merlin_candidates"] = merlin_morgana
+        elif role in ["MINION", "ASSASSIN", "MORGANA", "MORDRED"]:
+            # EVIL players know each other (except Oberon)
+            other_evil = [p for p in evil_players if p != player]
+            player_meta["teammates"] = other_evil
+        elif role == "OBERON":
+            # Oberon acts alone
+            player_meta["teammates"] = []
+        # LOYAL servants have no special knowledge
+        
+        meta_priv_all[player] = player_meta
+    
+    return meta_priv_all
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["roles"][name]
+    return meta_priv["GM_SYSTEM"]["roles"][name]
 
 ###############################################################################
 #  PROMPT HELPERS

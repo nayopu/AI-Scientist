@@ -148,7 +148,7 @@ Please make sure the abstract reads smoothly and is well-motivated. This should 
 """,
     "Related Work": """
 - Academic siblings of our work, i.e. alternative attempts in literature at trying to solve the same problem. 
-- Goal is to “Compare and contrast” - how does their approach differ in either assumptions or method? If their method is applicable to our Problem Setting I expect a comparison in the experimental section. If not, there needs to be a clear statement why a given method is not applicable. 
+- Goal is to "Compare and contrast" - how does their approach differ in either assumptions or method? If their method is applicable to our Problem Setting I expect a comparison in the experimental section. If not, there needs to be a clear statement why a given method is not applicable. 
 - Note: Just describing what another paper is doing is not enough. We need to compare and contrast.
 """,
     "Background": """
@@ -395,6 +395,185 @@ Ensure the citation is well-integrated into the text.'''
             + """\n You must use \cite or \citet to reference papers, do not manually type out author names."""
     )
     return aider_prompt, False
+
+
+# Social deduction game manual section tips
+game_manual_section_tips = {
+    "Title": """
+- Should be catchy and descriptive of the game concept
+- Include the core theme or unique mechanic
+- Make it memorable and engaging
+- Consider the target audience
+""",
+    "Abstract": """
+- Brief overview of the game concept and mechanics
+- What makes this game unique in the social deduction genre
+- Number of players and approximate play time
+- Target audience and complexity level
+- Key selling points that would attract players
+""",
+    "Introduction": """
+- Welcome players to the game
+- Brief history or inspiration behind the game concept
+- What players can expect from the experience
+- Overview of how social deduction works in this context
+- What makes this game different from others in the genre
+""",
+    "Game Overview": """
+- Detailed explanation of the core objective
+- How players interact and what they're trying to achieve
+- Basic game flow and structure
+- Key concepts players need to understand
+""",
+    "Components": """
+- List all physical or virtual components needed
+- Role cards, reference materials, tokens, etc.
+- What each component is used for
+- Any special materials or requirements
+""",
+    "Roles and Abilities": """
+- Detailed description of each role in the game
+- What each role is trying to achieve
+- Special abilities and when they can be used
+- How roles interact with each other
+- Balancing information and strategy tips for each role
+""",
+    "Game Flow": """
+- Step-by-step explanation of how a game progresses
+- Different phases and what happens in each
+- How turns work and who goes when
+- How information flows between players
+- When and how the game ends
+""",
+    "Rules and Mechanics": """
+- Detailed rules for all game mechanics
+- How voting, discussion, and special abilities work
+- Communication rules and restrictions
+- Timing and sequence rules
+- Edge cases and clarifications
+""",
+    "Victory Conditions": """
+- Clear explanation of how each side wins
+- Any alternative victory conditions
+- What happens in edge cases or ties
+- How to determine the winner
+""",
+    "Strategy and Tips": """
+- General strategy advice for all players
+- Role-specific tips and tactics
+- Common mistakes to avoid
+- How to read other players and deduce information
+- Balancing cooperation and competition
+""",
+}
+
+def perform_game_manual_writeup(
+        idea, folder_name, coder, cite_client, cite_model, num_cite_rounds=10, engine="semanticscholar"
+):
+    """
+    Generate a game manual instead of a research paper.
+    """
+    # CURRENTLY ASSUMES LATEX
+    title_abstract_prompt = f"""We've provided the `latex/template.tex` file for a social deduction game manual. We will be filling it in section by section.
+
+First, please fill in the "Title" and "Abstract" sections of the manual.
+
+This is for the game idea: {idea['Title']}
+Description: {idea['Experiment']}
+
+Some tips are provided below:
+{game_manual_section_tips["Title"]}
+{game_manual_section_tips["Abstract"]}
+
+The title should be engaging and reflect the unique aspects of this social deduction game.
+The abstract should give readers a clear understanding of what the game is about, how many players it supports, and what makes it interesting.
+
+Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these edits.
+"""
+    coder_out = coder.run(title_abstract_prompt)
+    
+    # Generate each section of the game manual
+    for section in [
+        "Introduction",
+        "Game Overview", 
+        "Components",
+        "Roles and Abilities",
+        "Game Flow",
+        "Rules and Mechanics",
+        "Victory Conditions",
+        "Strategy and Tips",
+    ]:
+        section_prompt = f"""Please fill in the {section} section of the game manual. 
+
+This is for the game idea: {idea['Title']}
+Description: {idea['Experiment']}
+
+Some tips are provided below:
+{game_manual_section_tips[section]}
+
+Be sure to make this section complete and self-contained. Players should be able to understand and play the game based on this manual.
+Focus on clarity, completeness, and ensuring players can actually reproduce and play this game.
+
+Before every paragraph, please include a brief description of what you plan to write in that paragraph in a comment.
+
+Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these edits.
+"""
+        coder_out = coder.run(section_prompt)
+        
+        # Refinement prompt for each section
+        refinement_prompt = f"""Great job! Now criticize and refine only the {section} section that you just wrote.
+Make this complete in this pass, do not leave any placeholders.
+
+Focus on:
+- **Completeness** – can someone reproduce the game from this manual?
+- **Clarity** – is it easy to understand for the target audience?
+- **Conciseness** – avoid unnecessary verbosity while maintaining completeness
+
+Pay particular attention to fixing any errors such as:
+- Unclear or missing rules
+- Inconsistent terminology
+- Missing information needed to play
+- Overly complex explanations
+- Gaps in the game flow or mechanics
+"""
+        coder_out = coder.run(refinement_prompt)
+
+    # Add optional citations if needed (fewer for game manuals)
+    for _ in range(min(num_cite_rounds, 3)):  # Limit citations for game manuals
+        with open(osp.join(folder_name, "latex", "template.tex"), "r") as f:
+            draft = f.read()
+        prompt, done = get_citation_aider_prompt(
+            cite_client, cite_model, draft, _, 3, engine=engine
+        )
+        if done:
+            break
+        if prompt is not None:
+            # extract bibtex string
+            bibtex_string = prompt.split('"""')[1]
+            # insert this into draft before the "\end{filecontents}" line
+            search_str = r"\end{filecontents}"
+            draft = draft.replace(search_str, f"{bibtex_string}{search_str}")
+            with open(osp.join(folder_name, "latex", "template.tex"), "w") as f:
+                f.write(draft)
+            coder_out = coder.run(prompt)
+
+    ## FINAL REFINEMENT LOOP
+    coder.run(
+        """Great job! Now that there is a complete draft of the entire game manual, let's do a final refinement pass.
+
+Focus on ensuring the manual is:
+1. **Complete** - Players can learn and play the game from this manual alone
+2. **Clear** - Rules and procedures are easy to understand
+3. **Consistent** - Terminology and references are used consistently throughout
+4. **Engaging** - The manual makes the game sound fun and interesting to play
+
+Go through each section and make any final improvements needed. Pay special attention to:
+- Making sure all game mechanics are clearly explained
+- Ensuring role abilities are fully detailed
+- Verifying that victory conditions are unambiguous
+- Checking that the game flow makes sense from start to finish
+"""
+    )
 
 
 # PERFORM WRITEUP

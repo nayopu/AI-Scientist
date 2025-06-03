@@ -118,22 +118,45 @@ def init_meta_pub(players: List[str]) -> Dict:
     return {"phase": "discussion", "alive": list(players)}
 
 def init_meta_priv(players: List[str]) -> Dict:
-    """Private meta only the GM can see"""
+    """Private meta organized by participant"""
     global CURRENT_LOCATION
     CURRENT_LOCATION = random.choice(LOCATIONS)
 
     # Exactly one Spy; everyone else is Local
     spy = random.choice(players)
-    roles = {p: ("SPY" if p == spy else "LOCAL") for p in players}
+    role_assignments = {p: ("SPY" if p == spy else "LOCAL") for p in players}
 
-    return {
-        "roles": roles,                # mapping player → role
+    # Create private meta structure
+    meta_priv_all = {}
+    
+    # GM_SYSTEM private meta (shared by GM and System)
+    meta_priv_all["GM_SYSTEM"] = {
+        "roles": role_assignments,     # mapping player → role
         "location": CURRENT_LOCATION,  # secret location
         "spy_guess": None              # later: {"player": name, "guess": str, "correct": bool}
     }
+    
+    # Each player's private meta
+    for player in players:
+        role = role_assignments[player]
+        player_meta = {
+            "role": role
+        }
+        
+        # Add role-specific private information
+        if role == "LOCAL":
+            # Locals know the location
+            player_meta["location"] = CURRENT_LOCATION
+        elif role == "SPY":
+            # Spy doesn't know the location
+            player_meta["location"] = None
+        
+        meta_priv_all[player] = player_meta
+    
+    return meta_priv_all
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["roles"][name]
+    return meta_priv["GM_SYSTEM"]["roles"][name]
 
 ###############################################################################
 # Prompt builders

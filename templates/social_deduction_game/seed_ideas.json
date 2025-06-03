@@ -1,16 +1,28 @@
 {
     "ideas": [
         {
-            "Title": "Example Experiment 1",
-            "Experiment": "This is an example experiment idea. Replace with your specific experiment description.",
-            "Baseline": "Describe the baseline experiment here",
-            "Expected_Outcome": "Describe what you expect to achieve with this experiment"
+            "Name": "time_traveler_conspiracy",
+            "Title": "Time Traveler Conspiracy: A Social Deduction Game with Temporal Mechanics",
+            "Experiment": "Design a social deduction game where players are time travelers from different eras trying to prevent or cause historical changes. Each player has a secret historical period they represent and must achieve era-specific objectives. The game features temporal phases where players can 'travel' to different time periods and use era-appropriate abilities. Information gathering involves learning about other players' time periods through their knowledge and behavior patterns. Win conditions involve successfully completing historical missions while preventing opposing factions from achieving theirs.",
+            "Interestingness": 8,
+            "Feasibility": 7,
+            "Novelty": 9
         },
         {
-            "Title": "Example Experiment 2",
-            "Experiment": "Another example experiment idea. Replace with your specific experiment description.",
-            "Baseline": "Describe the baseline experiment here",
-            "Expected_Outcome": "Describe what you expect to achieve with this experiment"
+            "Name": "corporate_espionage",
+            "Title": "Corporate Espionage: A Business-Themed Social Deduction Game", 
+            "Experiment": "Create a social deduction game set in a corporate environment where players are employees with hidden agendas. Some are loyal employees trying to complete projects, others are corporate spies trying to steal secrets, and some are whistleblowers trying to expose corruption. The game features day/night cycles representing work days and after-hours activities. Players have access to different company resources based on their cover roles (HR, IT, Management, etc.) and must balance maintaining their cover while pursuing their true objectives. Information flows through corporate channels, meetings, and private communications.",
+            "Interestingness": 7,
+            "Feasibility": 8,
+            "Novelty": 7
+        },
+        {
+            "Name": "quantum_entanglement_mystery",
+            "Title": "Quantum Entanglement: A Science Fiction Social Deduction Game",
+            "Experiment": "Design a social deduction game where players are scientists in a quantum research facility where reality itself is uncertain. Some players are from parallel dimensions trying to merge realities, others are trying to maintain timeline stability. The game features quantum uncertainty mechanics where player roles and allegiances can 'superposition' - existing in multiple states until observed/investigated. Players can form quantum entanglements that link their fates. The information gathering involves quantum measurements that collapse probability states and reveal information about other players.",
+            "Interestingness": 9,
+            "Feasibility": 6,
+            "Novelty": 10
         }
     ]
 }

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Word-Wolf (ワード人狼) rules for sdg_core v3
 """
@@ -6,9 +5,6 @@ Word-Wolf (ワード人狼) rules for sdg_core v3
 import random
 from typing import List, Dict, Tuple
 
-# --------------------------------------------------------------------
-# ★ 内部共有用のグローバル (init_meta_priv → *_sys_prompt で参照)
-# --------------------------------------------------------------------
 _WORDS_PER_PLAYER: Dict[str, str] = {}
 _PAIR: Tuple[str, str] | None = None           # (citizen_word, wolf_word)
 
@@ -121,10 +117,9 @@ def init_meta_pub(players: List[str]) -> Dict:
 
 def init_meta_priv(players: List[str]) -> Dict:
     """
-    Private game-state (GM only):
-      • roles {player: role}
-      • words {player: keyword}
-      • pair  (citizen_word, wolf_word)
+    Private game-state organized by participant:
+      • GM_SYSTEM: roles, words, pair (shared by GM and System)
+      • Each player: their role and word
     """
     global _WORDS_PER_PLAYER, _PAIR
 
@@ -137,15 +132,41 @@ def init_meta_priv(players: List[str]) -> Dict:
         for p in players
     }
 
-    return {
+    # Find wolf teammates
+    wolves = [p for p, r in roles.items() if r == "WOLF"]
+
+    # Create private meta structure
+    meta_priv_all = {}
+    
+    # GM_SYSTEM private meta (shared by GM and System)
+    meta_priv_all["GM_SYSTEM"] = {
         "roles": roles,
         "words": _WORDS_PER_PLAYER.copy(),
         "pair": _PAIR,
     }
+    
+    # Each player's private meta
+    for player in players:
+        role = roles[player]
+        word = _WORDS_PER_PLAYER[player]
+        
+        player_meta = {
+            "role": role,
+            "word": word
+        }
+        
+        # Add role-specific private information
+        if role == "WOLF":
+            # Wolves know their teammates
+            player_meta["teammates"] = [w for w in wolves if w != player]
+        
+        meta_priv_all[player] = player_meta
+    
+    return meta_priv_all
 
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["roles"][name]
+    return meta_priv["GM_SYSTEM"]["roles"][name]
 
 
 # ---------- プロンプト ----------

@@ -19,7 +19,7 @@ GOAL
   ↳ If the word is **not** guessed in time → everybody loses.
 
 ROLES
-• **Master** – Moderates the game, answers only “Yes / No / I don't know”.  
+• **Master** – Moderates the game, answers only "Yes / No / I don't know".  
   Shows their role openly.
 • **Insider** – Knows the secret word but stays hidden.  
   Guides the group toward guessing without being found.
@@ -43,8 +43,7 @@ VICTORY (when the Vote is resolved)
     # Private role blurbs (sent individually)
     # ─────────────────────────────────────────────────────────────────────────
     "role": {
-        "MASTER":   "You are the **Master**. Reveal yourself. Answer ONLY “Yes”, "
-                    "“No”, or “I don't know” to questions about the secret word.",
+        "MASTER":   "You are the **Master**. Reveal yourself. Answer ONLY \"Yes\", \"No\", or \"I don't know\" to questions about the secret word.",
         "INSIDER":  "You are the **Insider**. You secretly know the word. Help the "
                     "group guess it, but avoid being revealed in the Vote.",
         "COMMONER": "You are a **Commoner**. You don't know the word. Work with "
@@ -56,20 +55,20 @@ VICTORY (when the Vote is resolved)
     # ─────────────────────────────────────────────────────────────────────────
     "gm_guideline": """
 ==================== GM Procedural Guideline =====================
-Always prefix messages with “GM:”.
+Always prefix messages with "GM:".
 
 SET-UP
 • Privately choose a secret word (e.g. draw a card).  
 • DM the word to both Master and Insider.
 
 PHASE CONTROL
-1. Announce “GM: Question phase begins – ask yes/no questions.”  
+1. Announce "GM: Question phase begins – ask yes/no questions."  
    Start 5-minute timer (you may shorten in chat play).
 2. If word is guessed in time:  
-   • Announce “GM: Correct! The word was <WORD>. Discussion phase – 2 min.”  
-   • After discussion, announce “GM: Vote phase – DM one suspect.”
+   • Announce "GM: Correct! The word was <WORD>. Discussion phase – 2 min."  
+   • After discussion, announce "GM: Vote phase – DM one suspect."
 3. Collect votes (DM). Announce result:  
-   “GM: <NAME> is accused as Insider.”
+   "GM: <NAME> is accused as Insider."
 
 RULE ENFORCEMENT
 • Reject questions not answerable by Yes/No/I don't know.  
@@ -100,13 +99,13 @@ Private meta you maintain:
   secret_word      – string
 
 UPDATE RULES
-• When GM says “Question phase begins”            → phase = "question"
+• When GM says "Question phase begins"            → phase = "question"
 • When GM announces the correct word              → phase = "discussion", word_guessed = true
-• When GM says “Vote phase”                       → phase = "vote"
-• When GM announces “<NAME> is accused …”         → accused = <NAME>
+• When GM says "Vote phase"                       → phase = "vote"
+• When GM announces "<NAME> is accused ..."         → accused = <NAME>
 
 WIN CHECK
-• If phase == "question" and GM says “time’s up” AND word_guessed == false  
+• If phase == "question" and GM says "time's up" AND word_guessed == false  
     → everyone loses → winner = "NONE"
 • If phase == "vote" and accused is set:  
     – If roles[accused] == "INSIDER" → winner = "COMMONS"  
@@ -135,16 +134,43 @@ def init_meta_pub(players: List[str]) -> Dict:
 
 def init_meta_priv(players: List[str]) -> Dict:
     """Assign 1 Master, 1 Insider, rest Commoners; store secret word placeholder."""
-    roles = ["MASTER", "INSIDER"] + ["COMMONER"] * (len(players) - 2)
-    random.shuffle(roles)
-    return {
-        "roles": {p: r for p, r in zip(players, roles)},
+    roles_list = ["MASTER", "INSIDER"] + ["COMMONER"] * (len(players) - 2)
+    random.shuffle(roles_list)
+    role_assignments = {p: r for p, r in zip(players, roles_list)}
+    
+    # Create private meta structure
+    meta_priv_all = {}
+    
+    # GM_SYSTEM private meta (shared by GM and System)
+    meta_priv_all["GM_SYSTEM"] = {
+        "roles": role_assignments,
         "secret_word": "<SECRET_WORD>"
     }
+    
+    # Each player's private meta
+    for player in players:
+        role = role_assignments[player]
+        player_meta = {
+            "role": role
+        }
+        
+        # Add role-specific private information
+        if role == "INSIDER":
+            # Insider knows the secret word (will be set by GM)
+            player_meta["knows_word"] = True
+        elif role == "MASTER":
+            # Master knows the secret word (will be set by GM)
+            player_meta["knows_word"] = True
+        else:  # COMMONER
+            player_meta["knows_word"] = False
+        
+        meta_priv_all[player] = player_meta
+    
+    return meta_priv_all
 
 def assign_role(name: str, meta_priv: Dict) -> str:
     """Return this player's role."""
-    return meta_priv["roles"][name]
+    return meta_priv["GM_SYSTEM"]["roles"][name]
 
 ###############################################################################
 #  PROMPT HELPERS

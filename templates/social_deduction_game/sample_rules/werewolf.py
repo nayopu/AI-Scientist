@@ -151,19 +151,43 @@ def init_meta_priv(players: List[str]):
         roles += ["VILLAGER"]*(num_players - len(roles))
     
     random.shuffle(roles)
+    role_assignments = {p: r for p, r in zip(players, roles)}
     
-    # Initialize special role states
-    meta = {
-        "roles": {p: r for p, r in zip(players, roles)},
+    # Find werewolf teammates
+    werewolves = [p for p, r in role_assignments.items() if r == "WEREWOLF"]
+    
+    # Create private meta structure
+    meta_priv_all = {}
+    
+    # GM_SYSTEM private meta (shared by GM and System)
+    meta_priv_all["GM_SYSTEM"] = {
+        "roles": role_assignments,
         "witch_potions": {"save": True, "kill": True},  # Witch's available potions
         "protected": None,  # Who the doctor protected this night
         "seer_results": {}  # Seer's investigation history
     }
     
-    return meta
+    # Each player's private meta
+    for player in players:
+        role = role_assignments[player]
+        player_meta = {
+            "role": role
+        }
+        
+        # Add role-specific private information
+        if role == "WEREWOLF":
+            # Werewolves know their teammates
+            player_meta["teammates"] = [w for w in werewolves if w != player]
+        elif role in ["SEER", "DOCTOR", "HUNTER", "WITCH", "VILLAGER"]:
+            # Other roles don't have teammates but might have other private info
+            pass
+            
+        meta_priv_all[player] = player_meta
+    
+    return meta_priv_all
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["roles"][name]
+    return meta_priv["GM_SYSTEM"]["roles"][name]
 
 # ---------- プロンプト ----------
 def player_sys_prompt(name: str, role: str, lang: str) -> str:

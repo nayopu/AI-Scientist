@@ -94,7 +94,7 @@ In general, authors should be rewarded rather than punished for being up front a
   2: fair
   1: poor
 
-7. Contribution: Please assign the paper a numerical rating on the following scale to indicate the quality of the overall contribution this paper makes to the research area being studied. Are the questions being asked important? Does the paper bring a significant originality of ideas and/or execution? Are the results valuable to share with the broader NeurIPS community.
+7. Contribution: Please assign the paper a numerical rating on the following scale to indicate the quality of the overall contribution this paper makes to the research area being studied.
   4: excellent
   3: good
   2: fair
@@ -393,3 +393,180 @@ Improve the text using the review.'''.format(
         review=json.dumps(review)
     )
     coder_out = coder.run(improvement_prompt)
+
+# Game manual review system
+def perform_game_manual_review(
+    manual_text,
+    model,
+    client,
+    num_reflections=5,
+    num_fs_examples=1,
+    num_reviews_ensemble=3,
+    temperature=0.1,
+):
+    """
+    Review a game manual for completeness, clarity, and conciseness.
+    
+    Args:
+        manual_text: The text content of the game manual
+        model: The model to use for review
+        client: The LLM client
+        num_reflections: Number of reflection rounds
+        num_fs_examples: Number of few-shot examples (not used for game manuals)
+        num_reviews_ensemble: Number of review ensemble rounds
+        temperature: Temperature for generation
+        
+    Returns:
+        Dictionary containing review results with focus on game manual criteria
+    """
+    
+    game_manual_review_prompt = """
+You are an expert game designer and technical writer reviewing a social deduction game manual.
+Your task is to evaluate the manual on three key criteria that are essential for a good game manual:
+
+**COMPLETENESS** (1-10): Can someone completely reproduce and play this game using only this manual?
+- Are all rules clearly defined?
+- Are all roles and abilities fully explained? 
+- Are victory conditions unambiguous?
+- Is the game flow complete from setup to end?
+- Are edge cases and special situations covered?
+
+**CLARITY** (1-10): Is the manual easy to understand for the intended audience?
+- Are explanations clear and well-organized?
+- Is terminology consistent throughout?
+- Are examples provided where helpful?
+- Is the language appropriate for the target audience?
+- Are complex concepts broken down appropriately?
+
+**CONCISENESS** (1-10): Is unnecessary verbosity avoided while maintaining completeness?
+- Is information presented efficiently?
+- Are repetitions minimized?
+- Is the manual well-structured and focused?
+- Are explanations direct without being too brief?
+- Is there good balance between detail and brevity?
+
+Please provide:
+1. A score (1-10) for each criterion
+2. An overall score (1-10) 
+3. A decision: "Accept" or "Reject" (Accept if overall >= 6 and no criterion < 5)
+4. Specific weaknesses that need to be addressed
+5. Suggestions for improvement
+
+Focus particularly on whether players could actually learn and play this game successfully using only this manual.
+
+Game Manual to Review:
+{manual_text}
+
+Respond in JSON format:
+{{
+  "Completeness": <score>,
+  "Clarity": <score>, 
+  "Conciseness": <score>,
+  "Overall": <score>,
+  "Decision": "Accept" or "Reject",
+  "Weaknesses": ["weakness1", "weakness2", ...],
+  "Suggestions": ["suggestion1", "suggestion2", ...]
+}}
+"""
+
+    reviews = []
+    
+    for i in range(num_reviews_ensemble):
+        messages = [
+            {"role": "system", "content": "You are an expert game design and technical writing reviewer."},
+            {"role": "user", "content": game_manual_review_prompt.format(manual_text=manual_text)}
+        ]
+        
+        for j in range(num_reflections):
+            try:
+                response = client.chat.completions.create(
+                    model=model,
+                    messages=messages,
+                    temperature=temperature,
+                    max_tokens=2000,
+                )
+                
+                content = response.choices[0].message.content
+                
+                # Try to extract JSON from the response
+                import json
+                import re
+                
+                # Look for JSON block
+                json_match = re.search(r'\{.*\}', content, re.DOTALL)
+                if json_match:
+                    review_json = json.loads(json_match.group())
+                    
+                    if j < num_reflections - 1:
+                        # Add reflection for next iteration
+                        messages.append({"role": "assistant", "content": content})
+                        messages.append({
+                            "role": "user", 
+                            "content": f"""Please reflect on your review and consider if you want to adjust any scores or add additional insights. 
+                            Focus particularly on the three key criteria for game manuals:
+                            - Can players actually reproduce the game from this manual?
+                            - Is the manual clear and easy to follow?
+                            - Is it concise while still being complete?
+                            
+                            Provide your final review in the same JSON format."""
+                        })
+                    else:
+                        reviews.append(review_json)
+                        break
+                        
+            except Exception as e:
+                print(f"Error in review iteration {i}, reflection {j}: {e}")
+                if j == num_reflections - 1:
+                    # Fallback review if all iterations fail
+                    reviews.append({
+                        "Completeness": 5,
+                        "Clarity": 5,
+                        "Conciseness": 5,
+                        "Overall": 5,
+                        "Decision": "Reject",
+                        "Weaknesses": ["Unable to complete automated review"],
+                        "Suggestions": ["Manual review recommended"]
+                    })
+                break
+    
+    if not reviews:
+        return {
+            "Completeness": 5,
+            "Clarity": 5,
+            "Conciseness": 5,
+            "Overall": 5,
+            "Decision": "Reject",
+            "Weaknesses": ["Review system failed"],
+            "Suggestions": ["Manual review required"]
+        }
+    
+    # Aggregate reviews
+    avg_completeness = sum(r["Completeness"] for r in reviews) / len(reviews)
+    avg_clarity = sum(r["Clarity"] for r in reviews) / len(reviews)
+    avg_conciseness = sum(r["Conciseness"] for r in reviews) / len(reviews)
+    avg_overall = sum(r["Overall"] for r in reviews) / len(reviews)
+    
+    # Collect all weaknesses and suggestions
+    all_weaknesses = []
+    all_suggestions = []
+    for review in reviews:
+        all_weaknesses.extend(review.get("Weaknesses", []))
+        all_suggestions.extend(review.get("Suggestions", []))
+    
+    # Remove duplicates while preserving order
+    unique_weaknesses = list(dict.fromkeys(all_weaknesses))
+    unique_suggestions = list(dict.fromkeys(all_suggestions))
+    
+    # Decision based on average scores
+    decision = "Accept" if avg_overall >= 6 and min(avg_completeness, avg_clarity, avg_conciseness) >= 5 else "Reject"
+    
+    return {
+        "Completeness": round(avg_completeness, 1),
+        "Clarity": round(avg_clarity, 1),
+        "Conciseness": round(avg_conciseness, 1),
+        "Overall": round(avg_overall, 1),
+        "Decision": decision,
+        "Weaknesses": unique_weaknesses[:10],  # Limit to top 10
+        "Suggestions": unique_suggestions[:10],  # Limit to top 10
+        "num_reviews": len(reviews)
+    }

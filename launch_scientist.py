@@ -16,8 +16,8 @@ from datetime import datetime
 from ai_scientist.generate_ideas import generate_ideas, check_idea_novelty
 from ai_scientist.llm import create_client, AVAILABLE_LLMS
 from ai_scientist.perform_experiments import perform_experiments
-from ai_scientist.perform_review import perform_review, load_paper, perform_improvement
-from ai_scientist.perform_writeup import perform_writeup, generate_latex
+from ai_scientist.perform_review import perform_review, load_paper, perform_improvement, perform_game_manual_review
+from ai_scientist.perform_writeup import perform_writeup, generate_latex, perform_game_manual_writeup
 
 NUM_REFLECTIONS = 3
 
@@ -88,6 +88,13 @@ def parse_arguments():
         default="semanticscholar",
         choices=["semanticscholar", "openalex"],
         help="Scholar engine to use.",
+    )
+    parser.add_argument(
+        "--search-api",
+        type=str,
+        default="perplexity",
+        choices=["perplexity", "openai", "duckduckgo"],
+        help="Search API to use for novelty checking (perplexity via OpenRouter, OpenAI, or DuckDuckGo).",
     )
     parser.add_argument(
         "--docker",
@@ -275,7 +282,13 @@ def do_idea(
                 edit_format="diff",
             )
             try:
-                perform_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
+                # Check if this is a social deduction game experiment
+                if "social_deduction" in base_dir or args.experiment == "social_deduction_game":
+                    # Use game manual writeup instead of research paper
+                    perform_game_manual_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
+                else:
+                    # Use standard research paper writeup
+                    perform_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
             except Exception as e:
                 print(f"Failed to perform writeup: {e}")
                 return False
@@ -288,16 +301,30 @@ def do_idea(
         ## REVIEW PAPER
         if writeup == "latex":
             try:
-                paper_text = load_paper(f"{folder_name}/{idea['Name']}.pdf")
-                review = perform_review(
-                    paper_text,
-                    model="gpt-4o-2024-05-13",
-                    client=openai.OpenAI(),
-                    num_reflections=5,
-                    num_fs_examples=1,
-                    num_reviews_ensemble=5,
-                    temperature=0.1,
-                )
+                if "social_deduction" in base_dir or args.experiment == "social_deduction_game":
+                    # Use game manual review for social deduction games
+                    manual_text = load_paper(f"{folder_name}/{idea['Name']}.pdf")
+                    review = perform_game_manual_review(
+                        manual_text,
+                        model="gpt-4o-2024-05-13",
+                        client=openai.OpenAI(),
+                        num_reflections=3,
+                        num_fs_examples=1,
+                        num_reviews_ensemble=3,
+                        temperature=0.1,
+                    )
+                else:
+                    # Use standard paper review for research papers
+                    paper_text = load_paper(f"{folder_name}/{idea['Name']}.pdf")
+                    review = perform_review(
+                        paper_text,
+                        model="gpt-4o-2024-05-13",
+                        client=openai.OpenAI(),
+                        num_reflections=5,
+                        num_fs_examples=1,
+                        num_reviews_ensemble=5,
+                        temperature=0.1,
+                    )
                 # Store the review in separate review.txt file
                 with open(osp.join(folder_name, "review.txt"), "w") as f:
                     f.write(json.dumps(review, indent=4))
@@ -378,7 +405,7 @@ if __name__ == "__main__":
             base_dir=base_dir,
             client=client,
             model=client_model,
-            engine=args.engine,
+            search_api=args.search_api,
         )
 
     with open(osp.join(base_dir, "ideas.json"), "w") as f:

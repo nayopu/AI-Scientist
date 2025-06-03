@@ -9,22 +9,22 @@ import requests
 
 from ai_scientist.llm import get_response_from_llm, extract_json_between_markers, create_client, AVAILABLE_LLMS
 
-S2_API_KEY = os.getenv("S2_API_KEY")
+# Removed S2_API_KEY since we're not using academic search anymore
 
 idea_first_prompt = """{task_description}
 <experiment.py>
 {code}
 </experiment.py>
 
-Here are the ideas that you have already generated:
+Here are the game ideas that you have already generated:
 
 '''
 {prev_ideas_string}
 '''
 
-Come up with the next impactful and creative idea for research experiments and directions you can feasibly investigate with the code provided.
-Note that you will not have access to any additional resources or datasets.
-Make sure any idea is not overfit the specific training dataset or model, and has wider significance.
+Come up with the next impactful and creative idea for social deduction games that you can feasibly implement with the code provided.
+Note that you will not have access to any additional resources or external dependencies beyond what's provided.
+Make sure your game idea is broadly appealing and has wider entertainment value beyond specific player groups.
 
 Respond in the following format:
 
@@ -36,12 +36,12 @@ NEW IDEA JSON:
 <JSON>
 ```
 
-In <THOUGHT>, first briefly discuss your intuitions and motivations for the idea. Detail your high-level plan, necessary design choices and ideal outcomes of the experiments. Justify how the idea is different from the existing ones.
+In <THOUGHT>, first briefly discuss your intuitions and motivations for the game idea. Detail your high-level design plan, necessary gameplay mechanics and ideal player experience. Justify how the game idea is different from the existing ones.
 
-In <JSON>, provide the new idea in JSON format with the following fields:
+In <JSON>, provide the new game idea in JSON format with the following fields:
 - "Name": A shortened descriptor of the idea. Lowercase, no spaces, underscores allowed.
-- "Title": A title for the idea, will be used for the report writing.
-- "Experiment": An outline of the implementation. E.g. which functions need to be added or modified, how results will be obtained, ...
+- "Title": A title for the game, will be used for the manual writing.
+- "Experiment": An outline of the game implementation. E.g. which mechanics need to be added, how gameplay will work, what roles exist, etc.
 - "Interestingness": A rating from 1 to 10 (lowest to highest).
 - "Feasibility": A rating from 1 to 10 (lowest to highest).
 - "Novelty": A rating from 1 to 10 (lowest to highest).
@@ -52,11 +52,11 @@ You will have {num_reflections} rounds to iterate on the idea, but do not need t
 """
 
 idea_reflection_prompt = """Round {current_round}/{num_reflections}.
-In your thoughts, first carefully consider the quality, novelty, and feasibility of the idea you just created.
-Include any other factors that you think are important in evaluating the idea.
+In your thoughts, first carefully consider the quality, novelty, and feasibility of the game idea you just created.
+Include any other factors that you think are important in evaluating the game idea.
 Ensure the idea is clear and concise, and the JSON is the correct format.
 Do not make things overly complicated.
-In the next attempt, try and refine and improve your idea.
+In the next attempt, try and refine and improve your game idea.
 Stick to the spirit of the original idea unless there are glaring issues.
 
 Respond in the same format as before:
@@ -219,9 +219,9 @@ def generate_next_idea(
                         num_reflections=num_reflections,
                     )
                     + """
-Completed ideas have an additional "Score" field which indicates the assessment by an expert ML reviewer.
-This is on a standard 1-10 ML conference scale.
-Scores of 0 indicate the idea failed either during experimentation, writeup or reviewing.
+Completed ideas have an additional "Score" field which indicates the assessment by an expert game design reviewer.
+This is on a standard 1-10 game quality scale.
+Scores of 0 indicate the idea failed either during implementation, testing or reviewing.
 """,
                     client=client,
                     model=model,
@@ -279,90 +279,91 @@ def on_backoff(details):
     )
 
 
-@backoff.on_exception(
-    backoff.expo, requests.exceptions.HTTPError, on_backoff=on_backoff
-)
-def search_for_papers(query, result_limit=10, engine="semanticscholar") -> Union[None, List[Dict]]:
-    if not query:
-        return None
-    if engine == "semanticscholar":
-        rsp = requests.get(
-            "https://api.semanticscholar.org/graph/v1/paper/search",
-            headers={"X-API-KEY": S2_API_KEY} if S2_API_KEY else {},
+# Academic paper search functionality removed - now using web search only
+# Add web search function for game-related content
+def search_web_games(query, result_limit=5):
+    """Search the web for game-related content to check novelty"""
+    try:
+        # Use DuckDuckGo instant answer API for simple searches
+        response = requests.get(
+            "https://api.duckduckgo.com/",
             params={
-                "query": query,
-                "limit": result_limit,
-                "fields": "title,authors,venue,year,abstract,citationStyles,citationCount",
+                "q": f"{query} social deduction game board game mechanics",
+                "format": "json",
+                "no_redirect": "1",
+                "no_html": "1"
             },
+            timeout=10
         )
-        print(f"Response Status Code: {rsp.status_code}")
-        print(
-            f"Response Content: {rsp.text[:500]}"
-        )  # Print the first 500 characters of the response content
-        rsp.raise_for_status()
-        results = rsp.json()
-        total = results["total"]
-        time.sleep(1.0)
-        if not total:
-            return None
-
-        papers = results["data"]
-        return papers
-    elif engine == "openalex":
-        import pyalex
-        from pyalex import Work, Works
-        mail = os.environ.get("OPENALEX_MAIL_ADDRESS", None)
-        if mail is None:
-            print("[WARNING] Please set OPENALEX_MAIL_ADDRESS for better access to OpenAlex API!")
-        else:
-            pyalex.config.email = mail
-
-        def extract_info_from_work(work: Work, max_abstract_length: int = 1000) -> dict[str, str]:
-            # "Unknown" is returned when venue is unknown...
-            venue = "Unknown"
-            for i, location in enumerate(work["locations"]):
-                if location["source"] is not None:
-                    venue = location["source"]["display_name"]
-                    if venue != "":
-                        break
-            title = work["title"]
-            abstract = work["abstract"]
-            if abstract is None:
-                abstract = ""
-            if len(abstract) > max_abstract_length:
-                # To avoid context length exceed error.
-                print(f"[WARNING] {title=}: {len(abstract)=} is too long! Use first {max_abstract_length} chars.")
-                abstract = abstract[:max_abstract_length]
-            authors_list = [author["author"]["display_name"] for author in work["authorships"]]
-            authors = " and ".join(authors_list) if len(authors_list) < 20 else f"{authors_list[0]} et al."
-            paper = dict(
-                title=title,
-                authors=authors,
-                venue=venue,
-                year=work["publication_year"],
-                abstract=abstract,
-                citationCount=work["cited_by_count"],
-            )
-            return paper
-
-        works: List[Dict] = Works().search(query).get(per_page=result_limit)
-        papers: List[Dict[str, str]] = [extract_info_from_work(work) for work in works]
-        return papers
-    else:
-        raise NotImplementedError(f"{engine=} not supported!")
+        
+        if response.status_code in [200, 202]:  # Accept both 200 and 202
+            data = response.json()
+            results = []
+            
+            # Get related topics as search results
+            related_topics = data.get("RelatedTopics", [])[:result_limit]
+            for topic in related_topics:
+                if isinstance(topic, dict) and "Text" in topic:
+                    title = topic.get("FirstURL", "").split("/")[-1].replace("-", " ").title()
+                    if not title:
+                        title = "Related Topic"
+                    results.append({
+                        "title": title,
+                        "snippet": topic["Text"],
+                        "url": topic.get("FirstURL", "")
+                    })
+            
+            # Also try to get abstract if available
+            if data.get("Abstract"):
+                results.insert(0, {
+                    "title": data.get("AbstractSource", "Main Result"),
+                    "snippet": data["Abstract"],
+                    "url": data.get("AbstractURL", "")
+                })
+            
+            # If still no results, provide a generic response
+            if not results:
+                results = [{
+                    "title": "Search Query Analysis",
+                    "snippet": f"Search performed for: '{query}'. Consider checking popular social deduction games like Mafia, Werewolf, The Resistance, Secret Hitler, or Avalon for similar mechanics. Also look into game databases like BoardGameGeek for comprehensive game listings.",
+                    "url": "https://boardgamegeek.com"
+                }]
+                
+            return results
+        
+        # If non-successful status code, return fallback
+        return [{
+            "title": "Search Query Analysis",
+            "snippet": f"Search performed for: '{query}'. Consider checking popular social deduction games like Mafia, Werewolf, The Resistance, Secret Hitler, or Avalon for similar mechanics.",
+            "url": "https://boardgamegeek.com"
+        }]
+        
+    except Exception as e:
+        print(f"Error in web search: {e}")
+        # Return a fallback result even when search fails
+        return [{
+            "title": "Search Error - Manual Review Recommended",
+            "snippet": f"Unable to search for '{query}' due to technical issues. Recommend manually checking BoardGameGeek, Wikipedia's list of social deduction games, or other game databases.",
+            "url": "https://boardgamegeek.com"
+        }]
 
 
+novelty_system_msg = """You are an experienced game designer who is looking to create novel social deduction games.
+You have a game idea and you want to check if it is novel or not. I.e., not overlapping significantly with existing games or already well explored mechanics.
+Be a harsh critic for novelty, ensure there is a sufficient contribution in the idea for a new and interesting social deduction game.
+You will be given access to web search to find relevant games and information to help you make your decision.
+The search results will be presented to you.
 
-novelty_system_msg = """You are an ambitious AI PhD student who is looking to publish a paper that will contribute significantly to the field.
-You have an idea and you want to check if it is novel or not. I.e., not overlapping significantly with existing literature or already well explored.
-Be a harsh critic for novelty, ensure there is a sufficient contribution in the idea for a new conference or workshop paper.
-You will be given access to the Semantic Scholar API, which you may use to survey the literature and find relevant papers to help you make your decision.
-The top 10 results for any search query will be presented to you with the abstracts.
-
-You will be given {num_rounds} to decide on the paper, but you do not need to use them all.
+You will be given {num_rounds} to decide on the novelty, but you do not need to use them all.
 At any round, you may exit early and decide on the novelty of the idea.
-Decide a paper idea is novel if after sufficient searching, you have not found a paper that significantly overlaps with your idea.
-Decide a paper idea is not novel, if you have found a paper that significantly overlaps with your idea.
+Decide a game idea is novel if after sufficient searching, you have not found a game that significantly overlaps with your core mechanics and theme.
+Decide a game idea is not novel, if you have found games that significantly overlap with your idea.
+
+Focus on searching for:
+1. Existing social deduction games with similar themes or mechanics
+2. Board games, video games, or tabletop games with similar concepts
+3. Game design patterns or mechanics that match your idea
+4. Popular games in this genre
 
 {task_description}
 <experiment.py>
@@ -371,7 +372,7 @@ Decide a paper idea is not novel, if you have found a paper that significantly o
 """
 
 novelty_prompt = '''Round {current_round}/{num_rounds}.
-You have this idea:
+You have this social deduction game idea:
 
 """
 {idea}
@@ -392,13 +393,14 @@ RESPONSE:
 <JSON>
 ```
 
-In <THOUGHT>, first briefly reason over the idea and identify any query that could help you make your decision.
+In <THOUGHT>, first briefly reason over the game idea and identify any query that could help you make your decision.
+Focus on the core mechanics, theme, and unique aspects of your game idea.
 If you have made your decision, add "Decision made: novel." or "Decision made: not novel." to your thoughts.
 
 In <JSON>, respond in JSON format with ONLY the following field:
-- "Query": An optional search query to search the literature (e.g. attention is all you need). You must make a query if you have not decided this round.
+- "Query": An optional search query to search for existing games (e.g. "time travel social deduction game", "corporate espionage board game", "quantum mechanics game"). You must make a query if you have not decided this round.
 
-A query will work best if you are able to recall the exact name of the paper you are looking for, or the authors.
+The query will work best if you search for specific game names, mechanics, or themes related to your idea.
 This JSON will be automatically parsed, so ensure the format is precise.'''
 
 
@@ -408,7 +410,7 @@ def check_idea_novelty(
         client,
         model,
         max_num_iterations=10,
-        engine="semanticscholar",
+        search_api="perplexity",
 ):
     with open(osp.join(base_dir, "experiment.py"), "r") as f:
         code = f.read()
@@ -425,7 +427,7 @@ def check_idea_novelty(
 
         novel = False
         msg_history = []
-        papers_str = ""
+        results_str = ""
 
         for j in range(max_num_iterations):
             try:
@@ -434,7 +436,7 @@ def check_idea_novelty(
                         current_round=j + 1,
                         num_rounds=max_num_iterations,
                         idea=idea,
-                        last_query_results=papers_str,
+                        last_query_results=results_str,
                     ),
                     client=client,
                     model=model,
@@ -457,26 +459,25 @@ def check_idea_novelty(
                 json_output = extract_json_between_markers(text)
                 assert json_output is not None, "Failed to extract JSON from LLM output"
 
-                ## SEARCH FOR PAPERS
+                ## SEARCH FOR GAME CONTENT
                 query = json_output["Query"]
-                papers = search_for_papers(query, result_limit=10, engine=engine)
-                if papers is None:
-                    papers_str = "No papers found."
-
-                paper_strings = []
-                for i, paper in enumerate(papers):
-                    paper_strings.append(
-                        """{i}: {title}. {authors}. {venue}, {year}.\nNumber of citations: {cites}\nAbstract: {abstract}""".format(
-                            i=i,
-                            title=paper["title"],
-                            authors=paper["authors"],
-                            venue=paper["venue"],
-                            year=paper["year"],
-                            cites=paper["citationCount"],
-                            abstract=paper["abstract"],
+                
+                # Use the new web search functionality
+                web_results = search_web_content(query, search_api=search_api, result_limit=5)
+                if not web_results:
+                    results_str = "No game-related content found."
+                else:
+                    result_strings = []
+                    for i, result in enumerate(web_results):
+                        result_strings.append(
+                            """{i}: {title}\nURL: {url}\nContent: {snippet}""".format(
+                                i=i,
+                                title=result["title"],
+                                url=result["url"],
+                                snippet=result["snippet"]
+                            )
                         )
-                    )
-                papers_str = "\n\n".join(paper_strings)
+                    results_str = "\n\n".join(result_strings)
 
             except Exception as e:
                 print(f"Error: {e}")
@@ -490,6 +491,105 @@ def check_idea_novelty(
         json.dump(ideas, f, indent=4)
 
     return ideas
+
+
+# Remove search_for_papers function and replace with web search only
+def search_web_content(query, search_api="perplexity", result_limit=5):
+    """Search the web for game-related content using specified API"""
+    if search_api == "perplexity":
+        return search_perplexity(query, result_limit)
+    elif search_api == "openai":
+        return search_openai(query, result_limit)
+    elif search_api == "duckduckgo":
+        return search_web_games(query, result_limit)  # Use DuckDuckGo
+    else:
+        return search_web_games(query, result_limit)  # Fallback to DuckDuckGo
+
+def search_perplexity(query, result_limit=5):
+    """Search using Perplexity API via OpenRouter"""
+    try:
+        import openai
+        
+        # Use OpenRouter to access Perplexity
+        client = openai.OpenAI(
+            api_key=os.environ.get("OPENROUTER_API_KEY"),
+            base_url="https://openrouter.ai/api/v1"
+        )
+        
+        search_prompt = f"""Search for information about: {query}
+        
+Focus on finding:
+- Existing social deduction games with similar mechanics
+- Board games or video games with related themes
+- Game design concepts or mechanics
+- Rules or gameplay elements
+
+Provide a brief summary of relevant findings."""
+
+        response = client.chat.completions.create(
+            model="perplexity/llama-3.1-sonar-large-128k-online",
+            messages=[
+                {"role": "user", "content": search_prompt}
+            ],
+            max_tokens=1000
+        )
+        
+        content = response.choices[0].message.content
+        
+        # Parse the response into structured format
+        results = [{
+            "title": "Perplexity Search Results",
+            "snippet": content,
+            "url": "https://perplexity.ai"
+        }]
+        
+        return results
+        
+    except Exception as e:
+        print(f"Error in Perplexity search: {e}")
+        return []
+
+def search_openai(query, result_limit=5):
+    """Search using OpenAI's response capabilities"""
+    try:
+        import openai
+        
+        client = openai.OpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY")
+        )
+        
+        search_prompt = f"""Based on your knowledge, provide information about existing games, mechanics, or concepts related to: {query}
+
+Focus on:
+- Social deduction games with similar themes or mechanics
+- Board games, card games, or digital games with related concepts
+- Game design patterns or mechanics that might overlap
+- Popular games in this space
+
+Format your response as a brief analysis of what already exists in this space."""
+
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "user", "content": search_prompt}
+            ],
+            max_tokens=800
+        )
+        
+        content = response.choices[0].message.content
+        
+        # Parse the response into structured format
+        results = [{
+            "title": "OpenAI Knowledge Search",
+            "snippet": content,
+            "url": "https://openai.com"
+        }]
+        
+        return results
+        
+    except Exception as e:
+        print(f"Error in OpenAI search: {e}")
+        return []
 
 
 if __name__ == "__main__":
@@ -522,6 +622,13 @@ if __name__ == "__main__":
         action="store_true",
         help="Check novelty of ideas.",
     )
+    parser.add_argument(
+        "--search-api",
+        type=str,
+        default="perplexity",
+        choices=["perplexity", "openai", "duckduckgo"],
+        help="Search API to use for novelty checking (perplexity via OpenRouter, OpenAI, or DuckDuckGo).",
+    )
     args = parser.parse_args()
 
     # Create client
@@ -543,4 +650,5 @@ if __name__ == "__main__":
             base_dir=base_dir,
             client=client,
             model=client_model,
+            search_api=args.search_api,
         )
