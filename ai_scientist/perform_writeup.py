@@ -6,8 +6,9 @@ import re
 import shutil
 import subprocess
 from typing import Optional, Tuple
+import glob
 
-from ai_scientist.generate_ideas import search_for_papers
+from ai_scientist.generate_ideas import search_web_content
 from ai_scientist.llm import get_response_from_llm, extract_json_between_markers, create_client, AVAILABLE_LLMS
 
 
@@ -315,33 +316,32 @@ def get_citation_aider_prompt(
         json_output = extract_json_between_markers(text)
         assert json_output is not None, "Failed to extract JSON from LLM output"
         query = json_output["Query"]
-        papers = search_for_papers(query, engine=engine)
+        web_results = search_web_content(query, search_api=engine)
     except Exception as e:
         print(f"Error: {e}")
         return None, False
 
-    if papers is None:
-        print("No papers found.")
+    if web_results is None or not web_results:
+        print("No web results found.")
         return None, False
 
-    paper_strings = []
-    for i, paper in enumerate(papers):
-        paper_strings.append(
-            """{i}: {title}. {authors}. {venue}, {year}.\nAbstract: {abstract}""".format(
+    # Format web results for display (different from academic papers)
+    result_strings = []
+    for i, result in enumerate(web_results):
+        result_strings.append(
+            """{i}: {title}\nURL: {url}\nContent: {snippet}""".format(
                 i=i,
-                title=paper["title"],
-                authors=paper["authors"],
-                venue=paper["venue"],
-                year=paper["year"],
-                abstract=paper["abstract"],
+                title=result.get("title", "Unknown Title"),
+                url=result.get("url", "No URL"),
+                snippet=result.get("snippet", "No content available")
             )
         )
-    papers_str = "\n\n".join(paper_strings)
+    results_str = "\n\n".join(result_strings)
 
     try:
         text, msg_history = get_response_from_llm(
             citation_second_prompt.format(
-                papers=papers_str,
+                papers=results_str,  # Use results_str for web content
                 current_round=current_round,
                 total_rounds=total_rounds,
             ),
@@ -357,17 +357,31 @@ def get_citation_aider_prompt(
         json_output = extract_json_between_markers(text)
         assert json_output is not None, "Failed to extract JSON from LLM output"
         desc = json_output["Description"]
-        selected_papers = json_output["Selected"]
-        selected_papers = str(selected_papers)
+        selected_results = json_output["Selected"]
+        selected_results = str(selected_results)
 
-        # convert to list
-        if selected_papers != "[]":
-            selected_papers = list(map(int, selected_papers.strip("[]").split(",")))
+        # convert to list and create simple citations for web content
+        if selected_results != "[]":
+            selected_results = list(map(int, selected_results.strip("[]").split(",")))
             assert all(
-                [0 <= i < len(papers) for i in selected_papers]
-            ), "Invalid paper index"
-            bibtexs = [papers[i]["citationStyles"]["bibtex"] for i in selected_papers]
-            bibtex_string = "\n".join(bibtexs)
+                [0 <= i < len(web_results) for i in selected_results]
+            ), "Invalid result index"
+            
+            # Create simple bibtex entries for web content
+            bibtex_entries = []
+            for idx in selected_results:
+                result = web_results[idx]
+                title = result.get("title", "Web Resource").replace("{", "").replace("}", "")
+                url = result.get("url", "")
+                # Create a simple bibtex entry
+                key = f"web{idx}"
+                bibtex = f"""@misc{{{key},
+  title={{{title}}},
+  url={{{url}}},
+  note={{Accessed: \\today}}
+}}"""
+                bibtex_entries.append(bibtex)
+            bibtex_string = "\n".join(bibtex_entries)
         else:
             return None, False
 
@@ -392,7 +406,7 @@ Ensure the citation is well-integrated into the text.'''
 
     aider_prompt = (
             aider_format.format(bibtex=bibtex_string, description=desc)
-            + """\n You must use \cite or \citet to reference papers, do not manually type out author names."""
+            + """\n You must use \cite or \citet to reference sources, do not manually type out titles or URLs."""
     )
     return aider_prompt, False
 
@@ -615,6 +629,12 @@ Do not cite anything that is not already in `references.bib`. Do not add any new
 Keep the experimental results (figures and tables) only in the Results section, and make sure that any captions are filled in.
 In this pass, do not reference anything in later sections of the paper.
 
+IMPORTANT: When writing the {section} section, you have access to the generated game rule files (*.py files).
+These contain the detailed game mechanics, role definitions, victory conditions, and implementation details.
+For the Method section: Describe the actual game rules and mechanics that were implemented.
+For the Experimental Setup section: Reference how the game was configured and what specific rules were tested.
+Use the rule files to provide concrete details about the social deduction game that was created.
+
 Before every paragraph, please include a brief description of what you plan to write in that paragraph in a comment.
 
 Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these edits.
@@ -725,15 +745,46 @@ if __name__ == "__main__":
     model = args.model
     writeup_file = osp.join(folder_name, "latex", "template.tex")
     ideas_file = osp.join(folder_name, "ideas.json")
+    
+    # Find and include the generated rule file(s)
+    rule_files = []
+    
+    # Load ideas to get the idea name
     with open(ideas_file, "r") as f:
         ideas = json.load(f)
     for idea in ideas:
         if idea["Name"] in idea_name:
             print(f"Found idea: {idea['Name']}")
+            # Look for rule file with idea name
+            rule_file = osp.join(folder_name, f"{idea['Name']}.py")
+            if osp.exists(rule_file):
+                rule_files.append(rule_file)
+                print(f"Found rule file: {rule_file}")
             break
+    
+    # Also look for any other Python files that might be rule files
+    # (excluding experiment.py, plot.py, and other standard files)
+    excluded_files = {'experiment.py', 'plot.py', '__init__.py'}
+    for py_file in glob.glob(osp.join(folder_name, "*.py")):
+        if osp.basename(py_file) not in excluded_files and py_file not in rule_files:
+            # Check if this looks like a rule file by looking for common patterns
+            try:
+                with open(py_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    # Look for typical rule file patterns
+                    if any(pattern in content for pattern in ['RULEBOOK', 'init_meta_pub', 'player_sys_prompt', 'assign_role']):
+                        rule_files.append(py_file)
+                        print(f"Found additional rule file: {py_file}")
+            except Exception:
+                pass  # Skip files we can't read
+    
     if idea["Name"] not in idea_name:
         raise ValueError(f"Idea {idea_name} not found")
-    fnames = [exp_file, writeup_file, notes]
+    
+    # Include rule files in the files accessible to the AI coder
+    fnames = [exp_file, writeup_file, notes] + rule_files
+    print(f"Files accessible to AI coder: {fnames}")
+    
     io = InputOutput(yes=True, chat_history_file=f"{folder_name}/{idea_name}_aider.txt")
     if args.model == "deepseek-coder-v2-0724":
         main_model = Model("deepseek/deepseek-coder")

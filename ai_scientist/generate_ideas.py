@@ -166,7 +166,10 @@ def generate_ideas(
     ## SAVE IDEAS
     ideas = []
     for idea_str in idea_str_archive:
-        ideas.append(json.loads(idea_str))
+        parsed_idea = json.loads(idea_str)
+        # Only add properly structured ideas (dictionaries with required fields)
+        if isinstance(parsed_idea, dict) and 'Name' in parsed_idea:
+            ideas.append(parsed_idea)
 
     with open(osp.join(base_dir, "ideas.json"), "w") as f:
         json.dump(ideas, f, indent=4)

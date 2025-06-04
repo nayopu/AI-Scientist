@@ -1,0 +1,140 @@
+[
+  {
+    "phase": "role_assignment",
+    "roles": {
+      "P1": "VILLAGER",
+      "P2": "WEREWOLF",
+      "P3": "VILLAGER"
+    },
+    "initial_meta": {
+      "public": {
+        "phase": "vote",
+        "alive": [
+          "P1",
+          "P2",
+          "P3"
+        ],
+        "dead": []
+      },
+      "private": {
+        "GM_SYSTEM": {
+          "roles": {
+            "P1": "VILLAGER",
+            "P2": "WEREWOLF",
+            "P3": "VILLAGER"
+          },
+          "witch_potions": {
+            "save": true,
+            "kill": true
+          },
+          "protected": null,
+          "seer_results": {}
+        },
+        "P1": {
+          "role": "VILLAGER"
+        },
+        "P2": {
+          "role": "WEREWOLF",
+          "teammates": []
+        },
+        "P3": {
+          "role": "VILLAGER"
+        }
+      }
+    }
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P1",
+    "bid": 0.3,
+    "msg": "I think we should talk about our suspicions and observations. What do you all think?",
+    "to": "ALL",
+    "reason": "Engaging in discussion to gather more information about other players."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P2",
+    "bid": 0.8,
+    "msg": "GM, we haven't had the voting phase yet for the last round, please proceed with it!",
+    "to": "ALL",
+    "reason": "We need to remind the GM to move to the next phase; it seems like we've skipped the voting phase."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "P3",
+    "bid": 0.5,
+    "msg": "Let's discuss our thoughts on possible werewolves among us. What do you think, P1 and P2?",
+    "to": "ALL",
+    "reason": "I want to participate in the discussion since it's currently the discussion phase."
+  },
+  {
+    "turn": 1,
+    "phase": "bid",
+    "agent": "GM",
+    "bid": 1.0,
+    "msg": "GM: Discussion phase is over. It's now time for the vote phase. Please DM me exactly one name you would like to vote for.",
+    "to": "ALL",
+    "reason": "Ending discussion phase and starting the vote phase."
+  },
+  {
+    "turn": 1,
+    "phase": "selection",
+    "selected_speaker": "GM",
+    "max_bid": 1.0
+  },
+  {
+    "turn": 1,
+    "phase": "message",
+    "speaker": "GM",
+    "to": [
+      "ALL"
+    ],
+    "is_dm": false,
+    "msg": "GM: Discussion phase is over. It's now time for the vote phase. Please DM me exactly one name you would like to vote for."
+  },
+  {
+    "turn": 1,
+    "phase": "system_update",
+    "system_response": {
+      "update_pub": {
+        "phase": "vote",
+        "alive": [
+          "P1",
+          "P2",
+          "P3"
+        ],
+        "dead": []
+      },
+      "update_priv": {
+        "GM_SYSTEM": {
+          "roles": {
+            "P1": "VILLAGER",
+            "P2": "WEREWOLF",
+            "P3": "VILLAGER"
+          },
+          "witch_potions": {
+            "save": true,
+            "kill": true
+          },
+          "protected": null,
+          "seer_results": {}
+        },
+        "P1": {
+          "role": "VILLAGER"
+        },
+        "P2": {
+          "role": "WEREWOLF",
+          "teammates": []
+        },
+        "P3": {
+          "role": "VILLAGER"
+        }
+      },
+      "winner": null,
+      "reason": "Phase updated to vote; no players executed or affected."
+    }
+  }
+]

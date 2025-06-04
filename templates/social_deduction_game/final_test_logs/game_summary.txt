@@ -1,0 +1,16 @@
+=== SOCIAL DEDUCTION GAME LOG ===
+
+GAME SETUP:
+  P1: VILLAGER
+  P2: VILLAGER
+  P3: WEREWOLF
+
+[01] GM▶ALL: GM: Discussion phase has ended. It's time for the Vote phase. Please DM me exactly one name.
+[01] SYSTEM UPDATE:
+  Public meta: {"phase": "vote"}
+[02] P1▶ALL: GM, please confirm we are in the Vote phase and allow me to submit my vote.
+[03] P2▶ALL: GM, please confirm we are in the Vote phase and allow me to submit my vote.
+[03] SYSTEM UPDATE:
+  Public meta: {"phase": "vote"}
+[04] GM▶ALL: GM: Please DM me exactly one name for your votes.
+[05] P2▶ALL: GM, please confirm we are in the Vote phase.

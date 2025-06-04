@@ -1,0 +1,285 @@
+[
+{
+  "phase": "role_assignment",
+  "roles": {
+    "P1": "VILLAGER",
+    "P2": "VILLAGER",
+    "P3": "WEREWOLF"
+  },
+  "initial_meta": {
+    "public": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "private": {
+      "GM_SYSTEM": {
+        "roles": {
+          "P1": "VILLAGER",
+          "P2": "VILLAGER",
+          "P3": "WEREWOLF"
+        },
+        "witch_potions": {
+          "save": true,
+          "kill": true
+        },
+        "protected": null,
+        "seer_results": {}
+      },
+      "P1": {
+        "role": "VILLAGER"
+      },
+      "P2": {
+        "role": "VILLAGER"
+      },
+      "P3": {
+        "role": "WEREWOLF",
+        "teammates": []
+      }
+    }
+  }
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.5,
+  "msg": "What does everyone think about the possible roles we might have in this game? Any suspicions?",
+  "to": "ALL",
+  "reason": "I want to participate in the discussion and ask others about their thoughts without being too aggressive."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "I think we should all share our thoughts about who we suspect might be a Wolf. Let's discuss.",
+  "to": "ALL",
+  "reason": "It's important to have a discussion among all players to gather information and determine any suspicions before proceeding."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.8,
+  "msg": "GM, we haven't had the night phase yet for abilities. Please address this.",
+  "to": "ALL",
+  "reason": "It's crucial to remind the GM about the night phase for abilities, as we haven't had it yet."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Discussion phase ends. It's time for the vote phase. Please DM me exactly one name.",
+  "to": "ALL",
+  "reason": "Starting vote phase as the discussion has concluded."
+},
+{
+  "turn": 1,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 1,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Discussion phase ends. It's time for the vote phase. Please DM me exactly one name."
+},
+{
+  "turn": 1,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "vote",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "update_priv": {
+      "GM_SYSTEM": {
+        "roles": {
+          "P1": "VILLAGER",
+          "P2": "VILLAGER",
+          "P3": "WEREWOLF"
+        },
+        "witch_potions": {
+          "save": true,
+          "kill": true
+        },
+        "protected": null,
+        "seer_results": {}
+      },
+      "P1": {
+        "role": "VILLAGER"
+      },
+      "P2": {
+        "role": "VILLAGER"
+      },
+      "P3": {
+        "role": "WEREWOLF",
+        "teammates": []
+      }
+    },
+    "winner": null,
+    "reason": "Updated phase to vote after GM announced the end of discussion."
+  }
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.8,
+  "msg": "Please remember to submit your votes to the GM!",
+  "to": "ALL",
+  "reason": "I want to remind everyone to vote since we are in the voting phase."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.8,
+  "msg": "GM, it's time for the vote phase. Let's remain focused and discuss who seems suspicious before we cast our votes!",
+  "to": "ALL",
+  "reason": "I want to remind the GM that we need to submit our votes and also to ensure that we are focusing on suspects during this tense phase."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.9,
+  "msg": "GM, we need to move on to the voting phase. Please confirm!",
+  "to": "ALL",
+  "reason": "I want to ensure that the vote is executed correctly and remind the GM of the phase transition."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "P1,P2,P3",
+  "reason": "Waiting for players to submit their votes."
+},
+{
+  "turn": 2,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 0.9
+},
+{
+  "turn": 2,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM, we need to move on to the voting phase. Please confirm!"
+},
+{
+  "turn": 2,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "vote",
+      "alive": [
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "dead": []
+    },
+    "update_priv": {
+      "GM_SYSTEM": {
+        "roles": {
+          "P1": "VILLAGER",
+          "P2": "VILLAGER",
+          "P3": "WEREWOLF"
+        },
+        "witch_potions": {
+          "save": true,
+          "kill": true
+        },
+        "protected": null,
+        "seer_results": {}
+      },
+      "P1": {
+        "role": "VILLAGER"
+      },
+      "P2": {
+        "role": "VILLAGER"
+      },
+      "P3": {
+        "role": "WEREWOLF",
+        "teammates": []
+      },
+      "reason": "No updates needed"
+    },
+    "reason": "No reason provided"
+  }
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "GM, we need to proceed to the voting phase and confirm our choices!",
+  "to": "ALL",
+  "reason": "It's crucial that we confirm our votes to move the game forward."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.9,
+  "msg": "GM, please confirm that we are in the voting phase and ready to receive votes.",
+  "to": "ALL",
+  "reason": "It's critical to remind the GM that we are in the voting phase and to ensure that the process goes smoothly."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.9,
+  "msg": "GM, we need to proceed with the voting phase. Please confirm!",
+  "to": "ALL",
+  "reason": "It's crucial to remind the GM about moving to the voting phase and ensure my role as a Werewolf is active in the game."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Vote phase has ended. Please DM me exactly one name for your vote.",
+  "to": "ALL",
+  "reason": "Ensuring all players understand that they need to DM their votes."
+},
+{
+  "turn": 3,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 3,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Vote phase has ended. Please DM me exactly one name for your vote."
+}

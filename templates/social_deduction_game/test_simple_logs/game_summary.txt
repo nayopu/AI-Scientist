@@ -1,0 +1,62 @@
+=== SOCIAL DEDUCTION GAME LOG ===
+
+GAME SETUP:
+  P1: VILLAGER
+  P2: WEREWOLF
+  P3: VILLAGER
+
+[01] GM▶ALL: GM: Discussion phase is coming to an end. Please prepare for the voting phase.
+[02] P1▶ALL: GM, we are in the voting phase now. Let's proceed and ensure we submit our votes!
+[03] P2▶ALL: GM, we haven't had the voting phase yet, let's proceed before moving on to the next phase.
+[04] GM▶ALL: GM: It seems there was a mix-up. Discussion phase has ended, and we are now in the voting phase. Please DM me with exactly one name for your vote.
+[05] P2▶ALL: GM, we are in the voting phase now. Let's proceed!
+[06] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[07] P2▶ALL: GM, we are in the voting phase now. Let's proceed!
+[08] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[09] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[10] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[11] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[12] P2▶ALL: GM, we need to proceed with the voting phase and ensure everyone's votes are counted!
+[13] GM▶ALL: GM, we are currently in the voting phase. Please ensure all players submit their votes!
+[14] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[15] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[16] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[17] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[18] P2▶ALL: GM, we need to proceed with the voting phase and ensure everyone's votes are counted!
+[19] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[20] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[21] P2▶ALL: GM, we are in the voting phase now. Let's proceed and ensure we submit our votes!
+[22] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[23] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[24] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[25] GM▶ALL: GM: Vote phase is coming to an end. Please submit your votes if you haven't already!
+[26] GM▶ALL: GM: Vote phase has ended. I'll now announce the results.
+[27] GM▶ALL: GM: Vote phase has ended. I'll now announce the results.
+[28] GM▶ALL: GM: Night phase begins. Werewolves, DM me one victim, and special roles, DM me your actions.
+[29] P1▶ALL: GM, we haven't had the night phase yet for abilities. Please let us proceed!
+[30] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[31] GM▶ALL: GM, we haven't had the night phase yet for abilities. Please let us proceed!
+[32] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[33] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[34] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[35] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[36] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[37] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[38] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[39] P1▶ALL: GM, we haven't had the night phase yet for abilities. Please let us proceed!
+[40] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[41] GM▶ALL: GM, we haven't had the night phase yet for abilities. Please let us proceed!
+[42] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[43] GM▶ALL: GM: Night phase begins. Werewolves, DM me one victim, and special roles, DM me your actions.
+[44] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[45] GM▶ALL: GM: Night phase begins. Werewolves, DM me one victim, and special roles, DM me your actions.
+[46] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[47] P1▶ALL: GM, we haven't had the night phase yet for abilities. Please let us proceed!
+[48] GM▶ALL: GM, we need to proceed with the night phase for abilities.
+[49] GM▶ALL: GM: Night phase begins. Werewolves, DM me one victim, and special roles, DM me your actions.
+[50] GM▶ALL: GM: Night phase has ended. I will now announce the results.
+[51] GM▶ALL: GM: Night phase begins. Werewolves, DM me one victim, and special roles, DM me your actions.
+[52] GM▶ALL: GM, we haven't had the night phase yet for abilities. Please let us proceed!
+[53] GM▶ALL: GM, we haven't had the night phase yet for abilities. Please let us proceed!
+
+=== END OF GAME ===

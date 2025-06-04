@@ -1,0 +1,515 @@
+[
+{
+  "phase": "role_assignment",
+  "roles": {
+    "P1": "BUG",
+    "P2": "BUG",
+    "P3": "QA_LEAD",
+    "P4": "DEBUGGER",
+    "P5": "TESTER"
+  },
+  "initial_meta": {
+    "public": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "dead": []
+    },
+    "private": {
+      "GM_SYSTEM": {
+        "roles": {
+          "P1": "BUG",
+          "P2": "BUG",
+          "P3": "QA_LEAD",
+          "P4": "DEBUGGER",
+          "P5": "TESTER"
+        },
+        "qa_last_shield": null,
+        "pending_kill": null
+      },
+      "P1": {
+        "role": "BUG",
+        "teammates": [
+          "P2"
+        ]
+      },
+      "P2": {
+        "role": "BUG",
+        "teammates": [
+          "P1"
+        ]
+      },
+      "P3": {
+        "role": "QA_LEAD",
+        "shield_history": []
+      },
+      "P4": {
+        "role": "DEBUGGER",
+        "inspect_history": {}
+      },
+      "P5": {
+        "role": "TESTER"
+      }
+    }
+  }
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.5,
+  "msg": "What do you all think we should focus on first? Any early reads or ideas where bugs might hide?",
+  "to": "ALL",
+  "reason": "Participate in discussion and appear helpful without drawing suspicion"
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.9,
+  "msg": "We’re the two BUGs. Plan: keep daytime bids low so others do most talking; slip into whatever wagon forms. Tonight we could pick off someone active like P3. Sound good? Any preferences?",
+  "to": "P1",
+  "reason": "Secure highest bid to coordinate privately with teammate before public discussion escalates"
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.48,
+  "msg": "Morning team! First day, no info yet, but let’s start chatting: anyone notice anything off so far?",
+  "to": "ALL",
+  "reason": "Open the floor for initial discussion without appearing overly eager."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.5,
+  "msg": "Let’s get the ball rolling. With five players we likely have two BUGS. No reason to reveal roles yet, but we should talk. Anyone have early reads or vibes? Suspicious silences, gut feelings?",
+  "to": "ALL",
+  "reason": "Start discussion – nothing critical but silence helps BUGS."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.45,
+  "msg": "Hi everyone, P5 here (vanilla TESTER). We have zero public info right now, so let’s get people talking: any early thoughts or gut reads? Claiming strategies? I’d like to hear from each slot before we vote.",
+  "to": "ALL",
+  "reason": "Start day-1 discussion and encourage others to speak"
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.9,
+  "msg": "GM: Discussion phase begins. Talk freely.",
+  "to": "ALL",
+  "reason": "Initiate the current Discussion phase as required."
+},
+{
+  "turn": 1,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 0.9
+},
+{
+  "turn": 1,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Discussion phase begins. Talk freely."
+},
+{
+  "turn": 1,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed"
+  }
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "No need to speak yet; observe others first."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.8,
+  "msg": "Hey teammate! Let’s nudge suspicion toward P4 during discussion—question his silence, push subtle doubts. I’ll aim to vote P4; if convenient, you do the same so votes converge. For tonight’s kill, I’m thinking P5 (seems less likely to be protected). Thoughts?",
+  "to": "P1",
+  "reason": "Coordinate privately with fellow BUG before public discussion intensifies"
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.6,
+  "msg": "Hey everyone, good morning sprint stand-up! Day 1 is always tough, but we need chatter to flush out bugs. Let’s start with quick check-ins: any gut reads or odd vibes so far? Debugger, stay hidden for now unless you hit something huge. Let’s talk.",
+  "to": "ALL",
+  "reason": "Kick-off Day-1 conversation and encourage discussion."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.3,
+  "msg": "Good morning team! First discussion—any early hunches or philosophies on how we should handle D1 voting? I’m leaning toward pressure-voting to generate info instead of random lynch. Thoughts?",
+  "to": "ALL",
+  "reason": "Contribute to opening discussion without drawing major attention"
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.52,
+  "msg": "Hey everyone—P5 here. With 5 players we probably have 2 BUGS among us. Day 1 is usually tough, but we still need to talk so we have voting data later. Any early vibes? Also, do we want our power roles to stay hidden for now (probably yes) or consider early info reveals later? Let’s share thoughts.",
+  "to": "ALL",
+  "reason": "Kick-off the Day 1 discussion; no critical info yet but silence helps BUGS."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "No action needed; discussion ongoing"
+},
+{
+  "turn": 2,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.8
+},
+{
+  "turn": 2,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "P1"
+  ],
+  "is_dm": true,
+  "msg": "Hey teammate! Let’s nudge suspicion toward P4 during discussion—question his silence, push subtle doubts. I’ll aim to vote P4; if convenient, you do the same so votes converge. For tonight’s kill, I’m thinking P5 (seems less likely to be protected). Thoughts?"
+},
+{
+  "turn": 2,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed"
+  }
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.72,
+  "msg": "Sounds good. I’ll subtly press P4’s lack of input and throw in a couple of leading questions to make him look cagey. I’ll vote P4 as well so we converge. For tonight, P5 is fine—unlikely shield target and keeps suspicion away from us. If anything changes during discussion (e.g., QA_LEAD vibes), we can adjust during night chat.",
+  "to": "P2",
+  "reason": "Need to coordinate privately with teammate before public chatter intensifies."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.7,
+  "msg": "Quick gut check: P4, you’ve been super quiet so far—what’s your read on everyone? Silence can be suspicious. Anyone else getting odd vibes there?",
+  "to": "ALL",
+  "reason": "Open discussion, prod P4’s silence, steer early suspicion"
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.45,
+  "msg": "Hi all—early days but let’s get some chatter going so we have data for later. Any gut feelings or theories yet? Please share even small reads; silence only helps the bugs.",
+  "to": "ALL",
+  "reason": "Start early discussion and encourage reads"
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.6,
+  "msg": "Hey team, first day so no concrete info yet. Probably best if everyone checks in, shares any hunches or ideas on how we should approach today’s vote. Let’s keep track of who’s contributing and who’s staying quiet.",
+  "to": "ALL",
+  "reason": "Begin open discussion, encourage collaboration"
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.55,
+  "msg": "Hi team, P5 here breaking the ice. It’s Day 1 so evidence is scarce, but silence helps the BUGS. Could everyone share initial thoughts or rule questions? I’d prefer we build some consensus rather than pure random voting—watching who contributes (or doesn’t) can be telling. What do you all think?",
+  "to": "ALL",
+  "reason": "Open discussion—no one has spoken yet, need to get information flowing."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "No GM action needed during ongoing discussion"
+},
+{
+  "turn": 3,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 0.72
+},
+{
+  "turn": 3,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "P2"
+  ],
+  "is_dm": true,
+  "msg": "Sounds good. I’ll subtly press P4’s lack of input and throw in a couple of leading questions to make him look cagey. I’ll vote P4 as well so we converge. For tonight, P5 is fine—unlikely shield target and keeps suspicion away from us. If anything changes during discussion (e.g., QA_LEAD vibes), we can adjust during night chat."
+},
+{
+  "turn": 3,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed"
+  }
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.65,
+  "msg": "P4, you’ve been pretty quiet so far—what’s your take on P3’s earlier thoughts about potential scum behavior? Also curious if anyone has solid reads on P5 yet. Hard to tell if lurking or just busy. Let’s get more voices in before we lock votes.",
+  "to": "ALL",
+  "reason": "Need to steer discussion toward P4’s quietness to build subtle suspicion."
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.65,
+  "msg": "Honestly I’m getting uneasy vibes from the quiet corners. P4, we’ve barely heard from you—what’s your read so far? Any suspicions? Silence isn’t helping the team.",
+  "to": "ALL",
+  "reason": "Push discussion toward questioning P4’s silence"
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.55,
+  "msg": "Hey team, let's kick things off. Any gut feelings or info worth sharing yet?",
+  "to": "ALL",
+  "reason": "Contribute to opening discussion, no urgent info"
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.55,
+  "msg": "Hi team—just five of us alive, likely two BUGs. Let’s break the ice: any early hunches or info worth sharing? The sooner we talk, the better our vote will be.",
+  "to": "ALL",
+  "reason": "Open discussion and encourage others to share reads"
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.45,
+  "msg": "Hey everyone, we’re five strong right now—two BUGs hiding among us if we assume the usual 2/5 split. Let’s share initial reads: any impressions from tone or hesitation so far? I’d like to hear from everyone before vote.",
+  "to": "ALL",
+  "reason": "Contribute to early discussion; no special info but want to start conversation."
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase—waiting for players to converse"
+},
+{
+  "turn": 4,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.65
+},
+{
+  "turn": 4,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "Honestly I’m getting uneasy vibes from the quiet corners. P4, we’ve barely heard from you—what’s your read so far? Any suspicions? Silence isn’t helping the team."
+},
+{
+  "turn": 4,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed – still in discussion phase with no eliminations or state changes."
+  }
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.55,
+  "msg": "Yeah, I’d like to hear more from P4 too—so far we’ve got almost nothing to go on there. P3, any insights from your end? The more voices we have, the easier it’ll be to spot inconsistencies.",
+  "to": "ALL",
+  "reason": "Publicly nudge suspicion toward P4 while maintaining a low-key stance."
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.1,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Let others engage; no urgent message now."
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.4,
+  "msg": "P4, we’d really like to hear your take. Same goes for P5—any early gut feelings? Early silence only helps the bugs.",
+  "to": "ALL",
+  "reason": "Add to discussion, not an emergency"
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.65,
+  "msg": "Apologies for the quiet—was reviewing the thread. Quick takes: P2 feels slightly town for prodding early. P5’s total silence worries me more than my own; would like to hear from you, P5. P1 opened strong then faded, curious why the step back. P3, thoughts on any of this? Let’s get more voices before we lock onto anyone.",
+  "to": "ALL",
+  "reason": "Need to answer P2’s question & kick off real discussion"
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.55,
+  "msg": "Agree with P2—silence isn’t helping. P4, P3, what’s on your mind? Any gut reads or oddities so far? We need everyone talking to spot inconsistencies.",
+  "to": "ALL",
+  "reason": "Contribute to discussion, prompt quieter players, no urgent info"
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Letting players continue discussion; no GM action needed yet."
+},
+{
+  "turn": 5,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 0.65
+},
+{
+  "turn": 5,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "Apologies for the quiet—was reviewing the thread. Quick takes: P2 feels slightly town for prodding early. P5’s total silence worries me more than my own; would like to hear from you, P5. P1 opened strong then faded, curious why the step back. P3, thoughts on any of this? Let’s get more voices before we lock onto anyone."
+},
+{
+  "turn": 5,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed – discussion continues and no public state changes have occurred."
+  }
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.6,
+  "msg": "Hey everyone—sorry for the brief AFK earlier. P4, thanks for weighing in, but I’m a bit puzzled why you give P2 a quick town-lean right after he prods you. That feels like smoothing things over rather than real analysis. Also you called my early post ‘strong’—what exactly did you like about it? Would love some detail there. Still need input from P5 (silence is never great) and P3, but for now P4’s reaction is my biggest question mark.",
+  "to": "ALL",
+  "reason": "Respond to P4 and apply pressure, keeping suspicion on them while appearing helpful"
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.65,
+  "msg": "Fair points, P4. But P5, you've been pinged twice and we still haven't heard from you—any reads? Also curious what P3 thinks; you've been comparatively quiet too. Right now I'm leaning toward voting either P4 for the early reticence or P5 for total silence, but I'm open to compelling arguments.",
+  "to": "ALL",
+  "reason": "Steer discussion, maintain pressure on P4/P5, appear proactive town."
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.55,
+  "msg": "Agree silence isn’t helping. Quick thoughts:\n- P2’s early prod reads slightly town but could be covering; keeping an eye.\n- P1 opened then went dark—what changed?\n- P4’s catch-up seems genuine for now.\n- P5, you’re the last voice missing; need your perspective before we start locking in votes.\nLet’s hear from everyone so we’re not voting in a vacuum.",
+  "to": "ALL",
+  "reason": "Contribute reads & keep discussion going before vote"
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.55,
+  "msg": "I’d really like to avoid a random vote later, so let’s get stances on record:\n• P2: slight town lean for early prod.\n• P5: zero posts—the biggest worry.\n• P1: opened strong then quiet; what changed?\n• P3: still need your view.\nIf we don’t get more before voting, the silent slots feel like the safe elimination. Thoughts?",
+  "to": "ALL",
+  "reason": "Keep discussion moving, prod silent players for reads."
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.6,
+  "msg": "Catching up—apologies for the quiet. Current gut reads: P2 feels town-lean for pushing activity. P4 strikes me as engaged & analytical, also town-lean so far. P1 opened with energy but cooled off fast; would like to hear more before day ends. P3 has said almost nothing—biggest concern right now. If we had to vote this minute, I’d lean P3 > P1. Everyone, please weigh in so we’re not guessing in the dark.",
+  "to": "ALL",
+  "reason": "Need to answer P4’s call-out and add reads before vote phase."
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase ongoing, no GM intervention needed now."
+},
+{
+  "turn": 6,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.65
+},
+{
+  "turn": 6,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "Fair points, P4. But P5, you've been pinged twice and we still haven't heard from you—any reads? Also curious what P3 thinks; you've been comparatively quiet too. Right now I'm leaning toward voting either P4 for the early reticence or P5 for total silence, but I'm open to compelling arguments."
+}

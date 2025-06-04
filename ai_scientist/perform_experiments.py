@@ -33,6 +33,8 @@ def run_experiment(
     timeout: int = 7200,
     use_docker: bool = False,
     docker_image: str = "ai-scientist:latest",
+    client=None,
+    model: str = "gpt-4o-mini",
 ):
     """Run ``experiment.py`` either locally or inside a Docker container.
 
@@ -49,10 +51,25 @@ def run_experiment(
         restricted resources.
     docker_image : str, optional
         Name of the Docker image to use when ``use_docker`` is ``True``.
+    client : optional
+        LLM client object (for determining API type).
+    model : str, optional
+        LLM model name to pass to experiment.py.
     """
     cwd = osp.abspath(folder_name)
     if use_docker and shutil.which("docker") is None:
         raise EnvironmentError("Docker executable not found. Cannot use --docker")
+    
+    # Determine API from client type or default to openai
+    api = "openai"  # Default
+    if client is not None:
+        client_type = type(client).__name__.lower()
+        if "anthropic" in client_type:
+            api = "anthropic"
+        elif "openai" in client_type:
+            api = "openai"
+        # Add more API detection as needed
+    
     # COPY CODE SO WE CAN SEE IT.
     shutil.copy(
         osp.join(folder_name, "experiment.py"),
@@ -79,6 +96,8 @@ def run_experiment(
             "python",
             "experiment.py",
             f"--out_dir=run_{run_num}",
+            f"--model={model}",
+            f"--api={api}",
         ]
         run_cwd = None
     else:
@@ -86,6 +105,8 @@ def run_experiment(
             "python",
             "experiment.py",
             f"--out_dir=run_{run_num}",
+            f"--model={model}",
+            f"--api={api}",
         ]
         run_cwd = cwd
     try:
@@ -197,6 +218,8 @@ def perform_experiments(
     *,
     use_docker: bool = False,
     docker_image: str = "ai-scientist:latest",
+    client=None,
+    model: str = "gpt-4o-mini",
 ) -> bool:
     ## RUN EXPERIMENT
     current_iter = 0
@@ -220,6 +243,8 @@ def perform_experiments(
             run,
             use_docker=use_docker,
             docker_image=docker_image,
+            client=client,
+            model=model,
         )
         if return_code == 0:
             run += 1

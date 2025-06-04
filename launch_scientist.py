@@ -75,6 +75,11 @@ def parse_arguments():
         help="Skip idea generation and use existing ideas",
     )
     parser.add_argument(
+        "--skip-novelty-check", 
+        action="store_true",
+        help="Skip novelty checking of ideas",
+    )
+    parser.add_argument(
         "--experiment",
         type=str,
         default="social_deduction_game",
@@ -84,6 +89,28 @@ def parse_arguments():
         "--parallel",
         action="store_true",
         help="Run experiments in parallel",
+    )
+    parser.add_argument(
+        "--writeup",
+        type=str,
+        default="latex",
+        help="Writeup format to use",
+    )
+    parser.add_argument(
+        "--improvement",
+        action="store_true", 
+        help="Enable writeup improvement",
+    )
+    parser.add_argument(
+        "--docker",
+        action="store_true",
+        help="Use Docker for experiments",
+    )
+    parser.add_argument(
+        "--docker-image",
+        type=str,
+        default="ai-scientist:latest",
+        help="Docker image to use",
     )
     parser.add_argument(
         "--max-parallel",
@@ -458,574 +485,11 @@ def parse_arguments():
         help="Maximum Ti count to use for experiments",
     )
     parser.add_argument(
-        "--max-v",
-        type=float,
-        default=1.0,
-        help="Maximum V count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-cr",
-        type=float,
-        default=1.0,
-        help="Maximum Cr count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-mn",
-        type=float,
-        default=1.0,
-        help="Maximum Mn count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-fe",
-        type=float,
-        default=1.0,
-        help="Maximum Fe count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-co",
-        type=float,
-        default=1.0,
-        help="Maximum Co count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ni",
-        type=float,
-        default=1.0,
-        help="Maximum Ni count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-cu",
-        type=float,
-        default=1.0,
-        help="Maximum Cu count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-zn",
-        type=float,
-        default=1.0,
-        help="Maximum Zn count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ga",
-        type=float,
-        default=1.0,
-        help="Maximum Ga count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ge",
-        type=float,
-        default=1.0,
-        help="Maximum Ge count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-as",
-        type=float,
-        default=1.0,
-        help="Maximum As count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-se",
-        type=float,
-        default=1.0,
-        help="Maximum Se count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-br",
-        type=float,
-        default=1.0,
-        help="Maximum Br count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-kr",
-        type=float,
-        default=1.0,
-        help="Maximum Kr count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-rb",
-        type=float,
-        default=1.0,
-        help="Maximum Rb count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-sr",
-        type=float,
-        default=1.0,
-        help="Maximum Sr count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-y",
-        type=float,
-        default=1.0,
-        help="Maximum Y count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-zr",
-        type=float,
-        default=1.0,
-        help="Maximum Zr count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-nb",
-        type=float,
-        default=1.0,
-        help="Maximum Nb count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-mo",
-        type=float,
-        default=1.0,
-        help="Maximum Mo count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-tc",
-        type=float,
-        default=1.0,
-        help="Maximum Tc count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ru",
-        type=float,
-        default=1.0,
-        help="Maximum Ru count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-rh",
-        type=float,
-        default=1.0,
-        help="Maximum Rh count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-pd",
-        type=float,
-        default=1.0,
-        help="Maximum Pd count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ag",
-        type=float,
-        default=1.0,
-        help="Maximum Ag count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-cd",
-        type=float,
-        default=1.0,
-        help="Maximum Cd count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-in",
-        type=float,
-        default=1.0,
-        help="Maximum In count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-sn",
-        type=float,
-        default=1.0,
-        help="Maximum Sn count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-sb",
-        type=float,
-        default=1.0,
-        help="Maximum Sb count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-te",
-        type=float,
-        default=1.0,
-        help="Maximum Te count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-xe",
-        type=float,
-        default=1.0,
-        help="Maximum Xe count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-cs",
-        type=float,
-        default=1.0,
-        help="Maximum Cs count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ba",
-        type=float,
-        default=1.0,
-        help="Maximum Ba count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-la",
-        type=float,
-        default=1.0,
-        help="Maximum La count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ce",
-        type=float,
-        default=1.0,
-        help="Maximum Ce count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-pr",
-        type=float,
-        default=1.0,
-        help="Maximum Pr count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-nd",
-        type=float,
-        default=1.0,
-        help="Maximum Nd count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-pm",
-        type=float,
-        default=1.0,
-        help="Maximum Pm count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-sm",
-        type=float,
-        default=1.0,
-        help="Maximum Sm count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-eu",
-        type=float,
-        default=1.0,
-        help="Maximum Eu count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-gd",
-        type=float,
-        default=1.0,
-        help="Maximum Gd count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-tb",
-        type=float,
-        default=1.0,
-        help="Maximum Tb count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-dy",
-        type=float,
-        default=1.0,
-        help="Maximum Dy count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ho",
-        type=float,
-        default=1.0,
-        help="Maximum Ho count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-er",
-        type=float,
-        default=1.0,
-        help="Maximum Er count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-tm",
-        type=float,
-        default=1.0,
-        help="Maximum Tm count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-yb",
-        type=float,
-        default=1.0,
-        help="Maximum Yb count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-lu",
-        type=float,
-        default=1.0,
-        help="Maximum Lu count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-hf",
-        type=float,
-        default=1.0,
-        help="Maximum Hf count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ta",
-        type=float,
-        default=1.0,
-        help="Maximum Ta count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-w",
-        type=float,
-        default=1.0,
-        help="Maximum W count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-re",
-        type=float,
-        default=1.0,
-        help="Maximum Re count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-os",
-        type=float,
-        default=1.0,
-        help="Maximum Os count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ir",
-        type=float,
-        default=1.0,
-        help="Maximum Ir count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-pt",
-        type=float,
-        default=1.0,
-        help="Maximum Pt count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-au",
-        type=float,
-        default=1.0,
-        help="Maximum Au count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-hg",
-        type=float,
-        default=1.0,
-        help="Maximum Hg count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-tl",
-        type=float,
-        default=1.0,
-        help="Maximum Tl count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-pb",
-        type=float,
-        default=1.0,
-        help="Maximum Pb count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-bi",
-        type=float,
-        default=1.0,
-        help="Maximum Bi count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-po",
-        type=float,
-        default=1.0,
-        help="Maximum Po count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-at",
-        type=float,
-        default=1.0,
-        help="Maximum At count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-rn",
-        type=float,
-        default=1.0,
-        help="Maximum Rn count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-fr",
-        type=float,
-        default=1.0,
-        help="Maximum Fr count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ra",
-        type=float,
-        default=1.0,
-        help="Maximum Ra count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ac",
-        type=float,
-        default=1.0,
-        help="Maximum Ac count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-th",
-        type=float,
-        default=1.0,
-        help="Maximum Th count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-pa",
-        type=float,
-        default=1.0,
-        help="Maximum Pa count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-u",
-        type=float,
-        default=1.0,
-        help="Maximum U count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-np",
-        type=float,
-        default=1.0,
-        help="Maximum Np count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-pu",
-        type=float,
-        default=1.0,
-        help="Maximum Pu count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-am",
-        type=float,
-        default=1.0,
-        help="Maximum Am count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-cm",
-        type=float,
-        default=1.0,
-        help="Maximum Cm count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-bk",
-        type=float,
-        default=1.0,
-        help="Maximum Bk count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-cf",
-        type=float,
-        default=1.0,
-        help="Maximum Cf count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-es",
-        type=float,
-        default=1.0,
-        help="Maximum Es count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-fm",
-        type=float,
-        default=1.0,
-        help="Maximum Fm count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-md",
-        type=float,
-        default=1.0,
-        help="Maximum Md count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-no",
-        type=float,
-        default=1.0,
-        help="Maximum No count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-lr",
-        type=float,
-        default=1.0,
-        help="Maximum Lr count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-rf",
-        type=float,
-        default=1.0,
-        help="Maximum Rf count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-db",
-        type=float,
-        default=1.0,
-        help="Maximum Db count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-sg",
-        type=float,
-        default=1.0,
-        help="Maximum Sg count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-bh",
-        type=float,
-        default=1.0,
-        help="Maximum Bh count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-hs",
-        type=float,
-        default=1.0,
-        help="Maximum Hs count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-mt",
-        type=float,
-        default=1.0,
-        help="Maximum Mt count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ds",
-        type=float,
-        default=1.0,
-        help="Maximum Ds count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-rg",
-        type=float,
-        default=1.0,
-        help="Maximum Rg count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-cn",
-        type=float,
-        default=1.0,
-        help="Maximum Cn count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-nh",
-        type=float,
-        default=1.0,
-        help="Maximum Nh count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-fl",
-        type=float,
-        default=1.0,
-        help="Maximum Fl count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-mc",
-        type=float,
-        default=1.0,
-        help="Maximum Mc count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-lv",
-        type=float,
-        default=1.0,
-        help="Maximum Lv count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-ts",
-        type=float,
-        default=1.0,
-        help="Maximum Ts count to use for experiments",
-    )
-    parser.add_argument(
-        "--max-og",
-        type=float,
-        default=1.0,
-        help="Maximum Og count to use for experiments",
+        "--engine",
+        type=str,
+        default="semanticscholar",
+        choices=["semanticscholar", "openalex"],
+        help="Scholar engine to use for citations",
     )
     return parser.parse_args()
 
@@ -1069,6 +533,8 @@ def worker(
         gpu_id,
         use_docker,
         docker_image,
+        experiment="social_deduction_game",
+        engine="semanticscholar",
 ):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
     print(f"Worker {gpu_id} started.")
@@ -1088,6 +554,8 @@ def worker(
             use_docker,
             docker_image,
             log_file=True,
+            experiment=experiment,
+            engine=engine,
         )
         print(f"Completed idea: {idea['Name']}, Success: {success}")
     print(f"Worker {gpu_id} finished.")
@@ -1105,6 +573,8 @@ def do_idea(
         use_docker=False,
         docker_image="ai-scientist:latest",
         log_file=False,
+        experiment="social_deduction_game",
+        engine="semanticscholar",
 ):
     ## CREATE PROJECT FOLDER
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -1117,7 +587,14 @@ def do_idea(
         baseline_results = json.load(f)
     # Check if baseline_results is a dictionary before extracting means
     if isinstance(baseline_results, dict):
-        baseline_results = {k: v["means"] for k, v in baseline_results.items()}
+        # Safely extract means, handling cases where values don't have 'means' key
+        processed_results = {}
+        for k, v in baseline_results.items():
+            if isinstance(v, dict) and "means" in v:
+                processed_results[k] = v["means"]
+            else:
+                processed_results[k] = v
+        baseline_results = processed_results
     exp_file = osp.join(folder_name, "experiment.py")
     vis_file = osp.join(folder_name, "plot.py")
     notes = osp.join(folder_name, "notes.txt")
@@ -1169,6 +646,8 @@ def do_idea(
                 baseline_results,
                 use_docker=use_docker,
                 docker_image=docker_image,
+                client=client,
+                model=client_model,
             )
         except Exception as e:
             print(f"Error during experiments: {e}")
@@ -1203,12 +682,12 @@ def do_idea(
             )
             try:
                 # Check if this is a social deduction game experiment
-                if "social_deduction" in base_dir or args.experiment == "social_deduction_game":
+                if "social_deduction" in base_dir or experiment == "social_deduction_game":
                     # Use game manual writeup instead of research paper
-                    perform_game_manual_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
+                    perform_game_manual_writeup(idea, folder_name, coder, client, client_model, engine=engine)
                 else:
                     # Use standard research paper writeup
-                    perform_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
+                    perform_writeup(idea, folder_name, coder, client, client_model, engine=engine)
             except Exception as e:
                 print(f"Failed to perform writeup: {e}")
                 return False
@@ -1221,7 +700,7 @@ def do_idea(
         ## REVIEW PAPER
         if writeup == "latex":
             try:
-                if "social_deduction" in base_dir or args.experiment == "social_deduction_game":
+                if "social_deduction" in base_dir or experiment == "social_deduction_game":
                     # Use game manual review for social deduction games
                     manual_text = load_paper(f"{folder_name}/{idea['Name']}.pdf")
                     review = perform_game_manual_review(
@@ -1296,7 +775,7 @@ if __name__ == "__main__":
     api, model_name = parse_model_spec(args.model)
     
     # Create client with parsed values
-    client, client_model = create_client(model_name, api=api)
+    client, client_model = create_client(model_name)
 
     base_dir = osp.join("templates", args.experiment)
     results_dir = osp.join("results", args.experiment)
@@ -1316,12 +795,20 @@ if __name__ == "__main__":
             model=client_model,
             search_api=args.search_api,
         )
+    else:
+        # If novelty checking is skipped, mark all ideas as novel
+        for idea in ideas:
+            # Safety check: only process dictionary items with required fields
+            if isinstance(idea, dict) and 'Name' in idea:
+                idea["novel"] = True
 
     with open(osp.join(base_dir, "ideas.json"), "w") as f:
         json.dump(ideas, f, indent=4)
 
-    novel_ideas = [idea for idea in ideas if idea["novel"]]
+    novel_ideas = [idea for idea in ideas if isinstance(idea, dict) and idea.get("novel", False)]
     # novel_ideas = list(reversed(novel_ideas))
+
+    available_gpus = get_available_gpus()
 
     if args.parallel > 0:
         print(f"Running {args.parallel} parallel processes")
@@ -1346,6 +833,8 @@ if __name__ == "__main__":
                     gpu_id,
                     args.docker,
                     args.docker_image,
+                    args.experiment,
+                    args.engine,
                 ),
             )
             p.start()
@@ -1375,6 +864,8 @@ if __name__ == "__main__":
                     args.improvement,
                     args.docker,
                     args.docker_image,
+                    experiment=args.experiment,
+                    engine=args.engine,
                 )
                 print(f"Completed idea: {idea['Name']}, Success: {success}")
             except Exception as e:

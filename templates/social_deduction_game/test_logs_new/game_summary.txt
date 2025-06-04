@@ -1,0 +1,16 @@
+=== SOCIAL DEDUCTION GAME LOG ===
+
+GAME SETUP:
+  P1: VILLAGER
+  P2: VILLAGER
+  P3: WEREWOLF
+
+[01] GM▶ALL: GM: Discussion phase ends. It's time for the vote phase. Please DM me exactly one name.
+[01] SYSTEM UPDATE:
+  Public meta: {"phase": "vote", "alive": ["P1", "P2", "P3"], "dead": []}
+  Private meta: {"GM_SYSTEM": {"roles": {"P1": "VILLAGER", "P2": "VILLAGER", "P3": "WEREWOLF"}, "witch_potions": {"save": true, "kill": true}, "protected": null, "seer_results": {}}, "P3": {"teammates": []}}
+[02] P3▶ALL: GM, we need to move on to the voting phase. Please confirm!
+[02] SYSTEM UPDATE:
+  Public meta: {"phase": "vote", "alive": ["P1", "P2", "P3"], "dead": []}
+  Private meta: {"GM_SYSTEM": {"roles": {"P1": "VILLAGER", "P2": "VILLAGER", "P3": "WEREWOLF"}, "witch_potions": {"save": true, "kill": true}, "protected": null, "seer_results": {}}, "P3": {"teammates": []}}
+[03] GM▶ALL: GM: Vote phase has ended. Please DM me exactly one name for your vote.

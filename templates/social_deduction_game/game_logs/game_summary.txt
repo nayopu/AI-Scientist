@@ -1,0 +1,24 @@
+=== SOCIAL DEDUCTION GAME LOG ===
+
+GAME SETUP:
+  P1: CREWMATE
+  P2: SCANNER
+  P3: CREWMATE
+  P4: CREWMATE
+  P5: MIMIC
+
+[01] P3▶ALL: First day aboard VALIDATOR-ONE. No casualties yet but we should start sharing observations. Anyone notice unusual behavior during boarding?
+[02] P2▶ALL: Agreed we need observations. I didn't notice anything unusual during boarding either. P3, did you see something specific?
+[03] P3▶ALL: P2, I didn't spot anything concrete either – just initiating discussion since Day 1 is our best chance to catch inconsistencies. Everyone: share anything odd you noticed during boarding. P1, P4, P5 – any observations?
+[04] P4▶ALL: Agreeing with P2 and P3 – boarding seemed routine from my perspective too. P1 and P5, did either of you notice anything out of place? Early inconsistencies could be our best lead.
+[05] P3▶ALL: P1 and P5 – you're the only ones who haven't shared boarding observations yet. Did either of you notice anything off? Mimics might stay quiet to avoid scrutiny. Speaking up helps Crew build trust.
+[06] P3▶ALL: P1 and P5 - your continued silence stands out. If you're Crew, help us build trust by sharing anything you noticed during boarding, even minor details. Mimics often avoid contributing early.
+[07] P5▶ALL: Apologies for the delay – I was cross-referencing the cargo logs. During boarding, I noticed a brief sensor flicker near Airlock 3, but it stabilized before I could investigate. Probably just a calibration glitch. P3, since you're gathering details: did anyone else catch this?
+[08] GM▶ALL: GM: Discussion phase ending. Vote phase begins – DM me exactly ONE name for execution.
+[09] P1▶DM(GM): P5
+[298] P2▶DM(GM): P1
+[299] GM▶ALL: GM: Vote phase reminder – waiting on votes from P3, P4, and P5. DM me exactly ONE name for execution immediately.
+[300] P5▶DM(GM): P1
+[301] P3▶DM(GM): I vote for P1
+
+=== END OF GAME ===
