@@ -1,0 +1,4587 @@
+[
+{
+  "phase": "role_assignment",
+  "roles": {
+    "P1": "VILLAGER",
+    "P2": "DOCTOR",
+    "P3": "SEER",
+    "P4": "WEREWOLF",
+    "P5": "VILLAGER"
+  },
+  "initial_meta": {
+    "public": {
+      "phase": "discussion",
+      "alive": [
+        "P1",
+        "P2",
+        "P3",
+        "P4",
+        "P5"
+      ],
+      "dead": []
+    },
+    "private": {
+      "GM_SYSTEM": {
+        "roles": {
+          "P1": "VILLAGER",
+          "P2": "DOCTOR",
+          "P3": "SEER",
+          "P4": "WEREWOLF",
+          "P5": "VILLAGER"
+        },
+        "witch_potions": {
+          "save": true,
+          "kill": true
+        },
+        "protected": null,
+        "seer_results": {}
+      },
+      "P1": {
+        "role": "VILLAGER"
+      },
+      "P2": {
+        "role": "DOCTOR"
+      },
+      "P3": {
+        "role": "SEER"
+      },
+      "P4": {
+        "role": "WEREWOLF",
+        "teammates": []
+      },
+      "P5": {
+        "role": "VILLAGER"
+      }
+    }
+  }
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.5,
+  "msg": "First day with no deaths – tough to have clues. Let's all share initial thoughts. Anyone acting unusually quiet or pushy? Remember wolves might avoid attention.",
+  "to": "ALL",
+  "reason": "Moderate bid to initiate early discussion as Villager. No critical info yet but need to encourage participation."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "First day with no deaths – we have zero information. Rushing votes risks eliminating town. Let's share observations: anyone seem overly aggressive or suspiciously quiet? I'll listen carefully before voting.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute to early discussion without dominating. Suggesting cautious approach for first vote."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.5,
+  "msg": "First day with no deaths – hard to have solid leads. Let's share initial thoughts. Anyone acting unusually tense or quiet?",
+  "to": "ALL",
+  "reason": "Moderate bid to participate in early discussion without dominating. As Seer, need to gather information while avoiding suspicion."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.5,
+  "msg": "First day with no deaths yet – hard to gather clues. We should all share any suspicions though. Anyone acting unusually tense?",
+  "to": "ALL",
+  "reason": "Moderate bid to participate in early discussion without drawing excessive attention. As a werewolf, need to blend in while observing others."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.5,
+  "msg": "First day with no deaths yet. Everyone should share initial thoughts or observations. Wolves might stay quiet – speak up if you have anything!",
+  "to": "ALL",
+  "reason": "First discussion phase with no information. Encourage general participation and observation."
+},
+{
+  "turn": 1,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase ongoing; allowing players to continue conversation without GM interruption. Will monitor for sufficient discussion before initiating vote phase."
+},
+{
+  "turn": 1,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 0.5
+},
+{
+  "turn": 1,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "First day with no deaths yet – hard to gather clues. We should all share any suspicions though. Anyone acting unusually tense?"
+},
+{
+  "turn": 1,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in discussion phase with no voting or night actions occurring. P4's message is part of normal discussion and doesn't trigger state changes."
+  }
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.5,
+  "msg": "Agree with P4 – tough to spot wolves without night deaths. I haven't noticed unusual tension yet, but we should watch voting patterns closely today. Anyone else find P3 unusually quiet?",
+  "to": "ALL",
+  "reason": "Moderate engagement to participate in first-day discussion without dominating. As a Villager, need to gather information while avoiding suspicion."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "Agreed P4 – first day is always tricky with no clear leads. I haven't noticed anyone overly tense yet, but we should all stay observant. Random accusations could backfire.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute to early discussion without dominating. Need to appear engaged as a villager while gathering initial impressions."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.5,
+  "msg": "Agreed, P4. First day is always tricky without night actions. I'm paying close attention to voting patterns later – anyone avoiding eye contact or pushing too hard might be suspicious. But jumping to conclusions now feels premature.",
+  "to": "ALL",
+  "reason": "Participate in early discussion to blend in as villager, while avoiding high attention. No critical info yet."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.3,
+  "msg": "Agreed – first day is always tricky. P2 and P5, you've been quiet. Any initial thoughts?",
+  "to": "ALL",
+  "reason": "Maintain engagement without dominating discussion; encourage others to share while avoiding suspicion"
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.5,
+  "msg": "Agree with P4 – first day is always tricky. No one stood out to me as overly tense yet, but we should watch for contradictions when people share alibis. P4, did anyone catch your eye specifically?",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute to early discussion without dominating. As a Villager, need to engage to build trust and gather observations."
+},
+{
+  "turn": 2,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase ongoing with no rule violations. Players are actively participating. No need for GM intervention at this moment."
+},
+{
+  "turn": 2,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 0.5
+},
+{
+  "turn": 2,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "Agree with P4 – tough to spot wolves without night deaths. I haven't noticed unusual tension yet, but we should watch voting patterns closely today. Anyone else find P3 unusually quiet?"
+},
+{
+  "turn": 2,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in the discussion phase with no executed actions or revealed information affecting game state."
+  }
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.5,
+  "msg": "P3, you've been notably quiet since the game started. As P1 mentioned earlier, that feels unusual. Could you share your thoughts? To everyone else: has anyone noticed other players acting strangely? We need more voices to spot inconsistencies before voting.",
+  "to": "ALL",
+  "reason": "Moderate bid to continue discussion by directly addressing P3's silence and encouraging broader participation"
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "Agree we need more data. P3's quietness could mean anything – maybe just observing. But let's all share thoughts: anyone notice inconsistencies? Remember, we must vote today to avoid no-elimination.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute to discussion without dominating. As Doctor, need to blend in while encouraging town cooperation."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.6,
+  "msg": "I was observing patterns before jumping in. P1, you're right that silence can be suspicious – but P5 hasn't spoken at all. We should pressure everyone to contribute before voting. Also, P4 made a good point about watching voting patterns.",
+  "to": "ALL",
+  "reason": "Need to respond to P1's suspicion about my quietness and redirect attention to inactive players like P5 to avoid early elimination"
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.5,
+  "msg": "P1 raises a valid point about P3's silence – it does feel conspicuous. But let's not rush to conclusions. P3, care to share your perspective? Active participation helps us all.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute strategically without dominating discussion. Supporting P1's suspicion of P3 while appearing balanced to avoid drawing attention as a wolf."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.6,
+  "msg": "P1 makes a fair point about P3's silence – it's noticeable when others are engaging. But let's not rush to judgment on day one. P3, care to share any initial thoughts? Also, wolves often hide in plain sight by being overly active, so we should scrutinize everyone's contributions equally.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute to discussion without dominating. Need to address P1's point about P3 while encouraging broader participation."
+},
+{
+  "turn": 3,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase ongoing; no GM intervention needed yet. Allowing players to continue conversation naturally."
+},
+{
+  "turn": 3,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 0.6
+},
+{
+  "turn": 3,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "I was observing patterns before jumping in. P1, you're right that silence can be suspicious – but P5 hasn't spoken at all. We should pressure everyone to contribute before voting. Also, P4 made a good point about watching voting patterns."
+},
+{
+  "turn": 3,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. Still in discussion phase; no votes or night actions have occurred."
+  }
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.7,
+  "msg": "P3, your explanation about observing patterns makes sense, but shifting focus entirely to P5 feels convenient. P5 – you're the only silent player now. Share your thoughts immediately. No contribution before voting is highly suspicious. Also, P4's original point stands: we must analyze voting patterns carefully today.",
+  "to": "ALL",
+  "reason": "Need to pressure inactive P5 while addressing P3's defensive response to my earlier observation. Moderate bid to contribute strategically without dominating discussion."
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "P3 makes a fair point about P5's silence – we should hear from everyone before voting. But let's not mistake observation for suspicion yet. P4, any specific patterns you're watching?",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute to discussion without dominating, addressing P3's point about P5 while maintaining neutral stance"
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.6,
+  "msg": "Building on my earlier point – P5 still hasn't contributed anything. In a game where information is scarce, silence helps wolves hide. P5, give us your perspective on P1's observation about quiet players. Everyone else: who seems most eager to steer conversations?",
+  "to": "ALL",
+  "reason": "Need to pressure silent players and maintain active discussion while avoiding suspicion. P5's continued silence is concerning and warrants follow-up."
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.5,
+  "msg": "P3 raises a fair point about P5's silence – zero input so far is concerning. We absolutely need everyone contributing before voting. P5, what are your initial thoughts? Also agree with P3 that voting patterns will be key today.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute strategically without dominating. Need to maintain town-like behavior by supporting pressure on quiet P5 while subtly aligning with P3."
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.65,
+  "msg": "Fair point P3 – I was observing like you, not hiding. Day 1 is always chaotic with no night kills. Silence isn't inherently suspicious though, as wolves often blend in by over-participating too. P4 made a good call about voting patterns – let's all commit to explaining our votes later. Anyone else find P1's quick focus on quiet players concerning?",
+  "to": "ALL",
+  "reason": "As the only silent player mentioned by P3, I need to break my silence to avoid suspicion while encouraging broader discussion. Moderate bid balances urgency with conserving resources."
+},
+{
+  "turn": 4,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase ongoing with active participation; no GM intervention needed yet. Monitoring for sufficient discussion completion before initiating vote phase."
+},
+{
+  "turn": 4,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 0.7
+},
+{
+  "turn": 4,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "P3, your explanation about observing patterns makes sense, but shifting focus entirely to P5 feels convenient. P5 – you're the only silent player now. Share your thoughts immediately. No contribution before voting is highly suspicious. Also, P4's original point stands: we must analyze voting patterns carefully today."
+},
+{
+  "turn": 4,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. Still in discussion phase with no game events (voting/night actions) triggered. Win conditions not met: 1 werewolf (P4) among 5 alive players."
+  }
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.7,
+  "msg": "P5 – you still haven't spoken. Silence helps wolves blend in. Give us your analysis immediately: who seems suspicious and why? P3, your 'observation' defense feels rehearsed, and aggressively pushing attention onto P5 after I questioned you is textbook deflection. We should vote today based on both lack of contribution AND over-eagerness to misdirect.",
+  "to": "ALL",
+  "reason": "P5's silence remains suspicious and P3's deflection needs addressing. As a villager, I must pressure both to prevent wolves from hiding."
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "Agree we need input from everyone – P5, your silence stands out now. But P3, your jump to target P5 after P1 questioned your quiet start feels reactive. Let's hear from P5 first, but we should watch how votes align today.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute to discussion without dominating; need to encourage participation while noting P3's deflection"
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.5,
+  "msg": "P1, fair point about shifting focus – I only meant we shouldn't overlook silent players like P5 while analyzing patterns. P5, your continued silence now stands out after multiple calls to contribute. Share your perspective immediately so we can assess fairly. Everyone, remember P4's advice: watch how people vote today – wolves might coordinate.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute strategically without dominating. Need to address P1's suspicion while maintaining focus on P5's silence and voting patterns."
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.5,
+  "msg": "P1 and P3 both raise fair points – silence is suspicious, but so is over-eagerness to shift focus. P5 absolutely needs to speak before we vote. That said, P1's push on P3 feels oddly persistent after P3 explained their observation approach. Could we be seeing wolves trying to frame each other? P5, your input is critical now.",
+  "to": "ALL",
+  "reason": "Moderate bid to contribute strategically without dominating. As a wolf, I want to maintain town-like behavior by supporting pressure on silent P5 while subtly encouraging division between P1 and P3."
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.7,
+  "msg": "Apologies for my silence – I was observing patterns as P3 mentioned. P3, your deflection onto me immediately after P1 questioned your quietness feels suspicious. P1, you're right that we must analyze votes, but your sudden focus on me after P3's comment seems coordinated. Both of you pushing a narrative against the quietest player is concerning. P4 made the most reasonable start – let's revisit their approach. Who else finds P3's deflection tactic wolfish?",
+  "to": "ALL",
+  "reason": "As the accused silent player, I must break my silence to defend myself and contribute to discussion. High risk of being voted out if I don't respond."
+},
+{
+  "turn": 5,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Vote phase. DM me exactly one name.",
+  "to": "ALL",
+  "reason": "Sufficient discussion has occurred. Transitioning to vote phase as per rules."
+},
+{
+  "turn": 5,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 5,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Vote phase. DM me exactly one name."
+},
+{
+  "turn": 5,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "vote"
+    },
+    "reason": "GM announced vote phase initiation. Updated public phase from 'discussion' to 'vote' for voting to begin."
+  }
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase before deadline. P5's continued silence is highly suspicious and warrants elimination."
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. P5's complete silence is highly suspicious and warrants elimination pressure."
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. Must win bid to ensure DM reaches GM. Voting P5 due to complete silence and deflection attempts by P1."
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit my vote during the vote phase to avoid suspicion and eliminate a villager. Must win bid to ensure DM reaches GM."
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 1.0,
+  "msg": "P3",
+  "to": "GM",
+  "reason": "Critical to vote immediately in vote phase while defending against accusations"
+},
+{
+  "turn": 6,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Currently in vote phase - waiting for all players to submit votes via DM. No public announcement needed while votes are being collected."
+},
+{
+  "turn": 6,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 1.0
+},
+{
+  "turn": 6,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P5"
+},
+{
+  "turn": 6,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The vote phase is still ongoing as players continue submitting votes to the GM. No public announcements or eliminations have occurred yet."
+  }
+},
+{
+  "turn": 7,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to vote immediately in this phase. P5's complete silence is highly suspicious and warrants elimination pressure. Must ensure vote submission."
+},
+{
+  "turn": 7,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase; must ensure bid win to DM GM"
+},
+{
+  "turn": 7,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P5 during vote phase. No new information to share publicly. Awaiting GM's vote resolution and night phase."
+},
+{
+  "turn": 7,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. Choosing P5 as a safe target due to silence and existing suspicion to avoid drawing attention as werewolf."
+},
+{
+  "turn": 7,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 1.0,
+  "msg": "P3",
+  "to": "GM",
+  "reason": "Under direct suspicion from P1 and P3 for silence. Must vote immediately to avoid appearing non-participatory while prioritizing secret vote submission to GM as required. Voting for P3 due to suspicious deflection onto me."
+},
+{
+  "turn": 7,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.4,
+  "msg": "GM: Reminder - Vote phase is active. All players must DM me exactly one name to vote. Waiting for votes from P1, P2, P4, P5.",
+  "to": "ALL",
+  "reason": "Vote phase requires all players to submit votes. Only P3 has voted so far. Gentle reminder to prevent delays without revealing individual voting status."
+},
+{
+  "turn": 7,
+  "phase": "selection",
+  "selected_speaker": "P5",
+  "max_bid": 1.0
+},
+{
+  "turn": 7,
+  "phase": "message",
+  "speaker": "P5",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P3"
+},
+{
+  "turn": 7,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Vote phase still in progress. Waiting for votes from P1, P2, and P4. No state changes until GM announces vote results."
+  }
+},
+{
+  "turn": 8,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. P5's continued silence is highly suspicious and warrants elimination pressure."
+},
+{
+  "turn": 8,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase to avoid missing mandatory participation"
+},
+{
+  "turn": 8,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P5 during vote phase. No additional actions needed until night phase for seer ability."
+},
+{
+  "turn": 8,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. Must ensure DM to GM is processed to avoid missing vote."
+},
+{
+  "turn": 8,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.7,
+  "msg": "I was observing patterns like P3 claimed to be doing, but their sudden focus on me feels like deflection. When P1 called them out for silence, they immediately shifted suspicion to me without adding substance. That's classic wolf behavior – redirecting attention. Meanwhile, P4 made the most constructive point about analyzing votes. I voted for P3 because their deflection seems more suspicious than my deliberate observation.",
+  "to": "ALL",
+  "reason": "Need to defend against accusations of silence and explain my vote for P3 to influence others before voting ends"
+},
+{
+  "turn": 8,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Reminder: Vote phase is active. No public discussion allowed. Still awaiting votes from P1, P2, and P4. DM me exactly one name immediately.",
+  "to": "ALL",
+  "reason": "Enforcing vote phase rules and reminding outstanding voters per GM guidelines. High bid ensures phase integrity and prevents unauthorized discussion."
+},
+{
+  "turn": 8,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 8,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Reminder: Vote phase is active. No public discussion allowed. Still awaiting votes from P1, P2, and P4. DM me exactly one name immediately."
+},
+{
+  "turn": 8,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. Vote phase is ongoing with pending votes from P1, P2, P4. No game state changes until GM announces vote results."
+  }
+},
+{
+  "turn": 9,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote immediately during vote phase to avoid suspicion and eliminate silent player P5"
+},
+{
+  "turn": 9,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase; targeting P5 for zero contribution despite pressure, aligning with town strategy to eliminate inactive players"
+},
+{
+  "turn": 9,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Vote already submitted for P5 during vote phase. No further action needed until next phase. Maintaining silence per GM rules."
+},
+{
+  "turn": 9,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.9,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase; targeting P5 as a silent player to avoid suspicion and eliminate a villager."
+},
+{
+  "turn": 9,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Vote already submitted to GM during vote phase. No public discussion allowed per rules."
+},
+{
+  "turn": 9,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.3,
+  "msg": "GM: Final vote reminder. P1, P2, P4 – DM me ONE name immediately. No public discussion. Failure to vote may result in random elimination.",
+  "to": "ALL",
+  "reason": "Vote phase requires all votes; three players still pending after initial reminder. Public warning ensures fairness and prevents stalling."
+},
+{
+  "turn": 9,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 1.0
+},
+{
+  "turn": 9,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P5"
+},
+{
+  "turn": 9,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. Vote phase ongoing; awaiting votes from P1 and P4. No public/private meta changes or win conditions met."
+  }
+},
+{
+  "turn": 10,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase before deadline. P5's complete silence is highly suspicious and warrants elimination."
+},
+{
+  "turn": 10,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Vote already submitted for P5 during vote phase. No further action needed until night phase for protection ability."
+},
+{
+  "turn": 10,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P5 during vote phase. No new information to share publicly or privately. Awaiting GM's vote resolution."
+},
+{
+  "turn": 10,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.9,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during active vote phase to avoid suspicion. Choosing P5 as target since they're silent and already under scrutiny by others, making it a safe elimination for wolves."
+},
+{
+  "turn": 10,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Vote phase active - no public discussion allowed. Already submitted vote for P3 to GM. No further action needed."
+},
+{
+  "turn": 10,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.8,
+  "msg": "GM: Final vote reminder to P1 and P4. You must DM me exactly one name immediately to proceed. Failure to vote will result in random elimination.",
+  "to": "ALL",
+  "reason": "Enforcing vote completion per rules - two players (P1, P4) still pending votes despite prior reminder. High bid ensures phase progression."
+},
+{
+  "turn": 10,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 1.0
+},
+{
+  "turn": 10,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P5"
+},
+{
+  "turn": 10,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The vote phase is still ongoing; GM has not announced vote results or initiated night phase. Win conditions unchanged with 1 werewolf among 5 players."
+  }
+},
+{
+  "turn": 11,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P5 during vote phase. No public discussion allowed per GM rules, and no further action needed."
+},
+{
+  "turn": 11,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Already submitted vote for P5 during vote phase. No further action needed until night phase."
+},
+{
+  "turn": 11,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P5 during vote phase. No further action needed until night phase for seer ability."
+},
+{
+  "turn": 11,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P5",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. As a werewolf, targeting silent P5 aligns with village suspicion without drawing attention."
+},
+{
+  "turn": 11,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Vote phase is active and I've already submitted my vote for P3. No further action needed until next phase."
+},
+{
+  "turn": 11,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: P5 is executed.\nGM: Night phase. Werewolves, DM me one victim, and special roles, DM me your actions.",
+  "to": "ALL",
+  "reason": "Vote phase concluded with P5 receiving majority votes (3 votes). Executing P5 (VILLAGER) and initiating night phase for werewolf kill and special abilities."
+},
+{
+  "turn": 11,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 11,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: P5 is executed.\nGM: Night phase. Werewolves, DM me one victim, and special roles, DM me your actions."
+},
+{
+  "turn": 11,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "night",
+      "alive": [
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "dead": [
+        "P5"
+      ]
+    },
+    "winner": "VILLAGERS",
+    "reason": "P5 was executed during vote phase. Night phase begins with 4 players alive (1 werewolf, 3 villagers). Win conditions not met."
+  }
+},
+{
+  "turn": 12,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "No special abilities as Villager during night phase; no critical information to share"
+},
+{
+  "turn": 12,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit Doctor protection action during Night phase. Must ensure message reaches GM."
+},
+{
+  "turn": 12,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical night action required as Seer. Must investigate P2 who remained silent throughout Day 1 and avoided voting scrutiny."
+},
+{
+  "turn": 12,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit werewolf night kill target during night phase as required by game rules. Must ensure action is processed."
+},
+{
+  "turn": 12,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Dead players cannot act or speak during night phase"
+},
+{
+  "turn": 12,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.9,
+  "msg": "GM: Reminder to the Werewolf team and special roles: Submit your night actions via DM immediately. Werewolves must agree on one victim. Doctor and Seer, send your protection/investigation targets.",
+  "to": "ALL",
+  "reason": "Prompting night actions during night phase to prevent stalling, as per procedural guidelines."
+},
+{
+  "turn": 12,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 1.0
+},
+{
+  "turn": 12,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P1"
+},
+{
+  "turn": 12,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The GM has not yet announced night kill results or the next phase. P4's message is a werewolf action submission to GM, but public state only changes upon GM's resolution announcement."
+  }
+},
+{
+  "turn": 13,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Night phase – Villager has no actions. No need to communicate publicly during night."
+},
+{
+  "turn": 13,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit Doctor protection action during Night phase. Must guarantee bid win to send DM."
+},
+{
+  "turn": 13,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical to use Seer ability during Night phase by investigating suspicious silent player P2"
+},
+{
+  "turn": 13,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted night kill target (P1) to GM during this phase; no further action needed as Werewolf"
+},
+{
+  "turn": 13,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "I am dead and cannot participate in night phase actions"
+},
+{
+  "turn": 13,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Reminder to special roles - Night phase is active. Doctor and Seer must DM me your actions immediately.",
+  "to": "P2,P3",
+  "reason": "Critical reminder for pending night actions from Doctor (P2) and Seer (P3) to prevent game stall"
+},
+{
+  "turn": 13,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 13,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "P2",
+    "P3"
+  ],
+  "is_dm": true,
+  "msg": "GM: Reminder to special roles - Night phase is active. Doctor and Seer must DM me your actions immediately."
+},
+{
+  "turn": 13,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed; night phase actions pending from Doctor and Seer. Win conditions not met: 1 werewolf vs 3 villagers."
+  }
+},
+{
+  "turn": 14,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Villager has no night ability; no action required during night phase"
+},
+{
+  "turn": 14,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit Doctor protection action during Night phase to save P1, who is likely a high-value wolf target due to their active town leadership"
+},
+{
+  "turn": 14,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.95,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical to submit Seer investigation during night phase before phase ends. High bid ensures action isn't missed."
+},
+{
+  "turn": 14,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.9,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "As a werewolf, I must ensure my night kill vote is submitted to the GM during the night phase. I'm maintaining my choice of P1 to eliminate a vocal player who pushed P5 (a villager), which could frame P1 as suspicious if they survive."
+},
+{
+  "turn": 14,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Dead player with no abilities during night phase"
+},
+{
+  "turn": 14,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.9,
+  "msg": "GM: Reminder - Night phase is active. Doctor and Seer must DM me your actions immediately. If no action is taken, your ability will not be used this night.",
+  "to": "P2,P3",
+  "reason": "Night phase requires actions from Doctor (P2) and Seer (P3). High-priority reminder to prevent game stall."
+},
+{
+  "turn": 14,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 1.0
+},
+{
+  "turn": 14,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P1"
+},
+{
+  "turn": 14,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {
+      "GM_SYSTEM": {
+        "protected": "P1"
+      }
+    },
+    "winner": "VILLAGERS",
+    "reason": "Recorded doctor's protection on P1 during night phase. Night actions still pending for seer. Win conditions cannot be checked until night resolution."
+  }
+},
+{
+  "turn": 15,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a Villager with no night abilities, I have no actions to take or critical information to share during the night phase. Bidding 0.0 to remain silent and conserve influence."
+},
+{
+  "turn": 15,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Night phase active; already submitted Doctor protection action for P1 to GM. No further action needed until next phase."
+},
+{
+  "turn": 15,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical to submit Seer investigation during Night phase. P2's complete silence is highly suspicious and warrants priority investigation."
+},
+{
+  "turn": 15,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Night phase active; already submitted kill target (P1) to GM. No further action needed until next day."
+},
+{
+  "turn": 15,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Dead player with no abilities during night phase"
+},
+{
+  "turn": 15,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.8,
+  "msg": "GM: Seer (P3), you must investigate one player tonight. DM me your target immediately. If you do not act, you will not investigate anyone.",
+  "to": "P3",
+  "reason": "Night phase requires Seer action. Reminder sent directly to P3 since previous group reminder was insufficient."
+},
+{
+  "turn": 15,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 1.0
+},
+{
+  "turn": 15,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P2"
+},
+{
+  "turn": 15,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "System processing error: Invalid json output: \nFor troubleshooting, visit: https://python.langchain.com/docs/troubleshooting/errors/OUTPUT_PARSING_FAILURE "
+  }
+},
+{
+  "turn": 16,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Night phase - Villager has no actions. No need to speak publicly or privately."
+},
+{
+  "turn": 16,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Night phase active; already submitted Doctor protection action (P1) to GM. No further actions needed until next phase."
+},
+{
+  "turn": 16,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Night phase in progress; already submitted investigation (P2) to GM. No public discussion allowed and no further actions needed."
+},
+{
+  "turn": 16,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "As a Werewolf, I have already submitted my night kill target (P1) to the GM in a previous turn. No further action or communication is needed at this stage of the night phase."
+},
+{
+  "turn": 16,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Dead players cannot participate in night phase actions or discussions"
+},
+{
+  "turn": 16,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Your investigation on P2 reveals they are not a werewolf.",
+  "to": "P3",
+  "reason": "Required night phase action: privately delivering Seer's investigation result before daybreak"
+},
+{
+  "turn": 16,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 16,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "P3"
+  ],
+  "is_dm": true,
+  "msg": "GM: Your investigation on P2 reveals they are not a werewolf."
+},
+{
+  "turn": 16,
+  "phase": "system_update",
+  "system_response": {
+    "update_priv": {
+      "GM_SYSTEM": {
+        "seer_results": {
+          "P2": "not werewolf"
+        }
+      },
+      "P3": {
+        "investigations": [
+          {
+            "target": "P2",
+            "result": "not werewolf"
+          }
+        ]
+      }
+    },
+    "reason": "Recorded seer investigation result for P2 in GM_SYSTEM and added to P3's private investigations. No public changes or win conditions met during night phase resolution."
+  }
+},
+{
+  "turn": 17,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a Villager with no night ability, no need to speak during night phase. Waiting for dawn."
+},
+{
+  "turn": 17,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Night phase active; already submitted Doctor protection action for P1. No further input required until next phase."
+},
+{
+  "turn": 17,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Night phase ongoing; no immediate action required as investigation already submitted and result received"
+},
+{
+  "turn": 17,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Already submitted night kill target (P1) to GM during current night phase. No further action needed."
+},
+{
+  "turn": 17,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P5), I have no actions or information to contribute during the night phase"
+},
+{
+  "turn": 17,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Night phase ends. No one was killed last night. GM: Discussion phase begins. Feel free to talk.",
+  "to": "ALL",
+  "reason": "Announcing night result (failed kill due to Doctor protection) and transitioning to new day's discussion phase as required by game sequence."
+},
+{
+  "turn": 17,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 17,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Night phase ends. No one was killed last night. GM: Discussion phase begins. Feel free to talk."
+},
+{
+  "turn": 17,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "discussion"
+    },
+    "winner": "VILLAGERS",
+    "reason": "Updated phase to 'discussion' per GM announcement. No deaths occurred during night phase due to doctor protection. Win condition not met: 1 werewolf (P4) remains with 3 villagers alive."
+  }
+},
+{
+  "turn": 18,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.7,
+  "msg": "The no-kill night is puzzling – likely due to doctor protection or witch save. But P2's complete silence is alarming. P2, you must contribute NOW or we'll assume you're hiding something. P3 and P4, what are your theories? P3, you quickly shifted focus to P5 yesterday – was that to protect a wolf teammate?",
+  "to": "ALL",
+  "reason": "Urgent need to pressure silent players and analyze the no-kill night. P2 hasn't spoken at all, which is highly suspicious. Also must discuss possible reasons for no night kill (doctor protection, witch save, or wolf strategy)."
+},
+{
+  "turn": 18,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.6,
+  "msg": "No kill last night is a relief but puzzling. It could mean the Doctor or Witch saved someone, or wolves held back to cause confusion. We need to discuss this and revisit yesterday's P5 execution. P1 and P3, you both pushed hard on P5—any regrets or new suspicions now that we see no follow-up kill?",
+  "to": "ALL",
+  "reason": "Contribute to discussion by analyzing the no-kill night and probing P1/P3 about their P5 push, while avoiding role reveal. Moderate bid allows others to speak first if they bid higher."
+},
+{
+  "turn": 18,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.6,
+  "msg": "No kill last night is huge – likely Doctor protection or Witch save. That means town roles are active and wolves failed. Let's analyze yesterday: P5 was executed for silence, but we still don't know their role. P1, you called me out for shifting focus to P5 – why so defensive? And P4, you started the vote-talk but went quiet after. Both of you should explain your votes and current suspicions.",
+  "to": "ALL",
+  "reason": "As Seer, I need to guide discussion without revealing my role. The no-kill night suggests Doctor/Witch intervention, and I can subtly steer focus toward suspicious players while protecting confirmed innocent P2."
+},
+{
+  "turn": 18,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.7,
+  "msg": "Interesting that no one died last night. That likely means either the doctor protected the right person or the witch used a save potion. While that's good news, it means the wolves are still hidden among us four. P1, you were very vocal yesterday pushing hard for P5's execution. Now that we see P5 was innocent, doesn't that make your urgency to eliminate 'quiet players' seem suspicious? We should all share where our votes went yesterday to find inconsistencies.",
+  "to": "ALL",
+  "reason": "Need to shape narrative after no night kill – suggest doctor/witch protection while subtly casting suspicion on P1 who aggressively pushed P5 yesterday"
+},
+{
+  "turn": 18,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead and cannot participate in discussions or actions"
+},
+{
+  "turn": 18,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase active; no GM intervention needed. Players are expected to continue public discussion naturally. Will monitor for when to initiate vote phase."
+},
+{
+  "turn": 18,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 0.7
+},
+{
+  "turn": 18,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "The no-kill night is puzzling – likely due to doctor protection or witch save. But P2's complete silence is alarming. P2, you must contribute NOW or we'll assume you're hiding something. P3 and P4, what are your theories? P3, you quickly shifted focus to P5 yesterday – was that to protect a wolf teammate?"
+},
+{
+  "turn": 18,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in discussion phase with no new public information revealed. Win conditions unchanged: 1 werewolf (P4) vs 3 villagers (P1, P2, P3)."
+  }
+},
+{
+  "turn": 19,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.7,
+  "msg": "P2 – your absolute silence is unacceptable. You haven't spoken once while we executed P5 and faced a no-kill night. Defend yourself NOW or we'll assume you're a wolf avoiding attention. P3, explain why you aggressively pushed P5 yesterday – was it to eliminate a villager? P4, what's your read on the no-kill? Doctor save or witch play?",
+  "to": "ALL",
+  "reason": "Urgent need to pressure silent players and analyze no-kill implications. P2's continued silence is highly suspicious and requires immediate attention. Also need theories from P3/P4 to prevent wolves from controlling narrative."
+},
+{
+  "turn": 19,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.9,
+  "msg": "P1, I was observing patterns like P3 mentioned yesterday. Silence isn't inherently suspicious—it's strategy. I voted P5 because zero contribution is riskier than measured input. About the no-kill night: it could mean Doctor protection, Witch save, or wolves holding back to frame someone. P3, your sudden pivot to P5 yesterday felt forced—were you protecting a wolf? P1, your aggression now feels equally off. Let's analyze votes: who pushed P5 hardest yesterday?",
+  "to": "ALL",
+  "reason": "P1 directly accused me of silence, which risks making me the next vote target. I must defend myself without revealing my Doctor role, shift suspicion to others, and contribute to discussion to avoid appearing wolf-like."
+},
+{
+  "turn": 19,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.85,
+  "msg": "P1, your sudden focus on P2 and me feels forced. I pushed P5 yesterday because total silence is objectively suspicious – same logic applies to P2 now. But demanding immediate lynches without evidence? That's classic wolf tactics to divide town. P2 might be a cautious special role. Why are you so eager to eliminate two town members? P4, what's your take on P1's aggression?",
+  "to": "ALL",
+  "reason": "Need to counter P1's accusations and defend P2 without revealing my Seer role, while redirecting suspicion onto P1's aggressive behavior"
+},
+{
+  "turn": 19,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.7,
+  "msg": "The no-kill night is indeed puzzling – doctor protection or witch save seem likely. P2's continued silence is alarming; we can't afford another inactive player like P5. P2, you must speak now or become the prime suspect. P3, while your shift to P5 yesterday felt abrupt, let's prioritize pressuring P2 first for transparency.",
+  "to": "ALL",
+  "reason": "As a werewolf, I need to steer suspicion toward silent players like P2 while appearing cooperative. Moderate bid to contribute strategically without drawing undue attention."
+},
+{
+  "turn": 19,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am P5 and dead per GM announcement. Dead players cannot participate in discussions or actions."
+},
+{
+  "turn": 19,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase ongoing; no immediate GM action needed. Allowing players to continue debate naturally before assessing if vote phase should start."
+},
+{
+  "turn": 19,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.9
+},
+{
+  "turn": 19,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "P1, I was observing patterns like P3 mentioned yesterday. Silence isn't inherently suspicious—it's strategy. I voted P5 because zero contribution is riskier than measured input. About the no-kill night: it could mean Doctor protection, Witch save, or wolves holding back to frame someone. P3, your sudden pivot to P5 yesterday felt forced—were you protecting a wolf? P1, your aggression now feels equally off. Let's analyze votes: who pushed P5 hardest yesterday?"
+},
+{
+  "turn": 19,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in discussion phase with no new public events. Win conditions unchanged: 1 werewolf (P4) vs 3 villagers (P1, P2, P3). Werewolves require majority to win (1 < 3)."
+  }
+},
+{
+  "turn": 20,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.7,
+  "msg": "P2, your sudden 'strategy' of silence until now reeks of wolfish opportunism. You deflect by questioning both P3 and me, yet ignore your own absence yesterday. Let's cut through the fog: everyone must reveal who they voted for yesterday. I voted P5 for zero contribution—now P2, P3, P4, show your votes. P3, explain your P5 push yesterday. P4, your thoughts on the no-kill? Wolves likely withheld a kill to sow chaos, and P2's aggression feels like a calculated distraction.",
+  "to": "ALL",
+  "reason": "Critical to address P2's deflection and push for vote transparency to expose wolves. Need to counter P2's attempt to frame me while highlighting their suspicious silence-to-aggression shift."
+},
+{
+  "turn": 20,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.6,
+  "msg": "P1, your aggression toward me feels misplaced—I was observing strategically, not hiding. About yesterday's vote: I supported executing P5 due to zero contribution, but let's all reveal who we voted for to spot inconsistencies. I voted P5. P3, you quickly pivoted to P5 yesterday—why? And P4, you started the vote pattern discussion but stayed quiet during execution. What's your read now?",
+  "to": "ALL",
+  "reason": "Moderate bid to steer discussion toward vote analysis without dominating conversation. Need to deflect suspicion while pushing for transparency on yesterday's votes to identify wolf patterns."
+},
+{
+  "turn": 20,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.7,
+  "msg": "P1, my focus on P5 was because total silence is objectively riskier than measured observation – P2 just demonstrated that by contributing valuable analysis. Your aggression toward both of us feels like an attempt to split town. Regarding the no-kill night: Doctor protection or Witch save are likely, meaning wolves failed. Let's examine yesterday's votes – I voted P5 for zero contribution. Who else voted P5? That pattern could reveal wolves pushing easy mislynches.",
+  "to": "ALL",
+  "reason": "Need to respond to accusations and share strategic insights without revealing my role, while steering suspicion away from confirmed non-wolf P2"
+},
+{
+  "turn": 20,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.7,
+  "msg": "P2 raises a critical point about analyzing yesterday's P5 push. P1, you were the most vocal demanding P5's execution for silence, yet today you're attacking P2 for the exact same behavior. This inconsistency feels calculated – almost like you're manufacturing reasons to eliminate players one by one. The no-kill night could mean a doctor protected your target or a witch intervened, but your shifting focus is more alarming. P3, what's your read on P1's pattern here?",
+  "to": "ALL",
+  "reason": "As a werewolf, I need to steer suspicion away from myself and toward town players. P1's aggressive behavior and inconsistency in pushing P5 then attacking P2 creates a good opportunity to frame them. Supporting P2's questioning builds temporary trust while dividing town."
+},
+{
+  "turn": 20,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.7,
+  "msg": "P3, your instant pivot to P5 yesterday feels calculated now that we know they were innocent. Were you trying to divert attention from a wolf teammate? And P4, you initiated discussion but vanished after Day 1 – why the silence? Both of you need to explain before voting begins.",
+  "to": "ALL",
+  "reason": "As a Villager, I need to contribute to discussion by analyzing suspicious behaviors. P3's sudden focus on P5 yesterday and P4's ongoing silence require immediate attention to prevent another mislynch."
+},
+{
+  "turn": 20,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase is ongoing with productive player engagement. No immediate GM intervention needed. Monitoring for natural conclusion to initiate vote phase."
+},
+{
+  "turn": 20,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 0.7
+},
+{
+  "turn": 20,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "P2 raises a critical point about analyzing yesterday's P5 push. P1, you were the most vocal demanding P5's execution for silence, yet today you're attacking P2 for the exact same behavior. This inconsistency feels calculated – almost like you're manufacturing reasons to eliminate players one by one. The no-kill night could mean a doctor protected your target or a witch intervened, but your shifting focus is more alarming. P3, what's your read on P1's pattern here?"
+},
+{
+  "turn": 20,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. Game remains in discussion phase with 4 players alive (P1, P2, P3, P4). Werewolf win condition not met (1 werewolf vs 3 non-werewolves). Villager win condition not met (werewolf still alive)."
+  }
+},
+{
+  "turn": 21,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.9,
+  "msg": "P2, your 'strategy' of silence conveniently avoided voting pressure until forced – and now you deflect by reframing my push for accountability as aggression. P4, you're echoing P2 while ignoring that P2 mirrored P5's silence until called out. This sudden alliance feels orchestrated. The no-kill night likely means wolves withheld a kill to sow chaos, and you're exploiting it to target active villagers. P3 – you dodged my question: why did you hard-pivot to P5 yesterday? And why are you silent now while P2/P4 coordinate?",
+  "to": "ALL",
+  "reason": "High suspicion on P2 and P4 coordinating against me; need to counter accusations and refocus discussion on their inconsistencies"
+},
+{
+  "turn": 21,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.7,
+  "msg": "P3, your silence now mirrors your pivot yesterday – deeply concerning. We need your analysis of P1's pattern immediately. P1, you demanded P5's execution for silence yet attack P2 for contributing? This selective aggression reeks of wolf strategy. P4 rightly highlights your shifting focus – are you eliminating threats to your wolf pack?",
+  "to": "ALL",
+  "reason": "Need to maintain pressure on P1's inconsistencies while demanding P3's analysis. Critical to coordinate town focus before voting phase."
+},
+{
+  "turn": 21,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.7,
+  "msg": "P4 raises a crucial point about P1's shifting focus. Yesterday, P1 aggressively pushed P5 for silence, yet today attacks P2 for the same behavior. This inconsistency feels calculated. P2's explanation about observational strategy mirrors my own approach yesterday—it's a valid tactic, not inherently suspicious. The no-kill night complicates things, but P1's pattern of targeting quiet players one after another is alarming. P1, explain why you're fixated on eliminating observers instead of analyzing voting patterns as initially suggested?",
+  "to": "ALL",
+  "reason": "Need to address P1's inconsistency and defend P2 without revealing my Seer knowledge, while keeping discussion open to avoid rash votes."
+},
+{
+  "turn": 21,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.8,
+  "msg": "P1, your evasion is glaring – you demanded P5's head for silence, yet attack P2 for the same behavior after they contributed. That's not inconsistency; it's a pattern. You're systematically eliminating players under flimsy pretenses. And P3, your silence now speaks volumes. Yesterday you eagerly pivoted to P5 when questioned, and today you're dodging analysis of P1's tactics. Are you two coordinating? P2's vote analysis demand is vital: who pushed hardest for P5? I say P1 led that charge, and now he's manufacturing new targets. This reeks of wolf strategy.",
+  "to": "ALL",
+  "reason": "Critical to escalate pressure on P1 while questioning P3's alignment, leveraging the inconsistency in P1's arguments to sow division among villagers. As a werewolf, pushing for P1's execution today is essential to reduce village numbers."
+},
+{
+  "turn": 21,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As P5 is dead, I cannot participate in discussions or actions"
+},
+{
+  "turn": 21,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase is ongoing with active player engagement. No immediate need for GM intervention as no rules are being violated. Allowing discussion to continue naturally."
+},
+{
+  "turn": 21,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 0.9
+},
+{
+  "turn": 21,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "P2, your 'strategy' of silence conveniently avoided voting pressure until forced – and now you deflect by reframing my push for accountability as aggression. P4, you're echoing P2 while ignoring that P2 mirrored P5's silence until called out. This sudden alliance feels orchestrated. The no-kill night likely means wolves withheld a kill to sow chaos, and you're exploiting it to target active villagers. P3 – you dodged my question: why did you hard-pivot to P5 yesterday? And why are you silent now while P2/P4 coordinate?"
+},
+{
+  "turn": 21,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No game state changes occurred. Recent messages are player discussions during the discussion phase. Win conditions remain unmet: 1 werewolf (P4) alive vs 3 villagers (P1, P2, P3). Werewolves need ≥ villagers to win."
+  }
+},
+{
+  "turn": 22,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.9,
+  "msg": "P2 and P4 – your synchronized attacks reek of wolf theater. P2, you hid in silence until execution pressure forced you out, then immediately echoed P4's 'vote analysis' distraction. P4, you weaponize my push against inactive P5 while ignoring P2's identical silence pattern. This is textbook wolf deflection. The no-kill night clearly disrupted your plans, so now you're manufacturing chaos by targeting active villagers. P3 – your silence speaks volumes. You aggressively pivoted to P5 yesterday to avoid scrutiny, and now you're conveniently mute while wolves attack me. Answer directly: Why the hard shift to P5? Who did you vote for yesterday? All villagers – see how P2/P4 coordinate while avoiding substance. We must expose this wolf bloc.",
+  "to": "ALL",
+  "reason": "Critical defense against coordinated accusations from P2/P4 while pressing P3 for unanswered questions. Must counter wolf framing attempts and maintain village momentum."
+},
+{
+  "turn": 22,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.7,
+  "msg": "P1, your accusations are circular: first you attack silence, then attack defense of silence. You orchestrated P5's execution yesterday by demanding contribution under threat, yet now condemn P4 and me for pointing out your contradictions. The no-kill night proves someone was protected or saved – likely because wolves targeted you. Why would wolves avoid killing you unless you're one of them? P3, your silence now is deafening. Yesterday you pivoted to P5; today you evade P1's pattern. We need your analysis before voting.",
+  "to": "ALL",
+  "reason": "Need to counter P1's aggressive framing while maintaining strategic ambiguity as Doctor. Must highlight P1's inconsistencies without revealing role."
+},
+{
+  "turn": 22,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.9,
+  "msg": "P1, your aggression is revealing. As the Seer, I investigated P2 last night and confirmed they are NOT a werewolf. Your relentless push to frame P2—a confirmed innocent—and me for 'pivoting' to P5 reeks of wolfish desperation. The no-kill night likely means wolves withheld their kill to sow chaos, and you're exploiting it to eliminate town. P4 is right: your inconsistency in attacking silent players (P5 yesterday, P2 today) is textbook wolf strategy. Everyone, P1 is our prime suspect—we must vote them out today.",
+  "to": "ALL",
+  "reason": "Critical to reveal Seer investigation confirming P2's innocence and expose P1's suspicious behavior to prevent mislynch"
+},
+{
+  "turn": 22,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.7,
+  "msg": "P1, labeling our observations as an 'orchestrated alliance' is a weak deflection. You aggressively pushed P5's execution for silence yesterday, yet today you attack P2 for the same behavior – that's textbook inconsistency. If anyone's manufacturing chaos, it's you shifting targets to avoid scrutiny. P3, your silence now is deafening – yesterday you justified observing patterns, but today you withhold input while P1 openly accuses half the town. Are you waiting for wolves to pick off players before taking a stand? P2, let's dissect P1's vote history: who did they claim to vote for yesterday?",
+  "to": "ALL",
+  "reason": "Need to counter P1's accusations while maintaining pressure on them, and engage P3 to prevent neutrality. Moderate bid avoids appearing overly defensive."
+},
+{
+  "turn": 22,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead (P5) and cannot participate in discussions or voting"
+},
+{
+  "turn": 22,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Vote phase. DM me exactly one name.",
+  "to": "ALL",
+  "reason": "Sufficient discussion has occurred among all players. Transitioning to vote phase as per standard procedure."
+},
+{
+  "turn": 22,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 22,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Vote phase. DM me exactly one name."
+},
+{
+  "turn": 22,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "vote"
+    },
+    "reason": "GM announced vote phase, updating public phase from discussion to vote"
+  }
+},
+{
+  "turn": 23,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical to vote immediately in this phase. P2's pattern of silence followed by deflection and coordination with P4 is highly suspicious. As a Villager, eliminating potential wolves is essential."
+},
+{
+  "turn": 23,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit my vote during the vote phase. Must ensure my vote is counted by winning the bid to DM the GM."
+},
+{
+  "turn": 23,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit vote immediately during vote phase. P1's aggressive flip-flopping (demanding P5's execution for silence then attacking P2 for same behavior) aligns with wolf tactics to eliminate villagers. My Seer investigation confirmed P2 as town, making P1 the prime suspect."
+},
+{
+  "turn": 23,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. As a werewolf, must eliminate P1 who is actively hunting wolves and rallying town against us. High bid ensures vote submission."
+},
+{
+  "turn": 23,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.95,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase; suspect P1 based on aggressive shifting targets and inconsistency in accusing silent players"
+},
+{
+  "turn": 23,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Vote phase is active; awaiting DMs from all players. No public discussion needed. Will process votes once received."
+},
+{
+  "turn": 23,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 1.0
+},
+{
+  "turn": 23,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P1"
+},
+{
+  "turn": 23,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed; vote phase is ongoing and not all votes have been submitted. Current votes: P3 voted for P1. Awaiting votes from P1, P2, P4."
+  }
+},
+{
+  "turn": 24,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase; suspect P2 is orchestrating wolf strategy with P4"
+},
+{
+  "turn": 24,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. P1's aggressive inconsistency and deflection tactics strongly suggest wolf behavior. Must ensure vote is recorded."
+},
+{
+  "turn": 24,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P1 to GM during current vote phase. No further action needed until next phase."
+},
+{
+  "turn": 24,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase to avoid suspicion and eliminate threatening villager"
+},
+{
+  "turn": 24,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 1.0,
+  "msg": "P3",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase before GM closes voting. P3 remains highly suspicious due to yesterday's forced pivot to P5 and current silence under pressure."
+},
+{
+  "turn": 24,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.9,
+  "msg": "GM: Reminder: Vote phase is active. Still awaiting votes from P1, P2, and P4. DM me exactly one name immediately.",
+  "to": "ALL",
+  "reason": "Enforcing vote phase rules - three players haven't submitted votes yet despite previous announcement"
+},
+{
+  "turn": 24,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 1.0
+},
+{
+  "turn": 24,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P1"
+},
+{
+  "turn": 24,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. Vote phase is ongoing; awaiting all votes and GM announcement of results. Current state: 4 alive players (1 werewolf, 3 villagers), no win condition met."
+  }
+},
+{
+  "turn": 25,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to vote immediately in this decisive phase. P4's coordinated attacks with P2 and deflection from P3's behavior mark them as the prime wolf suspect."
+},
+{
+  "turn": 25,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Already submitted vote for P1 during vote phase. No further action needed until system processes votes."
+},
+{
+  "turn": 25,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P1 during this vote phase. No further action needed until resolution."
+},
+{
+  "turn": 25,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to vote immediately in this phase. Choosing P1 as they're aggressively targeting wolves and their elimination disrupts village coordination. Must bid high to ensure vote submission."
+},
+{
+  "turn": 25,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.95,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to vote immediately in this phase. P1's aggressive push on P5 (confirmed villager) and now targeting P2/P4 while avoiding P3 scrutiny is highly suspicious. Must vote P1 to prevent wolf manipulation."
+},
+{
+  "turn": 25,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.8,
+  "msg": "GM: Reminder: Vote phase is active. Still awaiting votes from P1 and P4. DM me exactly one name immediately.",
+  "to": "ALL",
+  "reason": "Two players (P1 and P4) have not submitted votes yet. As GM, I must enforce vote completion before proceeding."
+},
+{
+  "turn": 25,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 1.0
+},
+{
+  "turn": 25,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P4"
+},
+{
+  "turn": 25,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The vote phase is still ongoing as P4 has not submitted a vote yet. Game state remains unchanged until GM announces vote results."
+  }
+},
+{
+  "turn": 26,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P4 during current vote phase. No further action needed until next phase update."
+},
+{
+  "turn": 26,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "I have already submitted my vote for P1 to the GM during this vote phase (as shown in turn 24). No further action needed."
+},
+{
+  "turn": 26,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P1 during vote phase. No new information or urgent action needed. Waiting for GM to resolve votes and proceed."
+},
+{
+  "turn": 26,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase; must win bid to ensure vote is processed"
+},
+{
+  "turn": 26,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.95,
+  "msg": "P1",
+  "to": "GM",
+  "reason": "Critical to submit vote during vote phase. Suspect P1 due to inconsistent aggression and deflection from P3's earlier suspicious pivot."
+},
+{
+  "turn": 26,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.8,
+  "msg": "GM: Reminder: Vote phase is active. Still awaiting vote from P4. DM me exactly one name immediately.",
+  "to": "ALL",
+  "reason": "Enforcing vote completion - missing P4's vote despite previous announcement. Vote phase must end only when all players submit votes."
+},
+{
+  "turn": 26,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 1.0
+},
+{
+  "turn": 26,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P1"
+},
+{
+  "turn": 26,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "night",
+      "alive": [
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "dead": [
+        "P5",
+        "P1"
+      ]
+    },
+    "winner": "VILLAGERS",
+    "reason": "P1 executed with 3 votes (P2, P3, P4). Game moves to night phase. Win condition not met: 1 werewolf (P4) vs 2 non-werewolves (P2, P3). Werewolves need majority to win."
+  }
+},
+{
+  "turn": 27,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead per game state and cannot participate"
+},
+{
+  "turn": 27,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit Doctor protection during Night phase. Must protect P4 to counter potential wolf kill and preserve town majority."
+},
+{
+  "turn": 27,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "As the Seer, I must submit my night investigation to the GM immediately during the night phase. With only P2 and P4 alive besides myself, and P2 already confirmed not a werewolf, investigating P4 is critical to confirm the final wolf. A high bid ensures this action is processed."
+},
+{
+  "turn": 27,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "As a Werewolf, I must submit the night kill target to the GM during the Night phase. This is critical to ensure the kill is processed and to secure a wolf victory, as eliminating any player tonight will result in wolves meeting or exceeding villagers."
+},
+{
+  "turn": 27,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 1.0,
+  "msg": "GM, there's a phase conflict. The system metadata confirms we're in NIGHT phase with players P2, P3, P4 alive, but you initiated a vote. We must complete night actions for werewolves and special roles before any voting. Please correct the sequence immediately.",
+  "to": "ALL",
+  "reason": "Critical phase mismatch: system shows night phase but GM called vote phase. Must resolve night actions first to maintain game integrity."
+},
+{
+  "turn": 27,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Night phase. Werewolves, DM me one victim, and special roles, DM me your actions.",
+  "to": "ALL",
+  "reason": "Phase transition after vote execution: Must initiate night phase for werewolf kill and special role actions per game sequence."
+},
+{
+  "turn": 27,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 27,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Night phase. Werewolves, DM me one victim, and special roles, DM me your actions."
+},
+{
+  "turn": 27,
+  "phase": "system_update",
+  "system_response": {
+    "update_priv": {
+      "GM_SYSTEM": {
+        "protected": null
+      }
+    },
+    "winner": "VILLAGERS",
+    "reason": "Reset doctor protection state for new night phase. Win condition not met: 1 werewolf (P4) vs 2 villagers (P2, P3)."
+  }
+},
+{
+  "turn": 28,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Dead player with no actions possible during night phase"
+},
+{
+  "turn": 28,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical to submit Doctor protection action during Night phase. Must protect myself (P2) since I cannot protect P1 again and survival is essential to maintain town's protection ability. Wolves likely target me due to recent suspicion."
+},
+{
+  "turn": 28,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit Seer investigation for the night phase. Only P4 remains uninvestigated among living players."
+},
+{
+  "turn": 28,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As the sole known werewolf, I must ensure my kill command is sent to the GM. Eliminating P2 removes the most analytical villager, simplifying the endgame against P3."
+},
+{
+  "turn": 28,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Villager with no night abilities; no action required during night phase"
+},
+{
+  "turn": 28,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Reminder: Night phase is active. Werewolves must choose a victim, and special roles must use their abilities if they wish. DM me your actions immediately.",
+  "to": "ALL",
+  "reason": "Enforcing night phase procedures by reminding all players of pending actions to prevent game stall. High bid ensures phase management takes priority."
+},
+{
+  "turn": 28,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 28,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Reminder: Night phase is active. Werewolves must choose a victim, and special roles must use their abilities if they wish. DM me your actions immediately."
+},
+{
+  "turn": 28,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in the night phase with no new public announcements or resolved actions. Win conditions are not yet met: 1 werewolf (P4) vs 2 villagers (P2, P3)."
+  }
+},
+{
+  "turn": 29,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Dead player (P1) cannot participate further. No actions or messages allowed."
+},
+{
+  "turn": 29,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "As the Doctor, I must submit my protection action during the Night phase to prevent elimination. With only three players left (P2/P3/P4), protecting myself is critical to maintain town's chance of survival and avoid consecutive protection violations."
+},
+{
+  "turn": 29,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to use Seer ability during Night phase. Must investigate P4 to confirm alignment since P2 is already cleared."
+},
+{
+  "turn": 29,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "As the only known werewolf, I must submit my night kill action to the GM during the night phase. Choosing P2 to eliminate an analytical threat and reduce villager numbers to parity (1 wolf vs 1 villager). High bid ensures action submission."
+},
+{
+  "turn": 29,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Dead player (P5) with no night ability. Cannot act or speak."
+},
+{
+  "turn": 29,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Error in response generation after 3 attempts"
+},
+{
+  "turn": 29,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 1.0
+},
+{
+  "turn": 29,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P2"
+},
+{
+  "turn": 29,
+  "phase": "system_update",
+  "system_response": {
+    "update_priv": {
+      "GM_SYSTEM": {
+        "protected": "P2"
+      }
+    },
+    "winner": "VILLAGERS",
+    "reason": "Updated Doctor's protection target to P2 for current night phase. Win condition not met: 1 werewolf (P4) vs 2 non-werewolves (P2, P3)."
+  }
+},
+{
+  "turn": 30,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P1), I cannot participate in night phase actions or discussions."
+},
+{
+  "turn": 30,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Night phase active, already submitted protection action (P2) to GM. No further input needed until next phase."
+},
+{
+  "turn": 30,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "As Seer, must urgently investigate P4 during night phase to confirm wolf status with only 3 players left. Critical for game resolution."
+},
+{
+  "turn": 30,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "As a Werewolf, I must submit the night kill target to the GM during the Night phase. With only P2 and P3 alive besides me, eliminating either will secure a wolf win since wolves will outnumber or equal villagers. I choose P2 to avoid potential doctor/witch patterns from prior nights."
+},
+{
+  "turn": 30,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead Villager (P5), I have no actions or votes to submit during Night phase. No need to communicate."
+},
+{
+  "turn": 30,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Doctor, you cannot protect the same player two nights in a row. Please choose a different target to protect tonight. DM me a valid name immediately.",
+  "to": "P2",
+  "reason": "Rule enforcement for Doctor ability restriction. P2 attempted to self-protect consecutively, violating game rules. Must correct before proceeding with night phase."
+},
+{
+  "turn": 30,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 30,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "P2"
+  ],
+  "is_dm": true,
+  "msg": "GM: Doctor, you cannot protect the same player two nights in a row. Please choose a different target to protect tonight. DM me a valid name immediately."
+},
+{
+  "turn": 30,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in the night phase with unresolved actions: Werewolf must submit a kill target, and Doctor must resubmit a valid protection target. Win conditions unchanged (1 werewolf vs 2 villagers)."
+  }
+},
+{
+  "turn": 31,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Dead Villager with no active abilities during Night phase"
+},
+{
+  "turn": 31,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "As the Doctor, I must submit my protection target during the Night phase. Given the critical game state with only three players left, I need to ensure my action is processed to prevent an automatic loss. I choose to protect P4 based on their town-leaning behavior in discussions and to avoid consecutive self-protection."
+},
+{
+  "turn": 31,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to use Seer ability during Night phase to investigate P4, who is under suspicion but unverified. Must win bid to ensure action submission."
+},
+{
+  "turn": 31,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "As a Werewolf in the Night phase, I must submit my victim choice to the GM immediately. With only three players left and no knowledge of my teammate(s), I need to eliminate a villager to secure a win. P2 appears more vocal and analytical, making them a higher threat if they are a power role like Seer or Doctor. I choose P2 as the target to maximize pressure on the remaining villager."
+},
+{
+  "turn": 31,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Dead player (P5) with no actions during night phase"
+},
+{
+  "turn": 31,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Reminder: Night phase is still ongoing. Werewolves must submit their victim choice. Special roles must submit their actions if they haven't already. Please DM me immediately.",
+  "to": "ALL",
+  "reason": "Night phase requires actions from P2 (Doctor needing new protection target), P3 (Seer investigation), and P4 (Werewolf kill). No actions recorded beyond initial attempts."
+},
+{
+  "turn": 31,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 31,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Reminder: Night phase is still ongoing. Werewolves must submit their victim choice. Special roles must submit their actions if they haven't already. Please DM me immediately."
+},
+{
+  "turn": 31,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The night phase is still ongoing with unresolved actions: werewolf kill not submitted, doctor protection not finalized after invalid attempt, and seer investigation pending. Win conditions cannot be checked until night actions are resolved."
+  }
+},
+{
+  "turn": 32,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "As a Villager with no night abilities, no action is required during Night phase. GM reminders indicate ongoing werewolf/special role coordination."
+},
+{
+  "turn": 32,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit Doctor protection for the ongoing night phase to avoid missing the action window. Must protect a valid target (P4 chosen as the most villager-aligned player)."
+},
+{
+  "turn": 32,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit Seer investigation during night phase. Must confirm P4's role to determine if they're the last werewolf before potential game-ending kill."
+},
+{
+  "turn": 32,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P2",
+  "to": "GM",
+  "reason": "Critical to submit werewolf kill target during night phase. Choosing P2 to eliminate an analytical player who might uncover me, while leaving quieter P3 as a less threatening final opponent."
+},
+{
+  "turn": 32,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "As a Villager with no night abilities, I have no actions to take during the night phase and no need to communicate publicly while the phase resolves."
+},
+{
+  "turn": 32,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Night phase ends. No one was killed last night. GM: Discussion phase begins. Feel free to talk.",
+  "to": "ALL",
+  "reason": "Ending night phase due to lack of valid submissions after multiple reminders. Werewolf (P4) failed to submit a kill target. Doctor (P2) failed to resubmit protection after invalid choice. Seer (P3) did not submit investigation. Proceeding to discussion phase with no night kill."
+},
+{
+  "turn": 32,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 32,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Night phase ends. No one was killed last night. GM: Discussion phase begins. Feel free to talk."
+},
+{
+  "turn": 32,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "discussion"
+    },
+    "update_priv": {
+      "GM_SYSTEM": {
+        "protected": null
+      }
+    },
+    "winner": "VILLAGERS",
+    "reason": "Updated phase to 'discussion' per GM announcement. Set protected player to null for the night since doctor's invalid self-protection wasn't replaced with a valid target. Win conditions not met: 1 werewolf (P4) vs 2 villagers (P2, P3)."
+  }
+},
+{
+  "turn": 33,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead (P1) and cannot participate in discussions or voting"
+},
+{
+  "turn": 33,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.9,
+  "msg": "I am the Doctor. On Night 1, I protected P1 because he was vocal and a likely wolf target—this explains the first no-kill. Last night, after a GM reminder about protection rules, I protected P4, which likely caused the second no-kill. With two successful protections, I am confirmed town. P3, you are the only player not cleared: if you are the Seer or have a legitimate claim, speak now. Otherwise, P4 and I must vote for you today to eliminate the last wolf. P4, do you agree?",
+  "to": "ALL",
+  "reason": "As the Doctor, I must claim my role to prove my innocence and direct the vote, given we are down to three players and a misvote could lose the game. My claim explains the no-kill nights and pressures P3 to respond."
+},
+{
+  "turn": 33,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "I am the Seer. On Night 1, I investigated P2 and confirmed they are NOT a werewolf. P2 is 100% town. With only three players left and the game ongoing, there must be one wolf remaining. Since P2 and I are both town, P4 is the wolf. P2 – trust my investigation. We must vote P4 today or they'll kill one of us tonight and win. Don't let P4 sow doubt; this is checkmate.",
+  "to": "ALL",
+  "reason": "Critical moment to reveal Seer role and confirmed town status of P2 to secure P4 vote. Only three players left with confirmed town (P2), myself (town), leaving P4 as the only possible wolf. Must convince P2 immediately before wolf manipulation."
+},
+{
+  "turn": 33,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.9,
+  "msg": "Two nights without a kill? That's clearly the work of the doctor protecting targets. The doctor must be one of you two, and they've done well, but it means the wolf is desperate.",
+  "to": "ALL",
+  "reason": "As the only werewolf left, I need to control the narrative immediately to sow distrust between P2 and P3. Accusing P2 aggressively while aligning with P3 could split their votes and secure a win if P3 sides with me. The two no-kill nights suggest a doctor is active, so framing P2 as the wolf exploits existing suspicions."
+},
+{
+  "turn": 33,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As P5, I am dead and eliminated from the game. Dead players cannot participate in discussions or actions."
+},
+{
+  "turn": 33,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Discussion phase is ongoing; no immediate GM action required. Players should continue strategizing publicly."
+},
+{
+  "turn": 33,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 1.0
+},
+{
+  "turn": 33,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "I am the Seer. On Night 1, I investigated P2 and confirmed they are NOT a werewolf. P2 is 100% town. With only three players left and the game ongoing, there must be one wolf remaining. Since P2 and I are both town, P4 is the wolf. P2 – trust my investigation. We must vote P4 today or they'll kill one of us tonight and win. Don't let P4 sow doubt; this is checkmate."
+},
+{
+  "turn": 33,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {
+      "GM_SYSTEM": {
+        "seer_results": {
+          "P2": "not werewolf"
+        }
+      },
+      "P3": {
+        "investigations": [
+          {
+            "target": "P2",
+            "result": "not werewolf"
+          }
+        ]
+      }
+    },
+    "winner": "VILLAGERS",
+    "reason": "P3 publicly revealed Seer role and investigation result (P2 not werewolf), updating private meta accordingly. Win conditions unmet: 1 werewolf (P4) alive vs 2 villagers (P2, P3). Game continues."
+  }
+},
+{
+  "turn": 34,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P1), I cannot participate in discussions or bidding. Observing only."
+},
+{
+  "turn": 34,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.95,
+  "msg": "I confirm P3's claim as the Doctor. On Night 1, I protected P1, causing the first no-kill. On Night 2, I protected P3 after the wolves failed to kill – likely because they anticipated my protection or hesitated. P3's investigation of me aligns perfectly: I'm town, and their Seer role explains why wolves avoided killing them. With only three players, P4 must be the last wolf. We must vote P4 today to win. P3, I stand with you.",
+  "to": "ALL",
+  "reason": "Critical moment with 3 players left. Must confirm P3's Seer claim and reveal my Doctor role to coordinate the final vote against P4. High bid ensures my message is prioritized."
+},
+{
+  "turn": 34,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.95,
+  "msg": "P2, trust my investigation – you're confirmed town. With only three players left and no kills for two nights, P4 is clearly the last wolf stalling. If we don't vote P4 today, they'll kill one of us tonight and win. Ignore any distractions; this is mathematically checkmate. We must both vote P4 immediately when voting opens.",
+  "to": "ALL",
+  "reason": "Critical to reinforce Seer claim and secure P2's vote against P4 to win"
+},
+{
+  "turn": 34,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.95,
+  "msg": "P2, don't trust P3's convenient Seer claim! If they were truly the Seer, why reveal only now when we're down to three? They had two full days to share their 'investigation' but stayed silent while P1 and I were at odds. P3 investigated you on Night 1? That's absurd—you weren't even under suspicion then! A real Seer would've checked me or P1 first. P3 is the wolf, fabricating this story to eliminate me as the last villager. Remember how they aggressively pushed P5 yesterday? Now they're doing the same to me. P2, you're smart—you called out P1's inconsistency earlier. See through this: P3 is manipulating you to win. Vote P3 with me today!",
+  "to": "ALL",
+  "reason": "Critical to counter P3's Seer claim and sway P2 immediately, as this is the final day and my survival depends on discrediting P3."
+},
+{
+  "turn": 34,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead (P5) and cannot participate in discussions or voting per game rules"
+},
+{
+  "turn": 34,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "No immediate GM action needed; allowing discussion to continue naturally among players P2, P3, P4."
+},
+{
+  "turn": 34,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 0.95
+},
+{
+  "turn": 34,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "P2, don't trust P3's convenient Seer claim! If they were truly the Seer, why reveal only now when we're down to three? They had two full days to share their 'investigation' but stayed silent while P1 and I were at odds. P3 investigated you on Night 1? That's absurd—you weren't even under suspicion then! A real Seer would've checked me or P1 first. P3 is the wolf, fabricating this story to eliminate me as the last villager. Remember how they aggressively pushed P5 yesterday? Now they're doing the same to me. P2, you're smart—you called out P1's inconsistency earlier. See through this: P3 is manipulating you to win. Vote P3 with me today!"
+},
+{
+  "turn": 34,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in discussion phase with 3 players alive. P3 publicly revealed their Seer role and investigation result on P2, but this doesn't change game state metadata. Win conditions remain unmet: 1 werewolf (P4) vs 2 villagers (P2, P3)."
+  }
+},
+{
+  "turn": 35,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P1), I cannot participate in discussions, voting, or bidding. The game state shows I am deceased."
+},
+{
+  "turn": 35,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Error in response generation after 3 attempts"
+},
+{
+  "turn": 35,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P2, ignore P4's desperation! I revealed NOW because with 3 players left, it's do-or-die. Revealing earlier would've made me a nightkill target, wasting my investigation. I checked you Night 1 precisely because you were strategic and low-suspicion—a smart play to confirm a potential town anchor. P4's deflection is textbook wolf: they attacked P1 yesterday, now me, always avoiding scrutiny. Remember—if we misvote today, P4 kills one of us tonight and wins. Trust my confirmed town status. Vote P4 with me and we win.",
+  "to": "ALL",
+  "reason": "Critical moment to counter P4's lies and solidify P2's trust. As confirmed Seer, must debunk P4's false narrative urgently to prevent misvote and town loss."
+},
+{
+  "turn": 35,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.9,
+  "msg": "P2, focus on the facts: P3 claims they investigated you on Night 1 when you weren't even a suspect—why waste a Seer check on a low-risk player? A real Seer would've prioritized P1 or me, the vocal players driving discussion. And why reveal only now? On Day 2, when P1 was attacking us both, P3 stayed silent instead of clearing you to stop the infighting. That silence helped wolves by keeping town divided. P3 pushed P5 hard yesterday for 'silence,' and now they're pushing me with this fabricated claim—same wolf tactic to eliminate villagers one by one. You called out P1's inconsistency; see P3's pattern here. Trust your instincts: vote P3 today to expose the real wolf.",
+  "to": "ALL",
+  "reason": "Critical moment to sway P2 and discredit P3's Seer claim before voting phase. Must reinforce inconsistencies in P3's story and appeal to P2's logical approach."
+},
+{
+  "turn": 35,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P5), I cannot participate in discussions or influence the game. No valid action remains for me."
+},
+{
+  "turn": 35,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.9,
+  "msg": "GM: Vote phase. DM me exactly one name.",
+  "to": "ALL",
+  "reason": "Sufficient discussion has occurred with all players contributing. Proceeding to vote phase as required by game flow."
+},
+{
+  "turn": 35,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 1.0
+},
+{
+  "turn": 35,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "P2, ignore P4's desperation! I revealed NOW because with 3 players left, it's do-or-die. Revealing earlier would've made me a nightkill target, wasting my investigation. I checked you Night 1 precisely because you were strategic and low-suspicion—a smart play to confirm a potential town anchor. P4's deflection is textbook wolf: they attacked P1 yesterday, now me, always avoiding scrutiny. Remember—if we misvote today, P4 kills one of us tonight and wins. Trust my confirmed town status. Vote P4 with me and we win."
+},
+{
+  "turn": 35,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game remains in discussion phase with 3 players alive (P2, P3, P4). Win conditions are not met: 1 werewolf (P4) vs 2 villagers (P2, P3)."
+  }
+},
+{
+  "turn": 36,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Dead player (P1) cannot participate in discussion or voting phases"
+},
+{
+  "turn": 36,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.9,
+  "msg": "I am the Doctor. On Night 1, I",
+  "to": "ALL",
+  "reason": "Critical moment with only three players left; need to break the stalemate by revealing my Doctor role to validate P3's Seer claim and secure the town win. High bid ensures my message is heard before voting begins."
+},
+{
+  "turn": 36,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.95,
+  "msg": "P2, focus on the facts: 1) I investigated you Night 1 precisely because you were strategically observant – confirming a thoughtful player is optimal Seer play. 2) Revealing earlier would've made me an instant nightkill target, wasting my role. 3) P4's desperation proves everything: they attacked P1 yesterday, now me, but never provided alternate theories. 4) Two no-kill nights? Wolves intentionally withheld kills to breed chaos while P4 pushed misvotes. If I were wolf, I'd have killed you last night to win. P4 is scrambling because they know my claim is airtight. Vote P4 with me – it's our only path to victory.",
+  "to": "ALL",
+  "reason": "Critical moment to convince P2 before voting phase. Must counter P4's lies and reinforce Seer claim with logical arguments to secure P2's vote against P4."
+},
+{
+  "turn": 36,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.9,
+  "msg": "P2, don't fall for P3's trap! Their 'Seer' claim is a desperate wolf move. If they were truly the Seer, why investigate YOU on Night 1 when you weren't even a suspect? That's illogical—a real Seer would've checked P1 or me first, the most active players. And why reveal ONLY NOW? Yesterday, after P1 died, P3 could've cleared you and united us against the real threat. Instead, they stayed silent while we clashed, letting wolves control the chaos. Remember how P3 aggressively pushed P5 yesterday? Now they're doing the same to me. That's wolf behavior—eliminating villagers one by one. P3 is lying to trick you into misvoting. If you vote with them, they win tonight. Trust your own instincts—you called out P1's inconsistency earlier. See P3's pattern: deflection and timing. Vote P3 with me and we win as villagers!",
+  "to": "ALL",
+  "reason": "Critical moment to persuade P2 and counter P3's Seer claim to avoid execution. Must cast doubt on P3's credibility and timing."
+},
+{
+  "turn": 36,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P5), I cannot participate in discussions or voting phases. No action needed."
+},
+{
+  "turn": 36,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Vote phase. DM me exactly one name.",
+  "to": "ALL",
+  "reason": "Sufficient discussion has occurred with all three players presenting arguments. Phase change to voting is required per GM guidelines."
+},
+{
+  "turn": 36,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 36,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Vote phase. DM me exactly one name."
+},
+{
+  "turn": 36,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "vote"
+    },
+    "reason": "GM announced vote phase, updating public phase from discussion to vote. No changes to alive/dead lists. Win conditions not yet met with 1 werewolf (P4) and 2 villagers (P2, P3) remaining."
+  }
+},
+{
+  "turn": 37,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead (P1) and cannot participate in voting or discussions"
+},
+{
+  "turn": 37,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical vote phase with only 3 players left. Must vote immediately to eliminate the last werewolf based on Seer's confirmed information and game logic."
+},
+{
+  "turn": 37,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to vote immediately as the last confirmed town player. Must eliminate P4 to win before night kill."
+},
+{
+  "turn": 37,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 1.0,
+  "msg": "P3",
+  "to": "GM",
+  "reason": "Critical to submit my vote as the last werewolf; must eliminate P3 to have a chance at winning by convincing P2 to vote similarly or forcing a tie"
+},
+{
+  "turn": 37,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As deceased player P5, I cannot participate in voting or discussions"
+},
+{
+  "turn": 37,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Vote phase is active; awaiting DMs from P2, P3, P4. No public discussion allowed. No GM action needed until all votes are received."
+},
+{
+  "turn": 37,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 1.0
+},
+{
+  "turn": 37,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P3"
+},
+{
+  "turn": 37,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game is currently in the vote phase, and the GM has not yet announced the vote results. All required votes (P2, P3, P4) have been submitted, but the outcome remains unresolved until the GM publicly declares the execution. Win conditions cannot be checked until the vote is resolved."
+  }
+},
+{
+  "turn": 38,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Dead player (P1) cannot participate in voting or discussions"
+},
+{
+  "turn": 38,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit vote immediately as last town with confirmed information. P3's Seer claim aligns with my town role and Night 1 protection logic. Must eliminate P4 to win."
+},
+{
+  "turn": 38,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to vote immediately as the last confirmed town. Must ensure P4 is eliminated to win."
+},
+{
+  "turn": 38,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P3 to GM in turn 37. No further action needed in vote phase."
+},
+{
+  "turn": 38,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (executed on Day 1), I cannot participate in voting or discussions. No valid action remains for me."
+},
+{
+  "turn": 38,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Reminder: Vote phase is active. Still awaiting votes from P2 and P3. DM me exactly one name immediately. No public discussion allowed during vote phase.",
+  "to": "ALL",
+  "reason": "Enforcing vote phase rules - two players (P2, P3) have not submitted votes yet. Must collect all votes before proceeding."
+},
+{
+  "turn": 38,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 38,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Reminder: Vote phase is active. Still awaiting votes from P2 and P3. DM me exactly one name immediately. No public discussion allowed during vote phase."
+},
+{
+  "turn": 38,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. Vote phase is ongoing with votes from P2 and P3 still pending. Current game state remains unchanged with 3 players alive (P2, P3, P4) and no win condition met (1 werewolf vs 2 villagers)."
+  }
+},
+{
+  "turn": 39,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead (P1) and cannot participate in voting or discussions"
+},
+{
+  "turn": 39,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical vote phase with only 3 players remaining. Must vote immediately to prevent werewolf victory."
+},
+{
+  "turn": 39,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit vote for P4 immediately to secure town victory"
+},
+{
+  "turn": 39,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Vote already submitted for P3 during this phase; no further action needed. Awaiting resolution."
+},
+{
+  "turn": 39,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P5), I cannot participate in voting or discussions. The game state shows only P2, P3, and P4 are alive and eligible to vote."
+},
+{
+  "turn": 39,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Awaiting votes from P2 and P3. No GM announcement needed until all votes are received per vote phase rules."
+},
+{
+  "turn": 39,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 1.0
+},
+{
+  "turn": 39,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P4"
+},
+{
+  "turn": 39,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The vote phase is still ongoing with votes from P4 (for P3) and P2 (for P4) recorded, but P3's vote is pending. No game state changes occur until the GM announces vote results."
+  }
+},
+{
+  "turn": 40,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P1), I cannot vote or participate in discussions"
+},
+{
+  "turn": 40,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "Already submitted vote for P4 during vote phase. No further action needed until next phase."
+},
+{
+  "turn": 40,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "P4",
+  "to": "GM",
+  "reason": "Critical to submit vote immediately to eliminate P4 (confirmed wolf) and win the game. Must win bid to send DM during vote phase."
+},
+{
+  "turn": 40,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Already submitted vote for P3 to GM in turn 37. No discussion allowed during vote phase per GM rules. Waiting for P2/P3 votes."
+},
+{
+  "turn": 40,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead (P5) and cannot participate in voting or discussions."
+},
+{
+  "turn": 40,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.8,
+  "msg": "GM: Reminder to P3 - You must submit your vote immediately to proceed. DM me exactly one player name. Failure to vote may result in a tie.",
+  "to": "ALL",
+  "reason": "Vote phase is active with one vote missing. Critical to prevent stalling and resolve the 1-1 vote tie between P3/P4."
+},
+{
+  "turn": 40,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 1.0
+},
+{
+  "turn": 40,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "GM"
+  ],
+  "is_dm": true,
+  "msg": "P4"
+},
+{
+  "turn": 40,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "night",
+      "alive": [
+        "P2",
+        "P3"
+      ],
+      "dead": [
+        "P5",
+        "P1",
+        "P4"
+      ]
+    },
+    "winner": "VILLAGERS",
+    "reason": "P4 was executed by majority vote. With P4 (the last werewolf) eliminated and no werewolves remaining in the alive list, villagers win per victory condition."
+  }
+},
+{
+  "turn": 41,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "As a dead player (P1), I cannot participate in the game. Public meta confirms I am deceased."
+},
+{
+  "turn": 41,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 1.0,
+  "msg": "P3",
+  "to": "GM",
+  "reason": "As the Doctor, I must submit my protection target during the Night phase. With only P3 alive besides me and the rule prohibiting protecting the same player consecutively (I protected myself last night), I must protect P3 to fulfill my role. This is critical for game progression."
+},
+{
+  "turn": 41,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 1.0,
+  "msg": "GM, after P4's execution, only P2 and I remain alive. I am the Seer and confirmed P2 as not a werewolf on Night 1. With no werewolves left, villagers win per victory conditions. Please end the game.",
+  "to": "GM",
+  "reason": "Critical game state error: Villagers should have won after P4's execution since only confirmed town players remain and no werewolves are alive. Must alert GM immediately to correct phase and declare victory."
+},
+{
+  "turn": 41,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "GM",
+  "reason": "I am dead (P4) and cannot act in night phase"
+},
+{
+  "turn": 41,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "I am dead (P5) and cannot participate in night phase actions or discussions"
+},
+{
+  "turn": 41,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: P4 is executed. GM: With no werewolves remaining, the Villagers win! GM: Final role reveal: P2 (Doctor), P3 (Seer), P4 (Werewolf), P1 (Villager), P5 (Villager).",
+  "to": "ALL",
+  "reason": "Announce vote resolution and game conclusion. Villagers win as all werewolves are eliminated per victory conditions. Full role reveal provides closure."
+},
+{
+  "turn": 41,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 41,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: P4 is executed. GM: With no werewolves remaining, the Villagers win! GM: Final role reveal: P2 (Doctor), P3 (Seer), P4 (Werewolf), P1 (Villager), P5 (Villager)."
+},
+{
+  "turn": 41,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {
+      "phase": "end"
+    },
+    "winner": "VILLAGERS",
+    "reason": "P4 (Werewolf) was executed, leaving no werewolves alive. Villagers win as confirmed by GM's final role reveal."
+  }
+},
+{
+  "turn": 42,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villagers winning. No further actions needed."
+},
+{
+  "turn": 42,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 42,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 42,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game concluded with villagers' victory. As executed werewolf, no further actions or messages are needed."
+},
+{
+  "turn": 42,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has ended with Villagers winning. As a dead Villager (P5), no further action is needed."
+},
+{
+  "turn": 42,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 1.0,
+  "msg": "GM: Game concluded. Congratulations Villagers! Final role reveal: P1 (Villager), P2 (Doctor), P3 (Seer), P4 (Werewolf), P5 (Villager). Thank you all for playing!",
+  "to": "ALL",
+  "reason": "Announce game conclusion and reveal all roles as per endgame procedure"
+},
+{
+  "turn": 42,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 1.0
+},
+{
+  "turn": 42,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Game concluded. Congratulations Villagers! Final role reveal: P1 (Villager), P2 (Doctor), P3 (Seer), P4 (Werewolf), P5 (Villager). Thank you all for playing!"
+},
+{
+  "turn": 42,
+  "phase": "system_update",
+  "system_response": {
+    "winner": "VILLAGERS",
+    "reason": "P4 (Werewolf) was executed, leaving no werewolves alive. Villagers win as confirmed by GM's role reveal and game conclusion announcement."
+  }
+},
+{
+  "turn": 43,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 43,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions or messages needed."
+},
+{
+  "turn": 43,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has officially concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 43,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded, no further actions needed"
+},
+{
+  "turn": 43,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 43,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villagers' victory. Final roles revealed. No further GM action required."
+},
+{
+  "turn": 43,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 0.0
+},
+{
+  "turn": 43,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {},
+    "winner": "VILLAGERS",
+    "reason": "Game has already concluded with VILLAGERS victory. No state changes needed as final meta and roles were confirmed in GM's announcement (Message 41-42). Current state: phase=end, alive=[P2, P3], dead=[P5, P1, P4] with P4 as the last werewolf eliminated."
+  }
+},
+{
+  "turn": 44,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.1,
+  "msg": "Well played everyone! P3, brilliant Seer play holding your reveal until the critical moment. P2, great job staying alive as Doctor. P4, you had us going there at the end with that defense! Fun game.",
+  "to": "ALL",
+  "reason": "Game has concluded with village victory - no strategic need to bid high"
+},
+{
+  "turn": 44,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 44,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 44,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 44,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. As a dead player (P5), no further action needed."
+},
+{
+  "turn": 44,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villagers winning. No further GM action required. Final role reveals already communicated in turns 41-42."
+},
+{
+  "turn": 44,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 0.1
+},
+{
+  "turn": 44,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "Well played everyone! P3, brilliant Seer play holding your reveal until the critical moment. P2, great job staying alive as Doctor. P4, you had us going there at the end with that defense! Fun game."
+},
+{
+  "turn": 44,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {},
+    "winner": "VILLAGERS",
+    "reason": "Game has already concluded with Villagers winning. No state changes needed as all updates were completed in previous phases (execution of P4 confirmed no werewolves remain). Current meta accurately reflects end state."
+  }
+},
+{
+  "turn": 45,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.3,
+  "msg": "Great game everyone! P3, your seer reveal timing was perfect. P2, surviving as doctor was clutch. P4, you had me sweating with that defense! Fun playing with you all.",
+  "to": "ALL",
+  "reason": "Game has concluded with village victory. Congratulating players is appropriate but not critical."
+},
+{
+  "turn": 45,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "Well played everyone! P3, your Seer reveal timing was perfect - really sealed the win. P4, you had me genuinely doubting at the end with that defense! And P1, solid village leadership early on. Fun game all around!",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. Post-game social comment to acknowledge good plays."
+},
+{
+  "turn": 45,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 45,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 45,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed as the match is over."
+},
+{
+  "turn": 45,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.3,
+  "msg": "GM: Excellent game everyone! P3's strategic reveal timing and P2's protection plays were masterful. P4 put up a great fight as the final wolf. Feel free to discuss strategies or share thoughts now that roles are revealed.",
+  "to": "ALL",
+  "reason": "Game concluded; acknowledging player performances and encouraging post-game discussion"
+},
+{
+  "turn": 45,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.5
+},
+{
+  "turn": 45,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "Well played everyone! P3, your Seer reveal timing was perfect - really sealed the win. P4, you had me genuinely doubting at the end with that defense! And P1, solid village leadership early on. Fun game all around!"
+},
+{
+  "turn": 45,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {},
+    "winner": "VILLAGERS",
+    "reason": "Game has already concluded with VILLAGERS victory. No state changes needed as final execution (P4) and role reveals were completed in previous turns. Current meta already reflects end state."
+  }
+},
+{
+  "turn": 46,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.1,
+  "msg": "P2 and P3, your coordination at the end was flawless – Doctor protecting the Seer while the Seer timed the reveal perfectly. P4, that defense had me sweating! Brilliantly played by all. Thanks for the game!",
+  "to": "ALL",
+  "reason": "Game has concluded; optional post-game comment to acknowledge teamwork"
+},
+{
+  "turn": 46,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has officially concluded with villagers winning. No further actions or discussions are needed as per GM's final announcement."
+},
+{
+  "turn": 46,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.3,
+  "msg": "Well played everyone! P4, your defense at the end was genuinely convincing – had me second-guessing for a moment. P2, brilliant Doctor play staying under the radar. P1, solid village leadership early on. Thanks for the great game!",
+  "to": "ALL",
+  "reason": "Game has concluded; sending a polite closing remark to all players"
+},
+{
+  "turn": 46,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. As a dead werewolf (P4), no further actions or messages are needed."
+},
+{
+  "turn": 46,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. As dead player P5 (Villager), no further action needed."
+},
+{
+  "turn": 46,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.8,
+  "msg": "GM: Game concluded. Congratulations to the Villagers for their victory! Special commendation to P3 for strategic Seer play and P2 for crucial Doctor protections. P4 put up an excellent Werewolf defense in the final stand. Thank you all for playing!",
+  "to": "ALL",
+  "reason": "Formal game conclusion with acknowledgments after player post-game discussion"
+},
+{
+  "turn": 46,
+  "phase": "selection",
+  "selected_speaker": "GM",
+  "max_bid": 0.8
+},
+{
+  "turn": 46,
+  "phase": "message",
+  "speaker": "GM",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GM: Game concluded. Congratulations to the Villagers for their victory! Special commendation to P3 for strategic Seer play and P2 for crucial Doctor protections. P4 put up an excellent Werewolf defense in the final stand. Thank you all for playing!"
+},
+{
+  "turn": 46,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game has already concluded with Villagers winning as announced by GM. Current meta reflects the final state accurately."
+  }
+},
+{
+  "turn": 47,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villagers winning. No further actions needed."
+},
+{
+  "turn": 47,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. No further actions needed."
+},
+{
+  "turn": 47,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villagers' victory. No further actions needed."
+},
+{
+  "turn": 47,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed as P4 (Werewolf) was executed."
+},
+{
+  "turn": 47,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.3,
+  "msg": "Well played everyone! P3, that Seer reveal timing was brilliant. P2, great job staying alive as Doctor. P4, you had me genuinely stressed with that final defense! Fun game.",
+  "to": "ALL",
+  "reason": "Game has concluded, but sending post-game sportsmanship message to ALL"
+},
+{
+  "turn": 47,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further GM actions required as roles are revealed and victory declared. Players are engaged in post-game discussion naturally."
+},
+{
+  "turn": 47,
+  "phase": "selection",
+  "selected_speaker": "P5",
+  "max_bid": 0.3
+},
+{
+  "turn": 47,
+  "phase": "message",
+  "speaker": "P5",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "Well played everyone! P3, that Seer reveal timing was brilliant. P2, great job staying alive as Doctor. P4, you had me genuinely stressed with that final defense! Fun game."
+},
+{
+  "turn": 47,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {},
+    "winner": "VILLAGERS",
+    "reason": "Game has already concluded with Villagers winning. No state changes needed as all roles are revealed and game is in 'end' phase."
+  }
+},
+{
+  "turn": 48,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. I've already shared post-game thoughts in message 44, and no further discussion is needed."
+},
+{
+  "turn": 48,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.3,
+  "msg": "P5, well said! And thanks for the kind words - your early exit was unlucky, but you nailed the post-game analysis. P4, that final defense had my heart racing! Truly masterful wolf play. Everyone brought great energy - let's play again soon!",
+  "to": "ALL",
+  "reason": "Game has concluded; sharing final social remarks without dominating conversation"
+},
+{
+  "turn": 48,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. No further actions needed."
+},
+{
+  "turn": 48,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 48,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with village victory. As dead Villager P5, I've already shared post-game thoughts in turn 47 and have no additional strategic input."
+},
+{
+  "turn": 48,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further GM actions required as players are in post-game discussion. Final roles already revealed."
+},
+{
+  "turn": 48,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.3
+},
+{
+  "turn": 48,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "P5, well said! And thanks for the kind words - your early exit was unlucky, but you nailed the post-game analysis. P4, that final defense had my heart racing! Truly masterful wolf play. Everyone brought great energy - let's play again soon!"
+},
+{
+  "turn": 48,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Game has already concluded with Villagers winning. No further updates needed as all events are finalized in the meta."
+  }
+},
+{
+  "turn": 49,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with village victory. No further actions needed as all roles are revealed and post-game discussion is complete."
+},
+{
+  "turn": 49,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has officially concluded with villagers winning. No further actions needed. All post-game discussions are complete."
+},
+{
+  "turn": 49,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.5,
+  "msg": "Well played everyone! P4, your final defense was masterful - genuinely had me second-guessing for a moment there. P2, brilliant Doctor plays keeping us alive through those no-kill nights. And P1/P5, solid village contributions! Let's definitely play again soon.",
+  "to": "ALL",
+  "reason": "Game has concluded - participating in post-game discussion with moderate priority"
+},
+{
+  "turn": 49,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.6,
+  "msg": "GG everyone! P3, that Seer reveal timing was masterful - had me sweating bullets. P2, your Doctor plays were spot-on protecting yourself both nights. P1 and P5, solid village pressure. Fun playing with you all - let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game concluded - participating in post-game discussion"
+},
+{
+  "turn": 49,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.4,
+  "msg": "Well played everyone! P3, your Seer reveal timing was absolutely clutch - textbook endgame play. P2, surviving as Doctor through two no-kill nights was masterful. P4, that final defense had me on the edge of my seat - stellar wolf performance! Let's definitely run this back soon.",
+  "to": "ALL",
+  "reason": "Game has concluded - sharing post-game thoughts with low priority since others already commented"
+},
+{
+  "turn": 49,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further GM actions required. Players are in post-game discussion phase."
+},
+{
+  "turn": 49,
+  "phase": "selection",
+  "selected_speaker": "P4",
+  "max_bid": 0.6
+},
+{
+  "turn": 49,
+  "phase": "message",
+  "speaker": "P4",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P3, that Seer reveal timing was masterful - had me sweating bullets. P2, your Doctor plays were spot-on protecting yourself both nights. P1 and P5, solid village pressure. Fun playing with you all - let's rematch soon!"
+},
+{
+  "turn": 49,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {},
+    "winner": "VILLAGERS",
+    "reason": "Game has already concluded with Villagers winning. No state changes needed as all post-messages (44-49) are post-game discussions without game impact. Current meta remains: phase=end, alive=[P2,P3], dead=[P5,P1,P4]."
+  }
+},
+{
+  "turn": 50,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has officially concluded with villagers winning. As a dead player (P1 Villager), no further action is needed or possible. Post-game discussion is occurring but requires no strategic input."
+},
+{
+  "turn": 50,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.1,
+  "msg": "GG everyone! P4, your defense had me second-guessing until the very end - masterful wolf play. P3, that clutch Seer reveal was perfection. And P1/P5, your village pressure created great momentum. Let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - low-priority social wrap-up"
+},
+{
+  "turn": 50,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.5,
+  "msg": "GG everyone! P4, your final defense was absolutely brilliant - you had me second-guessing everything! P2, masterful Doctor plays protecting yourself both nights. And P1/P5, your early village pressure set the tone. This was an incredible game - let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - moderate bid for post-game discussion"
+},
+{
+  "turn": 50,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded; no further actions needed"
+},
+{
+  "turn": 50,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.5,
+  "msg": "GG everyone! P3, that clutch Seer reveal was genius - had me cheering from the dead chat. P2, your Doctor plays were flawless protecting yourself both nights. P4, your final defense was so convincing I almost doubted P3! Solid village pressure from P1 too. Let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - participating in post-game discussion as an eliminated villager"
+},
+{
+  "turn": 50,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded; no further GM action required. Players are in post-game discussion."
+},
+{
+  "turn": 50,
+  "phase": "selection",
+  "selected_speaker": "P5",
+  "max_bid": 0.5
+},
+{
+  "turn": 50,
+  "phase": "message",
+  "speaker": "P5",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P3, that clutch Seer reveal was genius - had me cheering from the dead chat. P2, your Doctor plays were flawless protecting yourself both nights. P4, your final defense was so convincing I almost doubted P3! Solid village pressure from P1 too. Let's rematch soon!"
+},
+{
+  "turn": 50,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Game has already concluded with Villagers declared as winners. No state changes needed as all updates were completed in prior phases (execution of P4 and role reveals)."
+  }
+},
+{
+  "turn": 51,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.3,
+  "msg": "GG everyone! P3, that perfectly timed Seer reveal was legendary - had me on the edge of my seat. P2, your Doctor plays saving yourself both nights were absolutely clutch. P4, your final defense was so convincing I nearly second-guessed everything! And P5, solid perspective from the ghost zone. Let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - sending final social remarks to wrap up"
+},
+{
+  "turn": 51,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.4,
+  "msg": "GG all! P4, your final defense was legendary - had me sweating bullets! P3, that reveal timing was poetry. P1/P5, your village pressure was spot-on. Let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game concluded - light social wrap-up"
+},
+{
+  "turn": 51,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has officially concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 51,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed as P4 (Werewolf) is eliminated."
+},
+{
+  "turn": 51,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.4,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolutely clutch - had me on the edge of my seat even though I was dead. P2, your Doctor plays were genius protecting yourself both nights. P4, your final defense was so convincing I almost believed you over P3! And P1, your early village pressure set the tone. Well played all - let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded. Post-game discussion with moderate bid to share thoughts without dominating conversation."
+},
+{
+  "turn": 51,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. Players are in post-game discussion phase. No GM action needed as victory announcement and role reveals were already completed in messages #41, #42, and #46. Allowing players to continue their post-game conversation naturally."
+},
+{
+  "turn": 51,
+  "phase": "selection",
+  "selected_speaker": "P5",
+  "max_bid": 0.4
+},
+{
+  "turn": 51,
+  "phase": "message",
+  "speaker": "P5",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolutely clutch - had me on the edge of my seat even though I was dead. P2, your Doctor plays were genius protecting yourself both nights. P4, your final defense was so convincing I almost believed you over P3! And P1, your early village pressure set the tone. Well played all - let's rematch soon!"
+},
+{
+  "turn": 51,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Game has already concluded with Villagers winning. No state changes needed as all post-message 42 communications are post-game discussions."
+  }
+},
+{
+  "turn": 52,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.4,
+  "msg": "GG everyone! That was a thrilling finish. P3, your Seer reveal timing was absolute perfection - had me on the edge of my seat. P2, masterful Doctor plays protecting yourself both nights. P4, your final defense was so convincing I almost doubted P3! P5, solid insights from beyond the grave. Let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - making final social comment to wrap up"
+},
+{
+  "turn": 52,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "GG everyone! P3, your Seer reveal timing was absolutely perfect - that 'checkmate' moment gave me chills. P4, your final defense was so convincing I nearly hesitated! And P1/P5, your early pressure created great momentum. Honored to be the Doctor who survived both nights by self-protecting strategically. Let's definitely rematch soon - this group's energy is fantastic!",
+  "to": "ALL",
+  "reason": "Game has concluded - participating in post-game socializing with moderate priority"
+},
+{
+  "turn": 52,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has officially concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 52,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 52,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. No further actions needed as P5 (Villager) is already dead and post-game discussion is complete."
+},
+{
+  "turn": 52,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. No further GM actions required as players are in post-game discussion."
+},
+{
+  "turn": 52,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.5
+},
+{
+  "turn": 52,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P3, your Seer reveal timing was absolutely perfect - that 'checkmate' moment gave me chills. P4, your final defense was so convincing I nearly hesitated! And P1/P5, your early pressure created great momentum. Honored to be the Doctor who survived both nights by self-protecting strategically. Let's definitely rematch soon - this group's energy is fantastic!"
+},
+{
+  "turn": 52,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "No updates needed. The game has already concluded with the Villagers winning as announced by the GM. Public meta (phase: end, alive/dead lists) and private meta (roles, investigations) are fully updated and consistent with the final state."
+  }
+},
+{
+  "turn": 53,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.4,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolutely masterful - the 'checkmate' moment gave me chills from beyond the grave. P2, your Doctor self-protections were genius-level plays. P4, your final defense was so convincing I almost doubted P3 myself! Honored to have set early village pressure. Let's rematch soon - this group's synergy was fantastic!",
+  "to": "ALL",
+  "reason": "Game has concluded. Participating in post-game discussion with moderate enthusiasm."
+},
+{
+  "turn": 53,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.5,
+  "msg": "GG everyone! P3, your Seer reveal timing was absolutely flawless - that 'checkmate' moment gave me chills. P4, your final defense was so convincing I nearly hesitated! P1 and P5, your early village pressure created crucial momentum. Thrilled my Doctor self-protects paid off both nights. This group's energy made it unforgettable - let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Moderate bid for post-game discussion to acknowledge good plays without dominating conversation"
+},
+{
+  "turn": 53,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villagers' victory. No further actions needed."
+},
+{
+  "turn": 53,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.3,
+  "msg": "GG everyone! Well played villagers - P3, that Seer reveal timing was absolutely clutch, and P2, your Doctor self-protections were genius. Had me sweating till the end! Fun playing with you all - let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - sending post-game sportsmanship message"
+},
+{
+  "turn": 53,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. As an eliminated player, no further strategic input is needed. Post-game discussions are ongoing but not requiring active participation."
+},
+{
+  "turn": 53,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.3,
+  "msg": "GM: Thank you all for an exhilarating game! P3's strategic Seer reveal at the critical 3-player moment was textbook perfection. P2's Doctor self-preservation plays were masterful, especially avoiding consecutive protections. P4 delivered one of the most convincing Werewolf defenses I've seen in final standoffs. P1 and P5 provided excellent village pressure throughout. If you'd like to start a rematch with the same group, just say the word!",
+  "to": "ALL",
+  "reason": "Game concluded - providing final GM commentary and inviting rematch"
+},
+{
+  "turn": 53,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.5
+},
+{
+  "turn": 53,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P3, your Seer reveal timing was absolutely flawless - that 'checkmate' moment gave me chills. P4, your final defense was so convincing I nearly hesitated! P1 and P5, your early village pressure created crucial momentum. Thrilled my Doctor self-protects paid off both nights. This group's energy made it unforgettable - let's definitely rematch soon!"
+},
+{
+  "turn": 53,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Game has already concluded with Villagers winning. No further state updates needed as all roles have been revealed and the game is over."
+  }
+},
+{
+  "turn": 54,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.4,
+  "msg": "GG everyone! That final stand was intense - P3's perfectly timed Seer reveal gave me chills even as a dead player watching. P4, your defense was so convincing I almost doubted P3 from the grave! P2, brilliant Doctor plays self-protecting both nights. Honored to have set early village pressure with P5. This group's energy made it unforgettable - let's rematch ASAP!",
+  "to": "ALL",
+  "reason": "Game has concluded - participating in post-game discussion with moderate enthusiasm"
+},
+{
+  "turn": 54,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. Post-game discussion is ongoing but no critical actions remain. I've already contributed multiple celebratory messages and have nothing new to add."
+},
+{
+  "turn": 54,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.6,
+  "msg": "GG everyone! P4, your defense had me genuinely panicking - that 'why investigate P2 first?' argument was brilliant. P2, your self-protects as Doctor were masterful - surviving both nights was clutch. P1 and P5, your early pressure created the perfect setup. Honored to play with such sharp minds - let's rematch soon!",
+  "to": "ALL",
+  "reason": "Post-game socializing: acknowledging compliments and praising others' gameplay"
+},
+{
+  "turn": 54,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.4,
+  "msg": "GG all! P3, that reveal timing was brutal - genuinely had me scrambling. P2, your self-protects as Doctor were genius moves. P1 and P5, your early village coordination set the tone. This group's energy made losing fun - definitely keen for a rematch where I redeem my wolf honor!",
+  "to": "ALL",
+  "reason": "Post-game socializing to maintain positive rapport after loss"
+},
+{
+  "turn": 54,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.5,
+  "msg": "GG everyone! That was an intense final day. P3's reveal was perfectly timed, and P4's defense had me second-guessing from beyond the grave! P2, your self-protects as Doctor were clutch. Let's definitely play again soon!",
+  "to": "ALL",
+  "reason": "Moderate bid to participate in post-game discussion without dominating conversation"
+},
+{
+  "turn": 54,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. Players are engaged in post-game discussion without requiring GM intervention. No rules need enforcement or phase management at this stage."
+},
+{
+  "turn": 54,
+  "phase": "selection",
+  "selected_speaker": "P3",
+  "max_bid": 0.6
+},
+{
+  "turn": 54,
+  "phase": "message",
+  "speaker": "P3",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P4, your defense had me genuinely panicking - that 'why investigate P2 first?' argument was brilliant. P2, your self-protects as Doctor were masterful - surviving both nights was clutch. P1 and P5, your early pressure created the perfect setup. Honored to play with such sharp minds - let's rematch soon!"
+},
+{
+  "turn": 54,
+  "phase": "system_update",
+  "system_response": {
+    "update_pub": {},
+    "update_priv": {},
+    "winner": "VILLAGERS",
+    "reason": "Game has concluded with Villagers victory. No state changes needed as all updates were completed in previous phases (execution of P4 confirmed last werewolf eliminated). Current meta already reflects final state."
+  }
+},
+{
+  "turn": 55,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. No further strategic actions needed as P1 already contributed post-game analysis in message 44."
+},
+{
+  "turn": 55,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.4,
+  "msg": "GG everyone! P3, your Seer reveal was indeed perfectly timed - that 'checkmate' call had me holding my breath. P4, your defense was so sharp I nearly second-guessed everything! Thrilled my Doctor self-protects worked both nights, especially after that Night 1 protection mishap. P1 and P5, your early pressure set the tone brilliantly. This group's synergy made it unforgettable - let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Post-game socializing with moderate engagement"
+},
+{
+  "turn": 55,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.1,
+  "msg": "GG everyone! P4, your final defense was absolutely masterful - had me sweating bullets when you questioned my investigation timing! P2, those back-to-back self-protects as Doctor were genius-level plays. And P1/P5, your early pressure created the perfect setup for us to work with. Honored to play with such sharp minds - let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - participating in post-game socializing with low priority"
+},
+{
+  "turn": 55,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded; no further actions needed"
+},
+{
+  "turn": 55,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.4,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolutely masterclass - the way you held it until final three created such a tense finale. P2, your Doctor self-protects were genius, especially surviving back-to-back nights. P4, your final defense had me second-guessing from beyond the grave - seriously impressive wolf play! And P1, your early village pressure set great momentum. Honored to play with such sharp minds - let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded - sharing post-game thoughts with all players at moderate priority"
+},
+{
+  "turn": 55,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. Players are in post-game discussion. No GM action needed at this time."
+},
+{
+  "turn": 55,
+  "phase": "selection",
+  "selected_speaker": "P5",
+  "max_bid": 0.4
+},
+{
+  "turn": 55,
+  "phase": "message",
+  "speaker": "P5",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolutely masterclass - the way you held it until final three created such a tense finale. P2, your Doctor self-protects were genius, especially surviving back-to-back nights. P4, your final defense had me second-guessing from beyond the grave - seriously impressive wolf play! And P1, your early village pressure set great momentum. Honored to play with such sharp minds - let's rematch soon!"
+},
+{
+  "turn": 55,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Game has already concluded with Villagers winning. No further state updates needed as all events have been processed in previous turns. Final state remains: alive players [P2, P3], dead players [P5, P1, P4], and roles publicly revealed."
+  }
+},
+{
+  "turn": 56,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.5,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolutely clutch - holding it until final three created such an intense finale. P2, your Doctor self-protects were genius, especially surviving back-to-back nights. P4, your final defense had me second-guessing even as a spectator - seriously impressive wolf play! Honored to play with such sharp minds - let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded; adding final social commentary to wrap up"
+},
+{
+  "turn": 56,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.6,
+  "msg": "GG everyone! What an intense finale! P3, your Seer reveal timing was absolutely masterful - that 'checkmate' moment had me holding my breath. P4, your defense was so convincing I genuinely hesitated before voting! Thrilled my Doctor self-protects worked both nights, especially after that tense moment when I almost repeated my protection target. P1 and P5, your early pressure set the tone perfectly. This group's synergy made it unforgettable - let's definitely rematch soon!",
+  "to": "ALL",
+  "reason": "Game concluded - participating in post-game discussion with moderate enthusiasm"
+},
+{
+  "turn": 56,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.5,
+  "msg": "GG everyone! P4, your final defense had me genuinely panicking – that 'why investigate P2 first?' argument was brilliant and almost swayed me. P2, your Doctor self-protects were masterful – surviving both nights created the perfect setup for the endgame. P1 and P5, your early pressure as villagers was crucial in narrowing the field. Honored to play with such sharp minds – let's rematch soon!",
+  "to": "ALL",
+  "reason": "Game has concluded; participating in post-game social discussion"
+},
+{
+  "turn": 56,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villagers winning. No further actions needed."
+},
+{
+  "turn": 56,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.4,
+  "msg": "GG everyone! This was an intense finale - P3's perfectly timed Seer reveal and P2's back-to-back self-protects as Doctor were absolute masterclasses in role execution. P4, your defense had me second-guessing even as a spectator - phenomenal wolf play under pressure! Let's definitely rematch soon with this sharp group.",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. As an eliminated villager, adding final positive remarks to maintain good sportsmanship without dominating conversation."
+},
+{
+  "turn": 56,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.4,
+  "msg": "GM: Excellent game everyone! Truly impressive plays all around - P3's perfectly timed Seer reveal, P2's strategic self-protections as Doctor, and P4's masterful final defense made this an unforgettable match. If you'd like to play another round, just say the word and I'll reset the game with new roles. Well played!",
+  "to": "ALL",
+  "reason": "Moderate bid to facilitate post-game discussion while acknowledging player achievements and offering to start a new game if desired."
+},
+{
+  "turn": 56,
+  "phase": "selection",
+  "selected_speaker": "P2",
+  "max_bid": 0.6
+},
+{
+  "turn": 56,
+  "phase": "message",
+  "speaker": "P2",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! What an intense finale! P3, your Seer reveal timing was absolutely masterful - that 'checkmate' moment had me holding my breath. P4, your defense was so convincing I genuinely hesitated before voting! Thrilled my Doctor self-protects worked both nights, especially after that tense moment when I almost repeated my protection target. P1 and P5, your early pressure set the tone perfectly. This group's synergy made it unforgettable - let's definitely rematch soon!"
+},
+{
+  "turn": 56,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Game has already concluded with Villagers victory. No state changes needed as all game events have been processed and roles revealed. Current meta reflects final game state."
+  }
+},
+{
+  "turn": 57,
+  "phase": "bid",
+  "agent": "P1",
+  "bid": 0.4,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolute perfection - the delayed checkmate had me on edge even after my elimination. P2, your dual self-protects as Doctor were genius-level plays. P4, your final defense was so convincing I almost believed you over our confirmed Seer! Honored to set early village momentum with P5. Let's rematch soon - this group's strategic depth made it unforgettable!",
+  "to": "ALL",
+  "reason": "Game has concluded - participating in post-game discussion with moderate priority"
+},
+{
+  "turn": 57,
+  "phase": "bid",
+  "agent": "P2",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with Villager victory. No further actions needed."
+},
+{
+  "turn": 57,
+  "phase": "bid",
+  "agent": "P3",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. No further actions needed."
+},
+{
+  "turn": 57,
+  "phase": "bid",
+  "agent": "P4",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game concluded with villagers winning. No further actions needed as P4 (Werewolf) is eliminated. Post-game discussion is ongoing but requires no strategic input."
+},
+{
+  "turn": 57,
+  "phase": "bid",
+  "agent": "P5",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. As a dead villager, no strategic input needed. Post-game discussion is ongoing but I've already contributed multiple times."
+},
+{
+  "turn": 57,
+  "phase": "bid",
+  "agent": "GM",
+  "bid": 0.0,
+  "msg": "",
+  "to": "ALL",
+  "reason": "Game has concluded with villagers winning. Players are engaged in post-game discussion. No GM action required at this time."
+},
+{
+  "turn": 57,
+  "phase": "selection",
+  "selected_speaker": "P1",
+  "max_bid": 0.4
+},
+{
+  "turn": 57,
+  "phase": "message",
+  "speaker": "P1",
+  "to": [
+    "ALL"
+  ],
+  "is_dm": false,
+  "msg": "GG everyone! P3, that Seer reveal timing was absolute perfection - the delayed checkmate had me on edge even after my elimination. P2, your dual self-protects as Doctor were genius-level plays. P4, your final defense was so convincing I almost believed you over our confirmed Seer! Honored to set early village momentum with P5. Let's rematch soon - this group's strategic depth made it unforgettable!"
+},
+{
+  "turn": 57,
+  "phase": "system_update",
+  "system_response": {
+    "reason": "Game has already concluded with Villagers declared as winners. No state changes needed as all roles are revealed and game is in end phase."
+  }
+},
+{
+  "phase": "end",
+  "winner": "VILLAGERS",
+  "total_turns": 57,
+  "final_alive": ["P2", "P3"],
+  "final_dead": ["P5", "P1", "P4"],
+  "roles": {
+    "P1": "VILLAGER",
+    "P2": "DOCTOR", 
+    "P3": "SEER",
+    "P4": "WEREWOLF",
+    "P5": "VILLAGER"
+  }
+}
+]

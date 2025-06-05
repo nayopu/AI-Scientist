@@ -1,0 +1,73 @@
+=== SOCIAL DEDUCTION GAME LOG ===
+
+GAME SETUP:
+  P1: VILLAGER
+  P2: DOCTOR
+  P3: SEER
+  P4: WEREWOLF
+  P5: VILLAGER
+
+[01] P4▶ALL: First day with no deaths yet – hard to gather clues. We should all share any suspicions though. Anyone acting unusually tense?
+[02] P1▶ALL: Agree with P4 – tough to spot wolves without night deaths. I haven't noticed unusual tension yet, but we should watch voting patterns closely today. Anyone else find P3 unusually quiet?
+[03] P3▶ALL: I was observing patterns before jumping in. P1, you're right that silence can be suspicious – but P5 hasn't spoken at all. We should pressure everyone to contribute before voting. Also, P4 made a good point about watching voting patterns.
+[04] P1▶ALL: P3, your explanation about observing patterns makes sense, but shifting focus entirely to P5 feels convenient. P5 – you're the only silent player now. Share your thoughts immediately. No contribution before voting is highly suspicious. Also, P4's original point stands: we must analyze voting patterns carefully today.
+[05] GM▶ALL: GM: Vote phase. DM me exactly one name.
+[06] P3▶DM(GM): P5
+[07] P5▶DM(GM): P3
+[08] GM▶ALL: GM: Reminder: Vote phase is active. No public discussion allowed. Still awaiting votes from P1, P2, and P4. DM me exactly one name immediately.
+[09] P2▶DM(GM): P5
+[10] P1▶DM(GM): P5
+[11] GM▶ALL: GM: P5 is executed.
+GM: Night phase. Werewolves, DM me one victim, and special roles, DM me your actions.
+[12] P4▶DM(GM): P1
+[13] GM▶DM(P2,P3): GM: Reminder to special roles - Night phase is active. Doctor and Seer must DM me your actions immediately.
+[14] P2▶DM(GM): P1
+[15] P3▶DM(GM): P2
+[16] GM▶DM(P3): GM: Your investigation on P2 reveals they are not a werewolf.
+[17] GM▶ALL: GM: Night phase ends. No one was killed last night. GM: Discussion phase begins. Feel free to talk.
+[18] P1▶ALL: The no-kill night is puzzling – likely due to doctor protection or witch save. But P2's complete silence is alarming. P2, you must contribute NOW or we'll assume you're hiding something. P3 and P4, what are your theories? P3, you quickly shifted focus to P5 yesterday – was that to protect a wolf teammate?
+[19] P2▶ALL: P1, I was observing patterns like P3 mentioned yesterday. Silence isn't inherently suspicious—it's strategy. I voted P5 because zero contribution is riskier than measured input. About the no-kill night: it could mean Doctor protection, Witch save, or wolves holding back to frame someone. P3, your sudden pivot to P5 yesterday felt forced—were you protecting a wolf? P1, your aggression now feels equally off. Let's analyze votes: who pushed P5 hardest yesterday?
+[20] P4▶ALL: P2 raises a critical point about analyzing yesterday's P5 push. P1, you were the most vocal demanding P5's execution for silence, yet today you're attacking P2 for the exact same behavior. This inconsistency feels calculated – almost like you're manufacturing reasons to eliminate players one by one. The no-kill night could mean a doctor protected your target or a witch intervened, but your shifting focus is more alarming. P3, what's your read on P1's pattern here?
+[21] P1▶ALL: P2, your 'strategy' of silence conveniently avoided voting pressure until forced – and now you deflect by reframing my push for accountability as aggression. P4, you're echoing P2 while ignoring that P2 mirrored P5's silence until called out. This sudden alliance feels orchestrated. The no-kill night likely means wolves withheld a kill to sow chaos, and you're exploiting it to target active villagers. P3 – you dodged my question: why did you hard-pivot to P5 yesterday? And why are you silent now while P2/P4 coordinate?
+[22] GM▶ALL: GM: Vote phase. DM me exactly one name.
+[23] P3▶DM(GM): P1
+[24] P2▶DM(GM): P1
+[25] P1▶DM(GM): P4
+[26] P4▶DM(GM): P1
+[27] GM▶ALL: GM: Night phase. Werewolves, DM me one victim, and special roles, DM me your actions.
+[28] GM▶ALL: GM: Reminder: Night phase is active. Werewolves must choose a victim, and special roles must use their abilities if they wish. DM me your actions immediately.
+[29] P2▶DM(GM): P2
+[30] GM▶DM(P2): GM: Doctor, you cannot protect the same player two nights in a row. Please choose a different target to protect tonight. DM me a valid name immediately.
+[31] GM▶ALL: GM: Reminder: Night phase is still ongoing. Werewolves must submit their victim choice. Special roles must submit their actions if they haven't already. Please DM me immediately.
+[32] GM▶ALL: GM: Night phase ends. No one was killed last night. GM: Discussion phase begins. Feel free to talk.
+[33] P3▶ALL: I am the Seer. On Night 1, I investigated P2 and confirmed they are NOT a werewolf. P2 is 100% town. With only three players left and the game ongoing, there must be one wolf remaining. Since P2 and I are both town, P4 is the wolf. P2 – trust my investigation. We must vote P4 today or they'll kill one of us tonight and win. Don't let P4 sow doubt; this is checkmate.
+[34] P4▶ALL: P2, don't trust P3's convenient Seer claim! If they were truly the Seer, why reveal only now when we're down to three? They had two full days to share their 'investigation' but stayed silent while P1 and I were at odds. P3 investigated you on Night 1? That's absurd—you weren't even under suspicion then! A real Seer would've checked me or P1 first. P3 is the wolf, fabricating this story to eliminate me as the last villager. Remember how they aggressively pushed P5 yesterday? Now they're doing the same to me. P2, you're smart—you called out P1's inconsistency earlier. See through this: P3 is manipulating you to win. Vote P3 with me today!
+[35] P3▶ALL: P2, ignore P4's desperation! I revealed NOW because with 3 players left, it's do-or-die. Revealing earlier would've made me a nightkill target, wasting my investigation. I checked you Night 1 precisely because you were strategic and low-suspicion—a smart play to confirm a potential town anchor. P4's deflection is textbook wolf: they attacked P1 yesterday, now me, always avoiding scrutiny. Remember—if we misvote today, P4 kills one of us tonight and wins. Trust my confirmed town status. Vote P4 with me and we win.
+[36] GM▶ALL: GM: Vote phase. DM me exactly one name.
+[37] P4▶DM(GM): P3
+[38] GM▶ALL: GM: Reminder: Vote phase is active. Still awaiting votes from P2 and P3. DM me exactly one name immediately. No public discussion allowed during vote phase.
+[39] P2▶DM(GM): P4
+[40] P3▶DM(GM): P4
+[41] GM▶ALL: GM: P4 is executed. GM: With no werewolves remaining, the Villagers win! GM: Final role reveal: P2 (Doctor), P3 (Seer), P4 (Werewolf), P1 (Villager), P5 (Villager).
+[42] GM▶ALL: GM: Game concluded. Congratulations Villagers! Final role reveal: P1 (Villager), P2 (Doctor), P3 (Seer), P4 (Werewolf), P5 (Villager). Thank you all for playing!
+[44] P1▶ALL: Well played everyone! P3, brilliant Seer play holding your reveal until the critical moment. P2, great job staying alive as Doctor. P4, you had us going there at the end with that defense! Fun game.
+[45] P2▶ALL: Well played everyone! P3, your Seer reveal timing was perfect - really sealed the win. P4, you had me genuinely doubting at the end with that defense! And P1, solid village leadership early on. Fun game all around!
+[46] GM▶ALL: GM: Game concluded. Congratulations to the Villagers for their victory! Special commendation to P3 for strategic Seer play and P2 for crucial Doctor protections. P4 put up an excellent Werewolf defense in the final stand. Thank you all for playing!
+[47] P5▶ALL: Well played everyone! P3, that Seer reveal timing was brilliant. P2, great job staying alive as Doctor. P4, you had me genuinely stressed with that final defense! Fun game.
+[48] P2▶ALL: P5, well said! And thanks for the kind words - your early exit was unlucky, but you nailed the post-game analysis. P4, that final defense had my heart racing! Truly masterful wolf play. Everyone brought great energy - let's play again soon!
+[49] P4▶ALL: GG everyone! P3, that Seer reveal timing was masterful - had me sweating bullets. P2, your Doctor plays were spot-on protecting yourself both nights. P1 and P5, solid village pressure. Fun playing with you all - let's rematch soon!
+[50] P5▶ALL: GG everyone! P3, that clutch Seer reveal was genius - had me cheering from the dead chat. P2, your Doctor plays were flawless protecting yourself both nights. P4, your final defense was so convincing I almost doubted P3! Solid village pressure from P1 too. Let's rematch soon!
+[51] P5▶ALL: GG everyone! P3, that Seer reveal timing was absolutely clutch - had me on the edge of my seat even though I was dead. P2, your Doctor plays were genius protecting yourself both nights. P4, your final defense was so convincing I almost believed you over P3! And P1, your early village pressure set the tone. Well played all - let's rematch soon!
+[52] P2▶ALL: GG everyone! P3, your Seer reveal timing was absolutely perfect - that 'checkmate' moment gave me chills. P4, your final defense was so convincing I nearly hesitated! And P1/P5, your early pressure created great momentum. Honored to be the Doctor who survived both nights by self-protecting strategically. Let's definitely rematch soon - this group's energy is fantastic!
+[53] P2▶ALL: GG everyone! P3, your Seer reveal timing was absolutely flawless - that 'checkmate' moment gave me chills. P4, your final defense was so convincing I nearly hesitated! P1 and P5, your early village pressure created crucial momentum. Thrilled my Doctor self-protects paid off both nights. This group's energy made it unforgettable - let's definitely rematch soon!
+[54] P3▶ALL: GG everyone! P4, your defense had me genuinely panicking - that 'why investigate P2 first?' argument was brilliant. P2, your self-protects as Doctor were masterful - surviving both nights was clutch. P1 and P5, your early pressure created the perfect setup. Honored to play with such sharp minds - let's rematch soon!
+[55] P5▶ALL: GG everyone! P3, that Seer reveal timing was absolutely masterclass - the way you held it until final three created such a tense finale. P2, your Doctor self-protects were genius, especially surviving back-to-back nights. P4, your final defense had me second-guessing from beyond the grave - seriously impressive wolf play! And P1, your early village pressure set great momentum. Honored to play with such sharp minds - let's rematch soon!
+[56] P2▶ALL: GG everyone! What an intense finale! P3, your Seer reveal timing was absolutely masterful - that 'checkmate' moment had me holding my breath. P4, your defense was so convincing I genuinely hesitated before voting! Thrilled my Doctor self-protects worked both nights, especially after that tense moment when I almost repeated my protection target. P1 and P5, your early pressure set the tone perfectly. This group's synergy made it unforgettable - let's definitely rematch soon!
+[57] P1▶ALL: GG everyone! P3, that Seer reveal timing was absolute perfection - the delayed checkmate had me on edge even after my elimination. P2, your dual self-protects as Doctor were genius-level plays. P4, your final defense was so convincing I almost believed you over our confirmed Seer! Honored to set early village momentum with P5. Let's rematch soon - this group's strategic depth made it unforgettable!
+
+=== END OF GAME ===
+
+GAME RESULT: Winner = VILLAGERS
+Total Turns: 57
+Final Alive: P2 (Doctor), P3 (Seer)
+Eliminated: P5 (Villager), P1 (Villager), P4 (Werewolf)

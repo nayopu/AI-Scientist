@@ -188,8 +188,8 @@ def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int 
             result = asyncio.run(run_game(
                 rules_module=rule_module,
                 num_players=num_players,
-                api_source="openai",  # Default to OpenAI, could be made configurable
-                model_name="gpt-4o-mini",  # Default model, could be made configurable
+                api_source="openrouter",  # Default to OpenAI, could be made configurable
+                model_name="deepseek/deepseek-r1-0528",  # Default model, could be made configurable
                 out_dir=out_dir
             ))
         except Exception as e:
