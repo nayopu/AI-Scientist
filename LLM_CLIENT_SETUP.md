@@ -107,7 +107,7 @@ The package provides backward compatibility through `ai_scientist.llm.create_cli
 - `--model` argument has been removed from `launch_scientist.py`
 - `--api` and `--model` arguments removed from experiment scripts
 - Use `AI_SCIENTIST_MODEL` environment variable instead
-
+ 
 ## Troubleshooting
 
 ### Missing Environment Variable

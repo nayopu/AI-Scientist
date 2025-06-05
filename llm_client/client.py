@@ -139,43 +139,45 @@ def get_batch_responses_from_llm(
     if msg_history is None:
         msg_history = []
 
-    if 'gpt' in model or 'o1' in model or 'o3' in model:
-        new_msg_history = msg_history + [{"role": "user", "content": msg}]
-        
-        # Handle o1/o3 models differently (no system message, different parameters)
-        if "o1" in model or "o3" in model:
-            messages = [{"role": "user", "content": system_message}] + new_msg_history
-            response = client.chat.completions.create(
-                model=model,
-                messages=messages,
-                temperature=1,
-                max_completion_tokens=MAX_NUM_TOKENS,
-                n=n_responses,
-                seed=0,
-            )
-        else:
-            response = client.chat.completions.create(
-                model=model,
-                messages=[
-                    {"role": "system", "content": system_message},
-                    *new_msg_history,
-                ],
+    # Route based on API provider and special model types
+    if config.api_provider == "anthropic" or "claude" in model:
+        # Anthropic models don't support n_responses, so generate individually
+        content, new_msg_history = [], []
+        for _ in range(n_responses):
+            c, hist = get_response_from_llm(
+                msg,
+                system_message,
+                print_debug=False,
+                msg_history=msg_history,
                 temperature=temperature,
-                max_tokens=MAX_NUM_TOKENS,
-                n=n_responses,
-                stop=None,
-                seed=0,
+                client=client,
+                model=model,
             )
-        
+            content.append(c)
+            new_msg_history.append(hist)
+            
+    elif "o1" in model or "o3" in model:
+        # o1/o3 models have special handling regardless of provider
+        new_msg_history = msg_history + [{"role": "user", "content": msg}]
+        messages = [{"role": "user", "content": system_message}] + new_msg_history
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=1,
+            max_completion_tokens=MAX_NUM_TOKENS,
+            n=n_responses,
+            seed=0,
+        )
         content = [r.message.content for r in response.choices]
         new_msg_history = [
             new_msg_history + [{"role": "assistant", "content": c}] for c in content
         ]
         
-    elif model in ["meta-llama/llama-3.1-405b-instruct", "llama-3-1-405b-instruct"]:
+    elif config.api_provider in ["openai", "openrouter", "gemini"] or 'gpt' in model:
+        # OpenAI-compatible APIs that support n_responses
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         response = client.chat.completions.create(
-            model="meta-llama/llama-3.1-405b-instruct",
+            model=model,
             messages=[
                 {"role": "system", "content": system_message},
                 *new_msg_history,
@@ -184,13 +186,15 @@ def get_batch_responses_from_llm(
             max_tokens=MAX_NUM_TOKENS,
             n=n_responses,
             stop=None,
+            seed=0,
         )
         content = [r.message.content for r in response.choices]
         new_msg_history = [
             new_msg_history + [{"role": "assistant", "content": c}] for c in content
         ]
+        
     else:
-        # For models that don't support n_responses, generate individually
+        # For providers that don't support n_responses, generate individually
         content, new_msg_history = [], []
         for _ in range(n_responses):
             c, hist = get_response_from_llm(
@@ -248,7 +252,8 @@ def get_response_from_llm(
     if msg_history is None:
         msg_history = []
 
-    if "claude" in model:
+    # Route based on API provider rather than model name patterns
+    if config.api_provider == "anthropic" or "claude" in model:
         new_msg_history = msg_history + [
             {
                 "role": "user",
@@ -280,24 +285,8 @@ def get_response_from_llm(
             }
         ]
         
-    elif 'gpt' in model:
-        new_msg_history = msg_history + [{"role": "user", "content": msg}]
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": system_message},
-                *new_msg_history,
-            ],
-            temperature=temperature,
-            max_tokens=MAX_NUM_TOKENS,
-            n=1,
-            stop=None,
-            seed=0,
-        )
-        content = response.choices[0].message.content
-        new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
-        
     elif "o1" in model or "o3" in model:
+        # o1/o3 models have special handling regardless of provider
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         response = client.chat.completions.create(
             model=model,
@@ -313,23 +302,8 @@ def get_response_from_llm(
         content = response.choices[0].message.content
         new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
         
-    elif model in ["meta-llama/llama-3.1-405b-instruct", "llama-3-1-405b-instruct"]:
-        new_msg_history = msg_history + [{"role": "user", "content": msg}]
-        response = client.chat.completions.create(
-            model="meta-llama/llama-3.1-405b-instruct",
-            messages=[
-                {"role": "system", "content": system_message},
-                *new_msg_history,
-            ],
-            temperature=temperature,
-            max_tokens=MAX_NUM_TOKENS,
-            n=1,
-            stop=None,
-        )
-        content = response.choices[0].message.content
-        new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
-        
-    elif model in ["deepseek-chat", "deepseek-coder"]:
+    elif config.api_provider == "deepseek" and model in ["deepseek-chat", "deepseek-coder"]:
+        # Only route to DeepSeek API if explicitly using deepseek provider
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         response = client.chat.completions.create(
             model=model,
@@ -345,7 +319,8 @@ def get_response_from_llm(
         content = response.choices[0].message.content
         new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
         
-    elif model in ["deepseek-reasoner"]:
+    elif config.api_provider == "deepseek" and model in ["deepseek-reasoner"]:
+        # DeepSeek reasoner models have special handling
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         response = client.chat.completions.create(
             model=model,
@@ -355,27 +330,27 @@ def get_response_from_llm(
             ],
             n=1,
             stop=None,
-        )
-        content = response.choices[0].message.content
-        new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
-        
-    elif "gemini" in model:
-        new_msg_history = msg_history + [{"role": "user", "content": msg}]
-        response = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": system_message},
-                *new_msg_history,
-            ],
-            temperature=temperature,
-            max_tokens=MAX_NUM_TOKENS,
-            n=1,
         )
         content = response.choices[0].message.content
         new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
         
     else:
-        raise ValueError(f"Model {model} not supported.")
+        # Default: Use OpenAI-compatible API for all other providers (OpenAI, OpenRouter, Gemini, etc.)
+        new_msg_history = msg_history + [{"role": "user", "content": msg}]
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": system_message},
+                *new_msg_history,
+            ],
+            temperature=temperature,
+            max_tokens=MAX_NUM_TOKENS,
+            n=1,
+            stop=None,
+            seed=0,
+        )
+        content = response.choices[0].message.content
+        new_msg_history = new_msg_history + [{"role": "assistant", "content": content}]
 
     if print_debug:
         print()
