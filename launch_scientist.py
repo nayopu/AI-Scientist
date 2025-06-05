@@ -1,7 +1,6 @@
 import argparse
 import json
 import multiprocessing
-import openai
 import os
 import os.path as osp
 import shutil
@@ -26,42 +25,8 @@ def print_time():
     print(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
 
-def parse_model_spec(model_spec: str) -> tuple[str, str]:
-    """
-    Parse model specification string into (api, model_name) tuple.
-    
-    Args:
-        model_spec: String in format 'api:model_name'
-        
-    Returns:
-        Tuple of (api, model_name)
-        
-    Raises:
-        ValueError: If format is invalid
-    """
-    try:
-        api, model_name = model_spec.split(':', 1)
-        api = api.lower()
-        if api not in ['openai', 'openrouter', 'anthropic']:
-            raise ValueError(f"Unsupported API: {api}")
-        return api, model_name
-    except ValueError:
-        raise ValueError(
-            "Model specification must be in format 'api:model_name'. "
-            "Examples: 'openai:gpt-4o-mini', 'openrouter:llama-3.1-405b-instruct'"
-        )
-
-
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Run AI scientist experiments")
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="openai:gpt-4o-mini",
-        help="Model specification in format 'api:model_name'. "
-             "Supported APIs: openai, openrouter, anthropic. "
-             "Examples: 'openai:gpt-4o-mini', 'openrouter:llama-3.1-405b-instruct', 'anthropic:claude-3-5-sonnet-20240620'",
-    )
     parser.add_argument(
         "--search-api",
         type=str,
@@ -159,9 +124,6 @@ def worker(
         queue,
         base_dir,
         results_dir,
-        model,
-        client,
-        client_model,
         writeup,
         improvement,
         gpu_id,
@@ -172,6 +134,10 @@ def worker(
 ):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
     print(f"Worker {gpu_id} started.")
+    
+    # Get configured client once for this worker
+    client, client_model = create_client()
+    
     while True:
         idea = queue.get()
         if idea is None:
@@ -180,7 +146,6 @@ def worker(
             base_dir,
             results_dir,
             idea,
-            model,
             client,
             client_model,
             writeup,
@@ -199,7 +164,6 @@ def do_idea(
         base_dir,
         results_dir,
         idea,
-        model,
         client,
         client_model,
         writeup,
@@ -253,14 +217,14 @@ def do_idea(
         io = InputOutput(
             yes=True, chat_history_file=f"{folder_name}/{idea_name}_aider.txt"
         )
-        if model == "deepseek-coder-v2-0724":
+        if client_model == "deepseek-coder-v2-0724":
             main_model = Model("deepseek/deepseek-coder")
-        elif model == "deepseek-reasoner":
+        elif client_model == "deepseek-reasoner":
             main_model = Model("deepseek/deepseek-reasoner")
-        elif model == "llama3.1-405b":
+        elif client_model == "llama3.1-405b" or client_model == "meta-llama/llama-3.1-405b-instruct":
             main_model = Model("openrouter/meta-llama/llama-3.1-405b-instruct")
         else:
-            main_model = Model(model)
+            main_model = Model(client_model)
         coder = Coder.create(
             main_model=main_model,
             fnames=fnames,
@@ -298,14 +262,14 @@ def do_idea(
         if writeup == "latex":
             writeup_file = osp.join(folder_name, "latex", "template.tex")
             fnames = [exp_file, writeup_file, notes]
-            if model == "deepseek-coder-v2-0724":
+            if client_model == "deepseek-coder-v2-0724":
                 main_model = Model("deepseek/deepseek-coder")
-            elif model == "deepseek-reasoner":
+            elif client_model == "deepseek-reasoner":
                 main_model = Model("deepseek/deepseek-reasoner")
-            elif model == "llama3.1-405b":
+            elif client_model == "llama3.1-405b" or client_model == "meta-llama/llama-3.1-405b-instruct":
                 main_model = Model("openrouter/meta-llama/llama-3.1-405b-instruct")
             else:
-                main_model = Model(model)
+                main_model = Model(client_model)
             coder = Coder.create(
                 main_model=main_model,
                 fnames=fnames,
@@ -334,13 +298,16 @@ def do_idea(
         ## REVIEW PAPER
         if writeup == "latex":
             try:
+                # Get configured client for review
+                review_client, review_model = create_client()
+                
                 if "social_deduction" in base_dir or experiment == "social_deduction_game":
                     # Use game manual review for social deduction games
                     manual_text = load_paper(f"{folder_name}/{idea['Name']}.pdf")
                     review = perform_game_manual_review(
                         manual_text,
-                        model="gpt-4o-2024-05-13",
-                        client=openai.OpenAI(),
+                        model=review_model,
+                        client=review_client,
                         num_reflections=3,
                         num_fs_examples=1,
                         num_reviews_ensemble=3,
@@ -351,8 +318,8 @@ def do_idea(
                     paper_text = load_paper(f"{folder_name}/{idea['Name']}.pdf")
                     review = perform_review(
                         paper_text,
-                        model="gpt-4o-2024-05-13",
-                        client=openai.OpenAI(),
+                        model=review_model,
+                        client=review_client,
                         num_reflections=5,
                         num_fs_examples=1,
                         num_reviews_ensemble=5,
@@ -375,10 +342,13 @@ def do_idea(
                     coder, folder_name, f"{folder_name}/{idea['Name']}_improved.pdf"
                 )
                 paper_text = load_paper(f"{folder_name}/{idea['Name']}_improved.pdf")
+                
+                # Get configured client for review
+                improve_client, improve_model = create_client()
                 review = perform_review(
                     paper_text,
-                    model="gpt-4o-2024-05-13",
-                    client=openai.OpenAI(),
+                    model=improve_model,
+                    client=improve_client,
                     num_reflections=5,
                     num_fs_examples=1,
                     num_reviews_ensemble=5,
@@ -405,11 +375,15 @@ def do_idea(
 if __name__ == "__main__":
     args = parse_arguments()
     
-    # Parse model specification
-    api, model_name = parse_model_spec(args.model)
+    # Print environment variable usage information
+    print("LLM Configuration:")
+    print(f"  Model: {os.environ.get('AI_SCIENTIST_MODEL', 'openai:gpt-4o-mini (default)')}")
+    print("  Set AI_SCIENTIST_MODEL environment variable to change model")
+    print("  Format: 'provider:model' (e.g., 'anthropic:claude-3-5-sonnet-20241022')")
+    print()
     
-    # Create client with parsed values
-    client, client_model = create_client(model_name)
+    # Create client with environment variable configuration
+    client, client_model = create_client()
 
     base_dir = osp.join("templates", args.experiment)
     results_dir = osp.join("results", args.experiment)
@@ -459,9 +433,6 @@ if __name__ == "__main__":
                     queue,
                     base_dir,
                     results_dir,
-                    args.model,
-                    client,
-                    client_model,
                     args.writeup,
                     args.improvement,
                     gpu_id,
@@ -491,7 +462,6 @@ if __name__ == "__main__":
                     base_dir,
                     results_dir,
                     idea,
-                    args.model,
                     client,
                     client_model,
                     args.writeup,

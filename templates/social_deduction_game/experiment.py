@@ -15,8 +15,8 @@ from typing import Dict, List, Any
 # Add your experiment-specific imports here
 import numpy as np
 
-# Import LLM utilities
-from llm_utils import create_llm
+# Import LLM utilities from the unified client
+from llm_client import get_llm_client
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -24,30 +24,43 @@ def parse_args():
     parser.add_argument("--idea", type=str, help="JSON string of the idea to implement")
     parser.add_argument("--baseline_game", type=str, default="werewolf", 
                         help="Baseline game to compare against")
-    parser.add_argument("--model", type=str, default="gpt-4o-mini",
-                        help="LLM model to use for rule generation")
-    parser.add_argument("--api", type=str, default="openai",
-                        help="API to use (openai, anthropic, openrouter, etc.)")
     return parser.parse_args()
 
-def generate_rule_file(idea: Dict[str, Any], output_path: str, model: str = "gpt-4o-mini", 
-                      api: str = "openai") -> bool:
+def generate_rule_file(idea: Dict[str, Any], output_path: str) -> bool:
     """
     Generate a Python rule file from the game idea using LLM.
     
     Args:
         idea: Game idea dictionary with Name, Title, Experiment fields
         output_path: Path where to save the generated rule file
-        model: LLM model to use for generation
-        api: API to use for the model
     """
     game_name = idea.get("Name", "custom_game")
     title = idea.get("Title", "Custom Social Deduction Game")
     description = idea.get("Experiment", "A new social deduction game")
     
     try:
-        # Create LangChain LLM client
-        llm_client = create_llm(api, model, temperature=0.1)
+        # Create LangChain LLM client using unified configuration
+        from langchain_openai import ChatOpenAI
+        
+        # Get client from unified configuration
+        client, model_name = get_llm_client()
+        
+        # Create LangChain wrapper for the configured client
+        if "claude" in model_name:
+            from langchain_anthropic import ChatAnthropic
+            llm_client = ChatAnthropic(
+                model=model_name,
+                temperature=0.1,
+                anthropic_api_key=client.api_key
+            )
+        else:
+            # For OpenAI-compatible APIs (including OpenRouter, DeepSeek, etc.)
+            llm_client = ChatOpenAI(
+                model=model_name,
+                temperature=0.1,
+                openai_api_key=client.api_key,
+                openai_api_base=getattr(client, 'base_url', None)
+            )
         
         # Read werewolf.py as an example
         # Read all Python files in sample_rules directory and create a dictionary
@@ -144,7 +157,7 @@ Generate a complete, working Python rule file that implements this specific soci
         with open(output_path, 'w') as f:
             f.write(generated_code.strip())
         
-        print(f"Generated rule file using LLM ({model}): {output_path}")
+        print(f"Generated rule file using LLM ({model_name}): {output_path}")
         return True
         
     except Exception as e:
@@ -152,21 +165,18 @@ Generate a complete, working Python rule file that implements this specific soci
         raise e  # Re-raise the error instead of falling back
 
 def run_game_simulation(rule_module: str, out_dir: str, num_players: int = 5, 
-                       api: str = "openai", model: str = "gpt-4o-mini", 
                        max_turns: int = 50) -> Dict:
     """
     Run a game simulation and capture the results.
     """
     try:
       
-        # Run the game simulation
+        # Run the game simulation using unified client configuration
         cmd = [
             sys.executable, 
             str(Path(__file__).parent / "sdg_core.py"),
             "--rules", rule_module,  # Just the module name
             "--players", str(num_players),
-            "--api", api,
-            "--model", model,
             "--out", out_dir
         ]
         
@@ -284,9 +294,30 @@ def evaluate_game_quality(new_game_results: Dict, baseline_results: Dict, rule_f
             with open(rule_file_path, 'r', encoding='utf-8') as f:
                 rule_content = f.read()
             
-            # Create LLM for rule analysis
+            # Create LLM for rule analysis using unified configuration
             try:
-                llm = create_llm("openai", "gpt-4o-mini", temperature=0.1)
+                from langchain_openai import ChatOpenAI
+                from langchain_anthropic import ChatAnthropic
+                
+                # Get client from unified configuration
+                client, model_name = get_llm_client()
+                
+                # Create LangChain wrapper for the configured client
+                if "claude" in model_name:
+                    llm = ChatAnthropic(
+                        model=model_name,
+                        temperature=0.1,
+                        anthropic_api_key=client.api_key
+                    )
+                else:
+                    # For OpenAI-compatible APIs
+                    llm = ChatOpenAI(
+                        model=model_name,
+                        temperature=0.1,
+                        openai_api_key=client.api_key,
+                        openai_api_base=getattr(client, 'base_url', None)
+                    )
+                    
             except Exception:
                 # Fallback to basic analysis if LLM unavailable
                 rule_analysis = {"error": "LLM unavailable for rule analysis"}
@@ -378,7 +409,27 @@ Respond with ONLY valid JSON matching this exact format:
             
             if dialogue_text.strip():
                 try:
-                    llm = create_llm("openai", "gpt-4o-mini", temperature=0.1)
+                    from langchain_openai import ChatOpenAI
+                    from langchain_anthropic import ChatAnthropic
+                    
+                    # Get client from unified configuration
+                    client, model_name = get_llm_client()
+                    
+                    # Create LangChain wrapper for the configured client
+                    if "claude" in model_name:
+                        llm = ChatAnthropic(
+                            model=model_name,
+                            temperature=0.1,
+                            anthropic_api_key=client.api_key
+                        )
+                    else:
+                        # For OpenAI-compatible APIs
+                        llm = ChatOpenAI(
+                            model=model_name,
+                            temperature=0.1,
+                            openai_api_key=client.api_key,
+                            openai_api_base=getattr(client, 'base_url', None)
+                        )
                     
                     dialogue_analyzer = ChatPromptTemplate.from_messages([
                         SystemMessage(content="""You are analyzing social deduction game dialogue quality.
@@ -514,13 +565,13 @@ def run_experiment(args=None):
     rule_file_path = Path(args.out_dir) / f"{rule_file_name}.py"
     rule_file_path.parent.mkdir(parents=True, exist_ok=True)
     
-    success = generate_rule_file(idea, rule_file_path, args.model, args.api)
+    success = generate_rule_file(idea, rule_file_path)
     if not success:
         return {"error": "Failed to generate rule file"}
     
     # Test the new game
     print("Running new game simulation...")
-    new_game_results = run_game_simulation(rule_file_name, args.out_dir, api=args.api, model=args.model)
+    new_game_results = run_game_simulation(rule_file_name, args.out_dir)
     
     if not new_game_results["success"]:
         print(f"New game failed: {new_game_results.get('error', 'Unknown error')}")
@@ -531,7 +582,7 @@ def run_experiment(args=None):
     # Run baseline game for comparison
     print("Running baseline game simulation...")
     baseline_rule_module = f"sample_rules.{args.baseline_game}"
-    baseline_results = run_game_simulation(baseline_rule_module, api=args.api, model=args.model)
+    baseline_results = run_game_simulation(baseline_rule_module)
     
     if not baseline_results["success"]:
         print("Warning: Baseline game failed, loading from file...")
