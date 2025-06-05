@@ -17,3 +17,4 @@ tiktoken
 wandb
 tqdm
 pytest
+langchain-anthropic

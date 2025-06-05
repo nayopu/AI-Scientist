@@ -3,7 +3,6 @@ import json
 import os
 import sys
 import time
-import subprocess
 import asyncio
 import tempfile
 import shutil
@@ -164,36 +163,41 @@ Generate a complete, working Python rule file that implements this specific soci
         print(f"Error generating rule file with LLM: {e}")
         raise e  # Re-raise the error instead of falling back
 
-def run_game_simulation(rule_module: str, out_dir: str, num_players: int = 5, 
+def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int = 5, 
                        max_turns: int = 50) -> Dict:
     """
     Run a game simulation and capture the results.
     """
     try:
-      
-        # Run the game simulation using unified client configuration
-        cmd = [
-            sys.executable, 
-            str(Path(__file__).parent / "sdg_core.py"),
-            "--rules", rule_module,  # Just the module name
-            "--players", str(num_players),
-            "--out", out_dir
-        ]
+        # Import the run_game function from sdg_core
+        from sdg_core import run_game
         
-        print(f"Running command: {' '.join(cmd)}")
+        # Use default output directory if not specified
+        if out_dir is None:
+            out_dir = "temp_game_logs"
         
-        # Run with timeout to prevent hanging
-        result = subprocess.run(
-            cmd, 
-            capture_output=True, 
-            text=True, 
-            timeout=900,  # 15 minute timeout
-            cwd=str(Path(__file__).parent)
-        )
+        # Create output directory
+        Path(out_dir).mkdir(parents=True, exist_ok=True)
         
-        if result.returncode != 0:
-            print(f"Game failed with error: {result.stderr}")
-            return {"success": False, "error": result.stderr, "dialogue": []}
+        print(f"Running game with rules: {rule_module}, players: {num_players}, output: {out_dir}")
+        
+        # Run the game directly using the run_game function
+        # Note: We need to handle async function call
+        try:
+            import asyncio
+            result = asyncio.run(run_game(
+                rules_module=rule_module,
+                num_players=num_players,
+                api_source="openai",  # Default to OpenAI, could be made configurable
+                model_name="gpt-4o-mini",  # Default model, could be made configurable
+                out_dir=out_dir
+            ))
+        except Exception as e:
+            return {"success": False, "error": f"Failed to run game: {str(e)}", "dialogue": []}
+        
+        # Check if game completed successfully
+        if not result["success"]:
+            return {"success": False, "error": result.get("error", "Unknown game error"), "dialogue": []}
         
         # Load the game summary log (for evaluation)
         summary_file = Path(out_dir) / "game_summary.txt"
@@ -209,9 +213,9 @@ def run_game_simulation(rule_module: str, out_dir: str, num_players: int = 5,
         
         # Parse information from summary text log
         dialogue = []
-        game_completed = False
-        winner = None
-        turn_count = 0
+        game_completed = result["game_completed"]
+        winner = result["winner"]
+        turn_count = result["turn_count"]
         
         # Parse conversations from summary text
         lines = game_summary_text.split('\n')
@@ -224,7 +228,6 @@ def run_game_simulation(rule_module: str, out_dir: str, num_players: int = 5,
                     # Extract turn number
                     turn_part = line.split(']')[0][1:]
                     turn = int(turn_part)
-                    turn_count = max(turn_count, turn)
                     
                     # Extract speaker and message
                     rest = line.split('] ', 1)[1]
@@ -247,11 +250,6 @@ def run_game_simulation(rule_module: str, out_dir: str, num_players: int = 5,
                     })
                 except (ValueError, IndexError):
                     continue
-            elif 'GAME RESULT:' in line:
-                game_completed = True
-                if 'Winner =' in line:
-                    winner_part = line.split('Winner =')[1].strip()
-                    winner = winner_part if winner_part != 'None' else None
         
         return {
             "success": True,
@@ -263,8 +261,8 @@ def run_game_simulation(rule_module: str, out_dir: str, num_players: int = 5,
             "game_summary_text": game_summary_text
         }
         
-    except subprocess.TimeoutExpired:
-        return {"success": False, "error": "Game timed out", "dialogue": []}
+    except ImportError as e:
+        return {"success": False, "error": f"Failed to import sdg_core: {e}", "dialogue": []}
     except Exception as e:
         return {"success": False, "error": str(e), "dialogue": []}
 
@@ -582,7 +580,8 @@ def run_experiment(args=None):
     # Run baseline game for comparison
     print("Running baseline game simulation...")
     baseline_rule_module = f"sample_rules.{args.baseline_game}"
-    baseline_results = run_game_simulation(baseline_rule_module)
+    baseline_out_dir = str(Path(args.out_dir) / "baseline")
+    baseline_results = run_game_simulation(baseline_rule_module, baseline_out_dir)
     
     if not baseline_results["success"]:
         print("Warning: Baseline game failed, loading from file...")

@@ -576,46 +576,46 @@ async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, meta_
     
     return bids, pkgs
 
-# ---------- メインループ ----------
-async def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--rules", required=True)
-    ap.add_argument("--players", type=int, default=5)
-    ap.add_argument("--api", choices=["openai", "openrouter"], default="openai",
-                    help="API source to use (OpenAI or OpenRouter)")
-    ap.add_argument("--model", default="gpt-4o-mini",
-                    help="Model name for players")
-    ap.add_argument("--gm-model", default=None,
-                    help="Model name for GM (if different from players)")
-    ap.add_argument("--lang", default="en")
-    ap.add_argument("--out", default="game_logs",
-                    help="Directory to store game logs. Will create two files: "
-                         "game_log.json (detailed log) and game_summary.txt (evaluation summary)")
-    args = ap.parse_args()
-
+async def run_game(rules_module: str, num_players: int = 5, api_source: str = "openai", 
+                  model_name: str = "gpt-4o-mini", gm_model_name: str = None, 
+                  lang: str = "en", out_dir: str = "game_logs") -> Dict[str, Any]:
+    """
+    Run a social deduction game programmatically.
+    
+    Args:
+        rules_module: Name of the rules module to import
+        num_players: Number of players (default: 5)
+        api_source: API source ("openai" or "openrouter", default: "openai")
+        model_name: Model name for players (default: "gpt-4o-mini")  
+        gm_model_name: Model name for GM (if different from players)
+        lang: Language code (default: "en")
+        out_dir: Directory to store game logs (default: "game_logs")
+    
+    Returns:
+        Dict containing game results with keys:
+        - success: bool indicating if game completed successfully
+        - winner: str or None indicating the winner
+        - turn_count: int number of turns played
+        - error: str error message if game failed
+    """
     try:
-        rules = importlib.import_module(args.rules)
-        names = [f"P{i+1}" for i in range(args.players)]
+        rules = importlib.import_module(rules_module)
+        names = [f"P{i+1}" for i in range(num_players)]
 
         # Initialize logger
-        logger = GameLogger(args.out)
+        logger = GameLogger(out_dir)
 
         meta_pub = rules.init_meta_pub(names)     # phase / alive / dead など
         meta_priv_all = rules.init_meta_priv(names)   # 役職など - now returns dict with keys for each participant
 
         # Create LLM instances
         try:
-            player_llm = create_llm(args.api, args.model)
-            gm_llm = create_llm(args.api, args.gm_model or args.model)
-            system_llm = create_llm(args.api, args.gm_model or args.model)
+            player_llm = create_llm(api_source, model_name)
+            gm_llm = create_llm(api_source, gm_model_name or model_name)
+            system_llm = create_llm(api_source, gm_model_name or model_name)
         except ValueError as e:
-            print(f"Error: {e}")
-            print("\nPlease set the required API key environment variable:")
-            if args.api == "openai":
-                print("export OPENAI_API_KEY='your-api-key'")
-            else:
-                print("export OPENROUTER_API_KEY='your-api-key'")
-            sys.exit(1)
+            error_msg = f"Error: {e}\nPlease set the required API key environment variable"
+            return {"success": False, "error": error_msg, "winner": None, "turn_count": 0}
 
         agents: Dict[str, Player] = {}
 
@@ -623,7 +623,7 @@ async def main():
         for n in names:
             role = rules.assign_role(n, meta_priv_all)
             agents[n] = Player(n, role,
-                              rules.player_sys_prompt(n, role, args.lang),
+                              rules.player_sys_prompt(n, role, lang),
                               player_llm)
         
         # Log role assignments
@@ -644,7 +644,7 @@ async def main():
 
         # GM
         agents["GM"] = GameMaster("GM",
-                                 rules.gm_sys_prompt(args.lang), gm_llm)
+                                 rules.gm_sys_prompt(lang), gm_llm)
         
         # Create GameSystem agent
         game_system = GameSystem(rules.system_sys_prompt(), 
@@ -658,9 +658,10 @@ async def main():
         dm_log: List[Tuple[int, str, str, str]] = []  # [(turn, sender, receiver, text)]
         turn = 0
         winner: str | None = None
+        max_turns = 100  # Safety limit to prevent infinite games
         
         try:
-            while winner is None:
+            while winner is None and turn < max_turns:
                 turn += 1
                 # ❶ 各エージェントが bid+msg を同時提出 (並列処理)
                 bids, pkgs = await parallel_bidding(agents, turn, meta_pub, meta_priv_all, public_log)
@@ -795,27 +796,78 @@ async def main():
                 # ❹ 勝利判定
                 winner = system_response.get("winner")
 
-            print(f"*** Game End. Winner = {winner} ***")
+            if turn >= max_turns and winner is None:
+                print(f"*** Game reached maximum turns ({max_turns}) without a winner ***")
+            else:
+                print(f"*** Game End. Winner = {winner} ***")
             
             # ゲーム終了をログに記録
             end_entry = {
                 "phase": "end",
-                "winner": winner
+                "winner": winner,
+                "total_turns": turn
             }
             logger.log_detailed(end_entry)
             logger.log_summary("result", end_entry)
             
+            return {
+                "success": True,
+                "winner": winner,
+                "turn_count": turn,
+                "game_completed": winner is not None,
+                "error": None
+            }
+            
         finally:
             # Save all logs even if the game was interrupted
             logger.save_logs()
-            print(f"Logs saved to directory: {args.out}")
+            print(f"Logs saved to directory: {out_dir}")
 
     except Exception as e:
-        print(f"Error: {e}")
+        error_msg = f"Game execution error: {str(e)}"
+        print(f"Error: {error_msg}")
         # Try to save logs if logger exists
         if 'logger' in locals():
             logger.save_logs()
-            print(f"Logs saved to directory: {args.out} (after error)")
+            print(f"Logs saved to directory: {out_dir} (after error)")
+        return {
+            "success": False,
+            "winner": None,
+            "turn_count": locals().get('turn', 0),
+            "game_completed": False,
+            "error": error_msg
+        }
+
+# ---------- メインループ ----------
+async def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--rules", required=True)
+    ap.add_argument("--players", type=int, default=5)
+    ap.add_argument("--api", choices=["openai", "openrouter"], default="openai",
+                    help="API source to use (OpenAI or OpenRouter)")
+    ap.add_argument("--model", default="gpt-4o-mini",
+                    help="Model name for players")
+    ap.add_argument("--gm-model", default=None,
+                    help="Model name for GM (if different from players)")
+    ap.add_argument("--lang", default="en")
+    ap.add_argument("--out", default="game_logs",
+                    help="Directory to store game logs. Will create two files: "
+                         "game_log.json (detailed log) and game_summary.txt (evaluation summary)")
+    args = ap.parse_args()
+
+    # Call the run_game function with parsed arguments
+    result = await run_game(
+        rules_module=args.rules,
+        num_players=args.players,
+        api_source=args.api,
+        model_name=args.model,
+        gm_model_name=args.gm_model,
+        lang=args.lang,
+        out_dir=args.out
+    )
+    
+    if not result["success"]:
+        print(f"Game failed: {result['error']}")
         sys.exit(1)
 
 
