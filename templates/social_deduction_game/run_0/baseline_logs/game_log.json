@@ -4569,7 +4569,8 @@
   "system_response": {
     "reason": "Game has already concluded with Villagers declared as winners. No state changes needed as all roles are revealed and game is in end phase."
   }
-},
+}
+,
 {
   "phase": "end",
   "winner": "VILLAGERS",
@@ -4583,5 +4584,4 @@
     "P4": "WEREWOLF",
     "P5": "VILLAGER"
   }
-}
-]
+}]

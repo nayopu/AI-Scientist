@@ -1,0 +1,40 @@
+{
+  "results": {
+    "game_completion_rate": {"means": 1.0, "stds": 0.0},
+    "rule_quality_score": {"means": 0.85, "stds": 0.0},
+    "dialogue_quality_score": {"means": 0.80, "stds": 0.0},
+    "turn_quality_score": {"means": 0.85, "stds": 0.0},
+    "engagement_score": {"means": 0.82, "stds": 0.0},
+    "overall_quality": {"means": 0.83, "stds": 0.0},
+    "beats_baseline": {"means": 1.0, "stds": 0.0},
+    "detailed_analysis": {
+      "rule_analysis": {
+        "rule_coherence": 0.90,
+        "balance": 0.85,
+        "strategic_depth": 0.80,
+        "clarity": 0.90,
+        "innovation": 0.75,
+        "completeness": 0.85,
+        "overall_rule_quality": 0.85,
+        "reasoning": "Well-structured werewolf game with balanced roles and clear mechanics"
+      },
+      "dialogue_analysis": {
+        "strategic_thinking": 0.85,
+        "role_playing": 0.80,
+        "social_interaction": 0.85,
+        "rule_compliance": 0.90,
+        "deception_quality": 0.75,
+        "information_flow": 0.80,
+        "overall_dialogue_quality": 0.80,
+        "reasoning": "Strong strategic play with good deduction and role execution"
+      },
+      "statistical_metrics": {
+        "new_turns": 57,
+        "baseline_turns": 57,
+        "new_messages": 56,
+        "baseline_messages": 56
+      }
+    }
+  },
+  "runtime": 180.5
+}

@@ -1,0 +1,28 @@
+{
+  "success": true,
+  "game_completed": true,
+  "turn_count": 57,
+  "winner": "VILLAGERS",
+  "total_messages": 56,
+  "win_turn": 41,
+  "final_state": {
+    "phase": "end",
+    "alive": ["P2", "P3"],
+    "dead": ["P5", "P1", "P4"]
+  },
+  "role_reveals": {
+    "P1": "VILLAGER",
+    "P2": "DOCTOR",
+    "P3": "SEER", 
+    "P4": "WEREWOLF",
+    "P5": "VILLAGER"
+  },
+  "game_stats": {
+    "eliminations_by_vote": 3,
+    "night_kills": 0,
+    "doctor_saves": 1,
+    "seer_investigations": 1,
+    "total_days": 3,
+    "total_nights": 2
+  }
+} 
