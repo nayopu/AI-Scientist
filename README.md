@@ -87,9 +87,11 @@ The system uses environment variables to configure the LLM model and API keys. T
 - `openrouter:llama-3.1-405b-instruct`
 - `anthropic:claude-3-5-sonnet-20240620`
 
-#### OpenAI API (GPT-4o, GPT-4o-mini, o1 models)
+#### OpenAI API (GPT-4o, GPT-4o-mini, o1 models, o3-mini)
 
 By default, this uses the `OPENAI_API_KEY` environment variable.
+
+**Note:** The system now has enhanced compatibility with o3-mini models, including automatic handling of model-specific parameter requirements.
 
 #### Anthropic API (Claude Sonnet 3.5)
 
@@ -331,9 +333,9 @@ python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
 
 python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
   --num-players 3 --max-turns 10 \
-    --gm-model "openai:o3-mini" \
-  --player-model "openrouter:deepseek/deepseek-r1-0528" \
-  --search-api openai
+  --player-model "openai:o3-mini" \
+  --search-api openai \
+  --skip-novelty-check
 ```
 
 ### Command Line Arguments
@@ -502,6 +504,10 @@ Ensure you have completed all the setup and preparation steps before the main ex
 
 The AI Scientist finishes an idea with a success rate that depends on the template, the base foundation model, and the complexity of the idea. We advise referring to our main paper. The highest success rates are observed with Claude Sonnet 3.5. Reviews are best done with GPT-4o; all other models have issues with positivity bias or failure to conform to required outputs. For game design templates, the system generates game manuals instead of research papers.
 
+**Note:** Recent improvements have enhanced PDF generation reliability. If you encounter PDF generation issues, you can use the provided troubleshooting tools:
+- Run `./fix_pdfs.sh` to batch-compile all LaTeX files to PDFs
+- Use `python test_pdf_generation.py <experiment_directory>` to test individual experiments
+
 **What is the cost of each idea generated?**
 
 Typically less than $15 per paper with Claude Sonnet 3.5. Game design experiments may vary in cost depending on the search API used (DuckDuckGo is free, while Perplexity and OpenAI have API costs). We recommend DeepSeek Coder V2 for a much more cost-effective approach. A good place to look for new models is the [Aider leaderboard](https://aider.chat/docs/leaderboards/).
@@ -563,6 +569,15 @@ The system now uses a unified model specification format: `api:model_name`. For 
 - `anthropic:claude-3-5-sonnet-20240620`
 
 This format is used consistently across all commands and configuration files. Make sure to set the appropriate API key environment variable for your chosen API.
+
+## Troubleshooting
+
+**Common Issues and Solutions:**
+
+- **PDF Generation Failures**: If LaTeX compilation fails, use `./fix_pdfs.sh` to batch-compile all experiments or `python test_pdf_generation.py <experiment_directory>` for individual testing.
+- **o3-mini Model Issues**: The system now automatically handles o3-mini model requirements. If you encounter parameter errors with newer models, ensure you're using the latest version.
+- **'means' KeyError**: Recent fixes have resolved data structure parsing issues. Update to the latest version if you encounter this error.
+- **Search API Problems**: For game design templates, DuckDuckGo search is always available as a free fallback if other APIs fail.
 
 ## Containerization
 

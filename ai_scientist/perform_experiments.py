@@ -82,12 +82,6 @@ def run_experiment(
             api = "openai"
         # Add more API detection as needed
     
-    # COPY CODE SO WE CAN SEE IT.
-    shutil.copy(
-        osp.join(folder_name, "experiment.py"),
-        osp.join(folder_name, f"run_{run_num}.py"),
-    )
-
     # LAUNCH COMMAND
     if use_docker:
         command = [
@@ -150,8 +144,21 @@ def run_experiment(
             next_prompt = f"Run failed with the following error {stderr_output}"
         else:
             with open(osp.join(cwd, f"run_{run_num}", "final_info.json"), "r") as f:
-                results = json.load(f)
-            results = {k: v["means"] for k, v in results.items()}
+                loaded_results = json.load(f)
+            
+            # Extract the results section and safely get means values
+            if "results" in loaded_results:
+                raw_results = loaded_results["results"]
+                # Only extract means for values that have the means key and are dictionaries
+                results = {}
+                for k, v in raw_results.items():
+                    if isinstance(v, dict) and "means" in v:
+                        results[k] = v["means"]
+                    elif isinstance(v, (int, float)):
+                        results[k] = v
+            else:
+                # Fallback if results structure is different
+                results = {"error": "Unable to parse results structure"}
 
             next_prompt = f"""Run {run_num} completed. Here are the results:
 {results}

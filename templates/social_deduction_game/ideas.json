@@ -1,11 +1,11 @@
 [
     {
-        "Name": "paranoia_network",
-        "Title": "Paranoia Network",
-        "Experiment": "Players are divided into two factions: Informants and Misinformation. Each player has a unique role with special abilities that influence discussions and voting. The game consists of discussion phases where players share information and vote to eliminate suspected Misinformation members. During each Night Phase, players can use their abilities secretly. Players can communicate privately with the GM to express suspicions or intentions that may impact public discussions. Unique roles include Informant (can reveal one player's faction), Insider (appears as an Informant but aligns with Misinformation), and Decoy (can mislead one player's vote). Informants win by eliminating all Misinformation members, while Misinformation wins if they equal the number of Informants or mislead the majority.",
+        "Name": "secret_syndicate",
+        "Title": "Secret Syndicate",
+        "Experiment": "Secret Syndicate is a social deduction game set in the covert world of spies and double agents. Players are secretly assigned roles that belong to one of two primary factions: the Syndicate or the Loyal Agents. In addition to standard discussion and voting phases, the game introduces a Night Auction phase where players bid with influence tokens to secure special abilities, sway votes, or reveal hidden information. The phases are as follows:\n\n1. Public Discussion Phase: Players debate and share suspicions openly.\n2. Voting Phase: Players vote to eliminate a suspected enemy. Votes can be influenced by secret bidding from the previous phase.\n3. Night Action Phase: The GameSystem sends private messages for role-specific actions.\n4. Night Auction Phase: Players secretly bid influence tokens for advantages like extra information, vote protection, or re-votes.\n\nRoles include:\n\u2022 Crime Boss (Syndicate): Allocates one bonus token to a Syndicate member each night.\n\u2022 Turncoat (Double Agent): Appears loyal initially but can switch allegiances once per game to gain dual insights.\n\u2022 Insider (Loyal Agent): Receives a hint about the alignment of one neighboring player during the night.\n\u2022 Informant (Syndicate): Intercepts one private message or vote detail each night.\n\u2022 Mole (Neutral): Works independently with a secret win condition of collecting a specified number of tokens.\n\nVictory conditions are multifaceted. Syndicate wins by reducing Loyal Agents to a minority while achieving their secret auction objectives, Loyal Agents win by eliminating key Syndicate members or preventing their objectives, and the Mole wins independently by amassing the target token count. The implementation leverages hidden information, private messaging, phase transitions, and influence token management, all of which are feasible within the provided game engine.",
         "Interestingness": 8,
-        "Feasibility": 8,
-        "Novelty": 9,
+        "Feasibility": 7,
+        "Novelty": 8,
         "novel": true
     }
 ]

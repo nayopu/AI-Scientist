@@ -122,10 +122,37 @@ def compile_latex(cwd, pdf_file, timeout=30):
     print("FINISHED GENERATING LATEX")
 
     # Attempt to move the PDF to the desired location
+    template_pdf = osp.join(cwd, "template.pdf")
     try:
-        shutil.move(osp.join(cwd, "template.pdf"), pdf_file)
-    except FileNotFoundError:
-        print("Failed to rename PDF.")
+        if osp.exists(template_pdf):
+            shutil.move(template_pdf, pdf_file)
+            print(f"Successfully moved PDF to: {pdf_file}")
+        else:
+            print(f"Template PDF not found at: {template_pdf}")
+            # Try alternative compilation without bibtex if first attempt failed
+            print("Attempting simpler compilation...")
+            subprocess.run(
+                ["pdflatex", "-interaction=nonstopmode", "template.tex"],
+                cwd=cwd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=timeout,
+            )
+            if osp.exists(template_pdf):
+                shutil.move(template_pdf, pdf_file)
+                print(f"Successfully moved PDF to: {pdf_file} (simple compilation)")
+            else:
+                print("Failed to generate PDF even with simple compilation")
+    except Exception as e:
+        print(f"Error moving PDF: {e}")
+        # Try copying instead of moving as fallback
+        if osp.exists(template_pdf):
+            try:
+                shutil.copy2(template_pdf, pdf_file)
+                print(f"Successfully copied PDF to: {pdf_file}")
+            except Exception as copy_error:
+                print(f"Failed to copy PDF: {copy_error}")
 
 
 per_section_tips = {
