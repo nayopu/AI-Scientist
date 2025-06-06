@@ -1,3 +1,9 @@
+\documentclass[
+    %blackwhite
+]{dragonbane-supplement}
+
+% We need to create the dragonbane-supplement document class locally since we can't access external packages
+% For now, we'll use a modified article class with custom styling
 \documentclass{article}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
@@ -5,8 +11,6 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{algorithm}
-\usepackage{algorithmic}
 \usepackage{booktabs}
 \usepackage{url}
 \usepackage{fancyhdr}
@@ -14,12 +18,106 @@
 \usepackage{subcaption}
 \usepackage{xcolor}
 \usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{tikz}
+\usepackage{multicol}
+\usepackage{titlesec}
+\usepackage{wallpaper}
 
+% Define Dragonbane-inspired colors
+\definecolor{DragonRed}{RGB}{139, 69, 19}
+\definecolor{DemonGreen}{RGB}{34, 139, 34}
+\definecolor{ScrollBeige}{RGB}{245, 245, 220}
+\definecolor{AncientGold}{RGB}{218, 165, 32}
+
+% Custom title formatting
+\titleformat{\part}[display]
+{\centering\huge\bfseries\color{DragonRed}}
+{\partname\ \thepart}{20pt}
+{\Huge}
+
+\titleformat{\chapter}[hang]
+{\LARGE\bfseries\color{DragonRed}}
+{\thechapter}{1em}
+{}
+
+\titleformat{\section}[hang]
+{\Large\bfseries\color{DemonGreen}}
+{\thesection}{1em}
+{}
+
+% Custom environments for boxes
+\newtcolorbox{dragonbox}[1]{
+    enhanced,
+    title={#1},
+    fonttitle=\bfseries\color{white},
+    colback=ScrollBeige,
+    colframe=DragonRed,
+    coltitle=DragonRed,
+    attach boxed title to top left={yshift=-2mm, xshift=2mm},
+    boxed title style={colback=DragonRed},
+    sharp corners,
+    left=2mm,
+    right=2mm,
+    top=3mm,
+    bottom=2mm
+}
+
+\newtcolorbox{demonbox}[1]{
+    enhanced,
+    title={#1},
+    fonttitle=\bfseries\color{white},
+    colback=DemonGreen!10,
+    colframe=DemonGreen,
+    coltitle=DemonGreen,
+    attach boxed title to top left={yshift=-2mm, xshift=2mm},
+    boxed title style={colback=DemonGreen},
+    sharp corners,
+    left=2mm,
+    right=2mm,
+    top=3mm,
+    bottom=2mm
+}
+
+\newtcolorbox{emptybox}[1]{
+    enhanced,
+    title={#1},
+    fonttitle=\bfseries\color{DragonRed},
+    colback=white,
+    colframe=DragonRed,
+    coltitle=DragonRed,
+    attach boxed title to top left={yshift=-2mm, xshift=2mm},
+    boxed title style={colback=white, colframe=DragonRed},
+    sharp corners,
+    left=2mm,
+    right=2mm,
+    top=3mm,
+    bottom=2mm
+}
+
+% Custom list items
+\newcommand{\bolditem}[1]{\item \textbf{#1}}
+\newcommand{\coloritem}[2][\DemonGreen]{\item \textcolor{#1}{\textbf{#2}}}
+\newcommand{\secretitem}[1]{\item \textcolor{DragonRed}{\textit{\textbf{#1}}}}
+
+% Two-column segment environment
+\newenvironment{segment}[1][]{
+    \ifx\relax#1\relax
+        \begin{multicols}{2}
+    \else
+        \section{#1}
+        \begin{multicols}{2}
+    \fi
+}{
+    \end{multicols}
+}
+
+% Page style
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{Social Deduction Game Manual}
-\lhead{\leftmark}
-\cfoot{\thepage}
+\rhead{\color{DragonRed}Social Deduction Game Manual}
+\lhead{\color{DemonGreen}\leftmark}
+\cfoot{\color{DragonRed}\thepage}
 
 \begin{filecontents}{references.bib}
 @inproceedings{werewolf2009,
@@ -42,55 +140,150 @@
   booktitle={Indie Boards and Cards},
   year={2009}
 }
+
+@book{werewolf_variants2015,
+  title={The Werewolf Book: The Encyclopedia of Shape-Shifting Beings},
+  author={Steiger, Brad},
+  publisher={Visible Ink Press},
+  year={2015}
+}
 \end{filecontents}
 
-\title{[TITLE TO BE FILLED]}
+%% ================ TITLE ================ %%
+\title{[GAME TITLE TO BE FILLED]}
 \author{AI Game Designer}
 \date{\today}
 
+%% ================ DOCUMENT ================ %%
 \begin{document}
 
-\maketitle
+% Title page with potential cover image
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    % Game cover image placeholder
+    % \includegraphics[width=0.8\textwidth]{cover_image.png}
+    \vspace{2cm}
+    
+    {\Huge\bfseries\color{DragonRed} [GAME TITLE TO BE FILLED] \par}
+    \vspace{1.5cm}
+    {\Large\color{DemonGreen} A Social Deduction Adventure \par}
+    \vspace{2cm}
+    {\large\color{DragonRed} Game Manual \par}
+    
+    \vfill
+    
+    {\large AI Game Designer \par}
+    {\large \today \par}
+\end{titlepage}
 
-\begin{abstract}
+% Abstract as a special box
+\begin{dragonbox}{Game Overview}
 [ABSTRACT TO BE FILLED]
-This manual presents a comprehensive guide to playing [GAME NAME], a novel social deduction game that combines traditional deductive reasoning with innovative mechanics. The game supports [X] players and features unique roles, strategic depth, and engaging social interaction.
-\end{abstract}
 
-\section{Introduction}
+This manual presents a comprehensive guide to playing [GAME NAME], a novel social deduction game that combines traditional deductive reasoning with innovative mechanics. The game supports [X] players and features unique roles, strategic depth, and engaging social interaction.
+
+\bolditem{Players:} [X-Y] players
+\bolditem{Play Time:} [X] minutes  
+\bolditem{Ages:} [X]+ years
+\bolditem{Complexity:} [Level]
+\end{dragonbox}
+
+\tableofcontents
+\newpage
+
+\part{Welcome to the Game}
+
+\begin{segment}[Introduction]
+
+\begin{quote}
+    "In the shadows of deception, truth becomes the ultimate weapon."
+    
+    --Ancient Gaming Proverb
+\end{quote}
+
 [INTRODUCTION TO BE FILLED]
 
 Social deduction games have captivated players for decades, from the classic Mafia \cite{mafia1986} to modern variants like One Night Ultimate Werewolf \cite{werewolf2009} and The Resistance \cite{resistance2009}. This manual introduces [GAME NAME], a new social deduction game that brings fresh mechanics and engaging gameplay to the genre.
 
-\section{Game Overview}
+\subsection{What Makes This Game Special}
 
-\subsection{Players and Setup}
+[UNIQUE FEATURES TO BE FILLED]
+
+\subsection{How to Use This Manual}
+
+This manual is organized into clear sections that will guide you through every aspect of the game. New players should read through the entire manual, while experienced social deduction players can focus on the specific rules and role descriptions.
+
+\end{segment}
+
+\part{Game Foundation}
+
+\begin{segment}[Game Overview]
+
+\subsection{The Core Concept}
+[CORE CONCEPT TO BE FILLED]
+
+\subsection{Victory Goals}
+[VICTORY GOALS TO BE FILLED]
+
+\subsection{Player Count and Setup}
 [SETUP DETAILS TO BE FILLED]
 
-\subsection{Objective}
-[OBJECTIVE TO BE FILLED]
+\end{segment}
 
-\section{Components}
-[COMPONENTS TO BE FILLED]
+\begin{segment}[Components]
 
-The game includes:
+The game includes the following components:
+
 \begin{itemize}
-\item Role cards for each player type
-\item Reference cards explaining abilities
-\item Game master instructions
-\item Phase tracking tokens (if applicable)
+    \coloritem{Role Cards:} Individual cards for each role with abilities and objectives
+    \coloritem{Reference Cards:} Quick-reference guides for common rules
+    \coloritem{Game Master Guide:} Instructions for facilitating the game
+    \secretitem{Special Tokens:} [If applicable] Phase markers or ability tokens
 \end{itemize}
 
-\section{Roles and Abilities}
-[ROLES TO BE FILLED]
+[DETAILED COMPONENT DESCRIPTIONS TO BE FILLED]
 
-This section details each role in the game, including their unique abilities, objectives, and strategic considerations.
+\end{segment}
+
+\part{Characters and Roles}
+
+\begin{segment}
+
+[ROLES INTRODUCTION TO BE FILLED]
+
+Each role in the game has unique abilities, objectives, and strategic considerations. Understanding these roles is crucial for both playing them effectively and deducing the roles of others.
+
+\end{segment}
+
+\chapter{Role Descriptions}
+
+\begin{segment}
 
 \subsection{[ROLE NAME]}
 [ROLE DESCRIPTION TO BE FILLED]
 
-\section{Game Flow}
-[GAME FLOW TO BE FILLED]
+\begin{dragonbox}{[ROLE NAME] Abilities}
+\begin{itemize}
+    \bolditem{Primary Objective:} [Objective]
+    \bolditem{Special Abilities:} [Abilities]
+    \bolditem{Victory Condition:} [How they win]
+\end{itemize}
+
+[Detailed ability description]
+\end{dragonbox}
+
+\paragraph{Strategy Tips:}
+[Role-specific strategy advice]
+
+\end{segment}
+
+\part{Rules and Gameplay}
+
+\chapter{Game Flow}
+
+\begin{segment}
 
 \subsection{Setup Phase}
 [SETUP INSTRUCTIONS TO BE FILLED]
@@ -98,40 +291,72 @@ This section details each role in the game, including their unique abilities, ob
 \subsection{Game Phases}
 [PHASE DESCRIPTIONS TO BE FILLED]
 
-\section{Rules and Mechanics}
-[RULES TO BE FILLED]
+\end{segment}
+
+\begin{segment}[Rules and Mechanics]
 
 \subsection{Discussion Phase}
 [DISCUSSION RULES TO BE FILLED]
 
-\subsection{Voting}
+\subsection{Voting Procedures}
 [VOTING RULES TO BE FILLED]
 
-\subsection{Special Abilities}
+\subsection{Special Ability Usage}
 [ABILITY RULES TO BE FILLED]
 
-\section{Victory Conditions}
+\end{segment}
+
+\begin{demonbox}{Victory Conditions}
 [VICTORY CONDITIONS TO BE FILLED]
 
-\section{Strategy and Tips}
-[STRATEGY SECTION TO BE FILLED]
+The game ends when one of the following conditions is met:
+\begin{itemize}
+    \coloritem{Condition 1:} [Description]
+    \coloritem{Condition 2:} [Description]
+    \coloritem{Condition 3:} [Description]
+\end{itemize}
+\end{demonbox}
+
+\part{Strategy and Mastery}
+
+\begin{segment}[Strategy and Tips]
 
 \subsection{General Strategy}
 [GENERAL TIPS TO BE FILLED]
 
-\subsection{Role-Specific Tips}
+\subsection{Reading Other Players}
+[SOCIAL DEDUCTION TIPS TO BE FILLED]
+
+\subsection{Role-Specific Strategies}
 [ROLE-SPECIFIC STRATEGY TO BE FILLED]
 
-\section{Variants and Optional Rules}
+\end{segment}
+
+\begin{segment}[Variants and Optional Rules]
+
+\subsection{Advanced Variants}
 [VARIANTS TO BE FILLED]
 
-\section{Designer Notes}
+\subsection{House Rules}
+[OPTIONAL RULES TO BE FILLED]
+
+\end{segment}
+
+\begin{emptybox}{Designer Notes}
 [DESIGNER NOTES TO BE FILLED]
 
-This game was designed using AI-assisted game design principles, iteratively tested and refined to create an engaging social deduction experience.
+This game was designed using AI-assisted game design principles, iteratively tested and refined to create an engaging social deduction experience that balances strategy, deduction, and social interaction.
+\end{emptybox}
 
-\section{Conclusion}
+\begin{segment}[Conclusion]
+
 [CONCLUSION TO BE FILLED]
+
+We hope you enjoy playing [GAME NAME] and discover the depth of strategy and social interaction it offers. Remember, in social deduction games, the most important skill is not just logical reasoning, but understanding the psychology of your fellow players.
+
+May your deductions be sharp and your bluffs convincing!
+
+\end{segment}
 
 \bibliographystyle{plain}
 \bibliography{references}

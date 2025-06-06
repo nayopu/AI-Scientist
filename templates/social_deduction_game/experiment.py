@@ -613,7 +613,7 @@ def run_experiment(args=None):
     
     # Load baseline game results from existing logs instead of running simulation
     print("Loading baseline game results from existing logs...")
-    baseline_logs_dir = Path(__file__).parent / "baseline_logs"
+    baseline_logs_dir = Path(__file__).parent / "run_0"
     
     try:
         # Load baseline game summary from JSON and text files

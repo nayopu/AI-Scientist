@@ -90,6 +90,7 @@ Pay attention to any accidental uses of HTML syntax, e.g. </end instead of \\end
         else:
             break
     compile_latex(cwd, pdf_file, timeout=timeout)
+    compile_role_cards(cwd, timeout=timeout)
 
 
 def compile_latex(cwd, pdf_file, timeout=30):
@@ -153,6 +154,42 @@ def compile_latex(cwd, pdf_file, timeout=30):
                 print(f"Successfully copied PDF to: {pdf_file}")
             except Exception as copy_error:
                 print(f"Failed to copy PDF: {copy_error}")
+
+def compile_role_cards(cwd, timeout=30):
+    """Compile all role card LaTeX files in the directory."""
+    print("GENERATING ROLE CARDS")
+    
+    # Find all role card tex files
+    role_card_files = glob.glob(osp.join(cwd, "role_card_*.tex"))
+    
+    for role_card_file in role_card_files:
+        filename = osp.basename(role_card_file)
+        base_name = filename[:-4]  # Remove .tex extension
+        
+        print(f"Compiling role card: {filename}")
+        
+        try:
+            result = subprocess.run(
+                ["pdflatex", "-interaction=nonstopmode", filename],
+                cwd=cwd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=timeout,
+            )
+            
+            pdf_file = osp.join(cwd, f"{base_name}.pdf")
+            if osp.exists(pdf_file):
+                print(f"Successfully generated: {pdf_file}")
+            else:
+                print(f"Failed to generate PDF for: {filename}")
+                
+        except subprocess.TimeoutExpired:
+            print(f"Role card compilation timed out after {timeout} seconds: {filename}")
+        except subprocess.CalledProcessError as e:
+            print(f"Error compiling role card {filename}: {e}")
+    
+    print("FINISHED GENERATING ROLE CARDS")
 
 
 per_section_tips = {
@@ -438,73 +475,59 @@ Ensure the citation is well-integrated into the text.'''
     return aider_prompt, False
 
 
-# Social deduction game manual section tips
+# Social deduction game manual section tips (Dragonbane style)
 game_manual_section_tips = {
     "Title": """
 - Should be catchy and descriptive of the game concept
 - Include the core theme or unique mechanic
 - Make it memorable and engaging
 - Consider the target audience
+- Use fantasy-themed language when appropriate
 """,
-    "Abstract": """
-- Brief overview of the game concept and mechanics
+    "Game Overview": """
+- Brief overview of the game concept and mechanics in a Dragonbane-style box
 - What makes this game unique in the social deduction genre
 - Number of players and approximate play time
 - Target audience and complexity level
 - Key selling points that would attract players
 """,
     "Introduction": """
-- Welcome players to the game
+- Welcome players to the game with an atmospheric quote
 - Brief history or inspiration behind the game concept
 - What players can expect from the experience
 - Overview of how social deduction works in this context
 - What makes this game different from others in the genre
 """,
-    "Game Overview": """
+    "Game Foundation": """
 - Detailed explanation of the core objective
 - How players interact and what they're trying to achieve
 - Basic game flow and structure
 - Key concepts players need to understand
+- Components and materials needed
 """,
-    "Components": """
-- List all physical or virtual components needed
-- Role cards, reference materials, tokens, etc.
-- What each component is used for
-- Any special materials or requirements
-""",
-    "Roles and Abilities": """
+    "Characters and Roles": """
+- Introduction to the role system
 - Detailed description of each role in the game
 - What each role is trying to achieve
 - Special abilities and when they can be used
 - How roles interact with each other
 - Balancing information and strategy tips for each role
 """,
-    "Game Flow": """
+    "Rules and Gameplay": """
 - Step-by-step explanation of how a game progresses
 - Different phases and what happens in each
-- How turns work and who goes when
-- How information flows between players
-- When and how the game ends
-""",
-    "Rules and Mechanics": """
 - Detailed rules for all game mechanics
 - How voting, discussion, and special abilities work
 - Communication rules and restrictions
-- Timing and sequence rules
-- Edge cases and clarifications
+- Victory conditions and how each side wins
 """,
-    "Victory Conditions": """
-- Clear explanation of how each side wins
-- Any alternative victory conditions
-- What happens in edge cases or ties
-- How to determine the winner
-""",
-    "Strategy and Tips": """
+    "Strategy and Mastery": """
 - General strategy advice for all players
 - Role-specific tips and tactics
 - Common mistakes to avoid
 - How to read other players and deduce information
 - Balancing cooperation and competition
+- Advanced variants and optional rules
 """,
 }
 
@@ -512,39 +535,50 @@ def perform_game_manual_writeup(
         idea, folder_name, coder, cite_client, cite_model, num_cite_rounds=10, engine="semanticscholar"
 ):
     """
-    Generate a game manual instead of a research paper.
+    Generate a game manual using Dragonbane-style template with image generation.
     """
+    import os.path as osp
+    
+    # Import image generation capabilities
+    try:
+        import sys
+        sys.path.append(osp.dirname(folder_name))
+        from image_generator import GameImageGenerator, create_game_config_from_rules
+        image_generator = GameImageGenerator()
+        generate_images = True
+    except Exception as e:
+        print(f"Image generation not available: {e}")
+        generate_images = False
+    
     # CURRENTLY ASSUMES LATEX
-    title_abstract_prompt = f"""We've provided the `latex/template.tex` file for a social deduction game manual. We will be filling it in section by section.
+    title_overview_prompt = f"""We've provided the `latex/template.tex` file for a social deduction game manual using Dragonbane-style formatting. We will be filling it in section by section.
 
-First, please fill in the "Title" and "Abstract" sections of the manual.
+First, please fill in the "Title" and "Game Overview" sections of the manual. Note that this template uses a special dragonbox for the game overview instead of a traditional abstract.
 
 This is for the game idea: {idea['Title']}
 Description: {idea['Experiment']}
 
 Some tips are provided below:
 {game_manual_section_tips["Title"]}
-{game_manual_section_tips["Abstract"]}
+{game_manual_section_tips["Game Overview"]}
 
 The title should be engaging and reflect the unique aspects of this social deduction game.
-The abstract should give readers a clear understanding of what the game is about, how many players it supports, and what makes it interesting.
+The game overview should be placed in the dragonbox and give readers a clear understanding of what the game is about, how many players it supports, and what makes it interesting.
 
 Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these edits.
+Update the cover image comment to show the path will be cover_image.png when generated.
 """
-    coder_out = coder.run(title_abstract_prompt)
+    coder_out = coder.run(title_overview_prompt)
     
-    # Generate each section of the game manual
+    # Generate each section of the game manual (updated for Dragonbane structure)
     for section in [
         "Introduction",
-        "Game Overview", 
-        "Components",
-        "Roles and Abilities",
-        "Game Flow",
-        "Rules and Mechanics",
-        "Victory Conditions",
-        "Strategy and Tips",
+        "Game Foundation", 
+        "Characters and Roles",
+        "Rules and Gameplay",
+        "Strategy and Mastery",
     ]:
-        section_prompt = f"""Please fill in the {section} section of the game manual. 
+        section_prompt = f"""Please fill in the {section} section of the game manual using the Dragonbane template structure.
 
 This is for the game idea: {idea['Title']}
 Description: {idea['Experiment']}
@@ -552,8 +586,18 @@ Description: {idea['Experiment']}
 Some tips are provided below:
 {game_manual_section_tips[section]}
 
+Important: Use the Dragonbane template elements like:
+- segment environments for two-column layout
+- dragonbox, demonbox, and emptybox for special content
+- coloritem, bolditem, and secretitem for lists
+- proper part and chapter divisions
+
 Be sure to make this section complete and self-contained. Players should be able to understand and play the game based on this manual.
 Focus on clarity, completeness, and ensuring players can actually reproduce and play this game.
+
+IMPORTANT: When writing the {section} section, you have access to the generated game rule files (*.py files).
+These contain the detailed game mechanics, role definitions, victory conditions, and implementation details.
+Use the rule files to provide concrete details about the social deduction game that was created.
 
 Before every paragraph, please include a brief description of what you plan to write in that paragraph in a comment.
 
@@ -569,15 +613,76 @@ Focus on:
 - **Completeness** – can someone reproduce the game from this manual?
 - **Clarity** – is it easy to understand for the target audience?
 - **Conciseness** – avoid unnecessary verbosity while maintaining completeness
+- **Dragonbane Style** – proper use of template elements and fantasy theming
 
 Pay particular attention to fixing any errors such as:
 - Unclear or missing rules
-- Inconsistent terminology
+- Inconsistent terminology  
 - Missing information needed to play
 - Overly complex explanations
 - Gaps in the game flow or mechanics
+- Improper use of Dragonbane template elements
 """
         coder_out = coder.run(refinement_prompt)
+
+    # Generate images if available
+    if generate_images:
+        try:
+            # Find rule files to extract game information
+            rule_files = []
+            for py_file in glob.glob(osp.join(folder_name, "*.py")):
+                if osp.basename(py_file) not in {'experiment.py', 'plot.py', '__init__.py'}:
+                    rule_files.append(py_file)
+            
+            if rule_files:
+                # Create game config from the first rule file
+                game_config = create_game_config_from_rules(rule_files[0])
+                
+                # Update with idea information
+                game_config['title'] = idea.get('Title', game_config['title'])
+                
+                # Generate images
+                print("Generating game images...")
+                assets = image_generator.generate_game_assets(game_config, folder_name)
+                
+                if assets:
+                    print(f"Generated {len(assets)} image assets")
+                    
+                    # Update template to include cover image
+                    if 'cover' in assets:
+                        cover_prompt = f"""The cover image has been generated at {assets['cover']}. 
+Please update the template.tex file to uncomment and use the cover image in the title page.
+Replace the commented includegraphics line with the actual image inclusion."""
+                        coder_out = coder.run(cover_prompt)
+                        
+        except Exception as e:
+            print(f"Error generating images: {e}")
+
+    # Generate role cards if we have role information
+    if generate_images:
+        try:
+            role_card_prompt = f"""Now let's create individual role cards using the role_card_template.tex file.
+
+Based on the roles defined in the game manual and rule files, create a separate LaTeX file for each role card.
+Name these files like role_card_[rolename].tex in the latex directory.
+
+Each role card should include:
+- Role name and type
+- Image (if generated)
+- Objective
+- Special abilities  
+- Victory condition
+- Strategy tip
+- Any warnings or special notes
+
+Use the \\createrolecard command from the role_card_template.tex.
+
+Create these as separate files so they can be compiled individually for printing."""
+            
+            coder_out = coder.run(role_card_prompt)
+            
+        except Exception as e:
+            print(f"Error creating role cards: {e}")
 
     # Add optional citations if needed (fewer for game manuals)
     for _ in range(min(num_cite_rounds, 3)):  # Limit citations for game manuals
@@ -607,14 +712,19 @@ Focus on ensuring the manual is:
 2. **Clear** - Rules and procedures are easy to understand
 3. **Consistent** - Terminology and references are used consistently throughout
 4. **Engaging** - The manual makes the game sound fun and interesting to play
+5. **Dragonbane Style** - Proper use of template elements and theming
 
 Go through each section and make any final improvements needed. Pay special attention to:
 - Making sure all game mechanics are clearly explained
-- Ensuring role abilities are fully detailed
-- Verifying that victory conditions are unambiguous
+- Ensuring role abilities are fully detailed using dragonbox elements
+- Verifying that victory conditions are unambiguous in demonbox format
 - Checking that the game flow makes sense from start to finish
+- Ensuring proper use of segment environments and special list items
 """
     )
+    
+    # Generate final PDF with both manual and role cards
+    generate_latex(coder, folder_name, f"{folder_name}/{idea['Name']}_manual.pdf")
 
 
 # PERFORM WRITEUP
@@ -831,6 +941,12 @@ if __name__ == "__main__":
         generate_latex(coder, args.folder, f"{args.folder}/test.pdf")
     else:
         try:
-            perform_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
+            # Check if this is a social deduction game template
+            if "social_deduction_game" in folder_name:
+                print("Detected social deduction game template, using game manual format")
+                perform_game_manual_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
+            else:
+                print("Using traditional research paper format")
+                perform_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
         except Exception as e:
             print(f"Failed to perform writeup: {e}")
