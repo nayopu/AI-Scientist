@@ -22,6 +22,7 @@ from typing import Dict, List, Tuple, Any
 import os
 import re
 import time
+import traceback
 
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
@@ -264,33 +265,36 @@ class Player(Agent):
 
 TURN STRUCTURE:
 Each turn follows this exact sequence:
-1. **Bidding Phase**: All players and GM submit bids simultaneously
-2. **Speaking Phase**: Only the highest bidder's message is used
-3. **System Update**: The system automatically updates game state and checks win conditions
+1. **Bidding Phase**: All players and GM submit bids and messages simultaneously
+2. **System Decision Phase**: System agent analyzes all submissions and decides which messages to execute
+3. **Message Execution**: Selected messages are delivered (can be multiple DMs in one turn)
+4. **System Update**: Game state is updated and win conditions are checked
 This cycle repeats until a winner is determined.
 
 Important mechanics:
 - All players and GM bid simultaneously in each turn
-- Only the highest bidder's message will be used
-- The conversation follows a strict pattern: bid → speak → system update → bid → speak → system update ...
+- The System agent decides which messages to execute based on both bid values and content
+- Multiple DMs can be executed in a single turn for efficiency
+- This is especially useful for voting phases and ability usage
+- The conversation follows a strict pattern: bid → system decision → message execution → system update
 - This applies to both public messages and DMs
-- **You must win the bid first to send a DM, otherwise your DM will be ignored.**
-- You cannot speak outside of this turn structure
 
-GM Phase Management:
-- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),
-  you should bid high (0.8-1.0) and speak to ALL to remind the GM
-- This is especially important if you need to use your ability or vote
-- Example: "GM, we haven't had the night phase yet for abilities"
-- The GM will then correct the phase sequence
+DM Guidelines:
+- You can submit DMs to specific players or the GM
+- Multiple DMs can be processed in a single turn
+- This is particularly useful for:
+  - Voting phases (submit your vote via DM to GM)
+  - Ability usage (submit ability targets via DM to GM)
+  - Private communications with other players
+- The System agent will decide which DMs to execute based on game state and content
 
 Bidding guidelines:
 - Bid to speak (0-1) and *optionally* send a message.
 - Higher bids indicate stronger desire to speak.
 - Consider your role, the current phase, and game state when bidding.
-- Use 1.0 bids sparingly - only when you believe you have critical information, a strong strategic reason to speak, or you need to DM the GM to finish your voting or ability.
-- Lower bids (0.3-0.7) are appropriate for general discussion or when others should - speak first.
-- Use 0.0 bids when you don't want to speak or you finished your voting or ability.
+- Use 1.0 bids sparingly - only when you believe you have critical information or a strong strategic reason to speak.
+- Lower bids (0.3-0.7) are appropriate for general discussion or when others should speak first.
+- Use 0.0 bids when you don't want to speak.
 
 Message guidelines:
 - Use "to": "ALL" for public messages visible to everyone
@@ -321,26 +325,28 @@ class GameMaster(Player):
 
 TURN STRUCTURE:
 Each turn follows this exact sequence:
-1. **Bidding Phase**: All players and GM submit bids simultaneously
-2. **Speaking Phase**: Only the highest bidder's message is used
-3. **System Update**: The system automatically updates game state and checks win conditions
+1. **Bidding Phase**: All players and GM submit bids and messages simultaneously
+2. **System Decision Phase**: System agent analyzes all submissions and decides which messages to execute
+3. **Message Execution**: Selected messages are delivered (can be multiple DMs in one turn)
+4. **System Update**: Game state is updated and win conditions are checked
 This cycle repeats until a winner is determined.
 
 Important mechanics:
 - All players and GM bid simultaneously in each turn
-- Only the highest bidder's message will be used
-- The conversation follows a strict pattern: bid → speak → system update → bid → speak → system update ...
+- The System agent decides which messages to execute based on both bid values and content
+- Multiple DMs can be executed in a single turn for efficiency
+- This is especially useful for voting phases and ability usage
+- The conversation follows a strict pattern: bid → system decision → message execution → system update
 - This applies to both public messages and DMs
-- Even if you want to send a DM, you must win the bid first
-- PUBLIC META is automatically updated by the system after each turn
-- You do NOT update the meta directly - the system handles this
 
-GM Phase Management:
-- If you notice the GM has skipped a required phase (e.g., night phase for abilities, voting phase),
-  - you should bid high (0.8-1.0) and speak to ALL to remind the GM
-- This is especially important if you need to use your ability or vote
-- Example: "GM, we haven't had the night phase yet for abilities"
-- The GM will then correct the phase sequence
+DM Guidelines:
+- You can submit DMs to specific players or groups of players
+- Multiple DMs can be processed in a single turn
+- This is particularly useful for:
+  - Announcing phase changes to specific players
+  - Giving secret investigation results
+  - Coordinating with specific player groups
+- The System agent will decide which DMs to execute based on game state and content
 
 Bidding guidelines:
 - Bid to speak (0-1) and *optionally* send a message.
@@ -352,7 +358,7 @@ Bidding guidelines:
   - DMing specific players or player groups to give secret investigation results
 - Use lower bids (0.3-0.7) for general game management and responses.
 - Use 0.0 bids when you don't need to talk
-- Use 0.0 when you are waiting players' DMs for their votes, abilities, selections, etc.
+- Use 0.0 when you are waiting for players' DMs for their votes, abilities, selections, etc.
 
 Message guidelines:
 - Use "to": "ALL" for public messages visible to everyone (e.g., announcing phase changes, correcting player behavior, etc.)
@@ -597,13 +603,11 @@ async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, meta_
     
     results = await asyncio.gather(*tasks)
     
-    bids = {}
     pkgs = {}
     for agent, result in zip(agents.values(), results):
-        bids[agent.name] = float(result["bid"])
         pkgs[agent.name] = result
     
-    return bids, pkgs
+    return pkgs
 
 async def run_game(rules_module: str, num_players: int = 5, api_source: str = "openai", 
                   model_name: str = "gpt-4o-mini", gm_model_name: str = None, 
@@ -690,7 +694,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
             while winner is None and turn < max_turns:
                 turn += 1
                 # ❶ 各エージェントが bid+msg を同時提出 (並列処理)
-                bids, pkgs = await parallel_bidding(agents, turn, meta_pub, meta_priv_all, public_log)
+                pkgs = await parallel_bidding(agents, turn, meta_pub, meta_priv_all, public_log)
                     
                 # Log all agent bids using new event system
                 for agent_name, pkg in pkgs.items():
@@ -809,9 +813,8 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
             # Save all logs even if the game was interrupted
             logger.save_logs()
             ConsoleLogger.log_info(f"Logs saved to directory: {out_dir}")
-
     except Exception as e:
-        error_msg = f"Game execution error: {str(e)}"
+        error_msg = f"Game execution error: {str(e)}\nTraceback:\n{traceback.format_exc()}"
         ConsoleLogger.log_error(error_msg)
         # Try to save logs if logger exists
         if 'logger' in locals():
