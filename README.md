@@ -574,7 +574,12 @@ This format is used consistently across all commands and configuration files. Ma
 
 **Common Issues and Solutions:**
 
-- **PDF Generation Failures**: If LaTeX compilation fails, use `./fix_pdfs.sh` to batch-compile all experiments or `python test_pdf_generation.py <experiment_directory>` for individual testing.
+- **PDF Generation Failures**: If LaTeX compilation fails, you have several options:
+  - Use `./fix_pdfs.sh` to batch-compile all experiments 
+  - Use `python test_pdf_generation.py <experiment_directory>` for individual testing
+  - **Manual fix**: Navigate to the experiment's `latex/` directory and run `pdflatex template.tex`, then copy the resulting PDF to the parent directory with the expected name (e.g., `cp template.pdf ../experiment_name.pdf`)
+- **"Success: False" Status**: Sometimes experiments show as failed due to PDF generation issues during the review phase, even when all core functionality (experiments, plotting, writeup) completed successfully. Check if the PDF exists and was generated correctly - the experiment may have actually succeeded.
+- **Summarization Errors**: End-of-process errors like "summarizer unexpectedly failed" or "cannot schedule new futures after shutdown" are typically benign cleanup issues that don't affect the core experiment results.
 - **o3-mini Model Issues**: The system now automatically handles o3-mini model requirements. If you encounter parameter errors with newer models, ensure you're using the latest version.
 - **'means' KeyError**: Recent fixes have resolved data structure parsing issues. Update to the latest version if you encounter this error.
 - **Search API Problems**: For game design templates, DuckDuckGo search is always available as a free fallback if other APIs fail.

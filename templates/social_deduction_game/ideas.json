@@ -1,11 +1,20 @@
 [
     {
-        "Name": "secret_syndicate",
-        "Title": "Secret Syndicate",
-        "Experiment": "Secret Syndicate is a social deduction game set in the covert world of spies and double agents. Players are secretly assigned roles that belong to one of two primary factions: the Syndicate or the Loyal Agents. In addition to standard discussion and voting phases, the game introduces a Night Auction phase where players bid with influence tokens to secure special abilities, sway votes, or reveal hidden information. The phases are as follows:\n\n1. Public Discussion Phase: Players debate and share suspicions openly.\n2. Voting Phase: Players vote to eliminate a suspected enemy. Votes can be influenced by secret bidding from the previous phase.\n3. Night Action Phase: The GameSystem sends private messages for role-specific actions.\n4. Night Auction Phase: Players secretly bid influence tokens for advantages like extra information, vote protection, or re-votes.\n\nRoles include:\n\u2022 Crime Boss (Syndicate): Allocates one bonus token to a Syndicate member each night.\n\u2022 Turncoat (Double Agent): Appears loyal initially but can switch allegiances once per game to gain dual insights.\n\u2022 Insider (Loyal Agent): Receives a hint about the alignment of one neighboring player during the night.\n\u2022 Informant (Syndicate): Intercepts one private message or vote detail each night.\n\u2022 Mole (Neutral): Works independently with a secret win condition of collecting a specified number of tokens.\n\nVictory conditions are multifaceted. Syndicate wins by reducing Loyal Agents to a minority while achieving their secret auction objectives, Loyal Agents win by eliminating key Syndicate members or preventing their objectives, and the Mole wins independently by amassing the target token count. The implementation leverages hidden information, private messaging, phase transitions, and influence token management, all of which are feasible within the provided game engine.",
+        "Name": "twilight_verdict",
+        "Title": "Twilight Verdict: The Spectral Switch",
+        "Experiment": "In Twilight Verdict, players engage in a standard social deduction game during the first phase, with each player receiving a hidden role complete with unique abilities and team alignments. The game includes public discussion, private messaging with the GM, and voting rounds. Instead of a timed switch, a dynamic event called the 'Spectral Switch' is triggered when in-game conditions are met\u2014for instance, when suspicion peaks or a critical vote occurs. At this moment, roles, abilities, or allegiances are either revealed or inverted, forcing players to rapidly adapt to a dramatically altered set of rules. Victory conditions are based on cumulative performances across both phases, and new objectives emerge post-switch that may conflict with earlier goals. This twist heightens tension, rewards adaptability, and creates a fresh, unpredictable challenge in social deduction gameplay.",
         "Interestingness": 8,
-        "Feasibility": 7,
-        "Novelty": 8,
+        "Feasibility": 8,
+        "Novelty": 9,
+        "novel": true
+    },
+    {
+        "Name": "mirror_gambit",
+        "Title": "Mirror Gambit: The Dual Deception",
+        "Experiment": "In Mirror Gambit, players begin the game with hidden roles and standard social deduction mechanics such as discussion, voting, and special night actions. Each role possesses a dual aspect: a primary identity and a hidden shadow identity that remains unknown until triggered. The game is divided into two main phases. In the first phase, players work towards traditional victory conditions, aligning subtly with factions (e.g., Protectors vs. Saboteurs) and using their special abilities to gather information. As suspicions peak, a hidden condition known as the 'Mirror Trigger' is met\u2014this might occur after a critical vote or when a specific number of secret messages have been exchanged. Upon triggering, players' shadow identities are activated, causing roles and objectives to be reinterpreted. For example, a Protector might discover a sabotaging shadow, leading to conflicting objectives within the same player. New win conditions emerge in the second phase that depend on the cumulative performance in both parts, as well as on the successful navigation of dual agendas. Key roles include the 'Mirror', who can manipulate the activation timing; the 'Facade', whose apparent loyalty is a ruse; and the 'Double Agent', who benefits from chaos. The implementation involves mechanics for role-based hidden information, dynamic phase transitions, secret communications from the game master that reveal shadow identities, and updated public rules post-trigger. This design emphasizes adaptability, layered strategy, and continuous social interaction, ensuring an engaging experience with high strategic and narrative depth.",
+        "Interestingness": 9,
+        "Feasibility": 8,
+        "Novelty": 9,
         "novel": true
     }
 ]
