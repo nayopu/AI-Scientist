@@ -186,14 +186,39 @@ def init_meta_pub(players: List[str]) -> Dict:
 
 def init_meta_priv(players: List[str]) -> Dict:
     """Private meta information - roles and game state"""
-    return {
-        "GM_SYSTEM": {
-            "roles": {},  # Will be filled by assign_role
-            "rejected_in_row": 0,
-            "assassination_used": False,
-            "winner": None
-        }
+    roles = _role_distribution(len(players))
+    role_assignments = {p: r for p, r in zip(players, roles)}
+    
+    # Create private meta structure
+    meta_priv_all = {}
+    
+    # GM_SYSTEM private meta (shared by GM and System)
+    meta_priv_all["GM_SYSTEM"] = {
+        "roles": role_assignments,
+        "rejected_in_row": 0,
+        "assassination_used": False,
+        "winner": None
     }
+    
+    # Each player's private meta
+    for player in players:
+        role = role_assignments[player]
+        player_meta = {
+            "role": role
+        }
+        
+        # Add role-specific private information
+        if role in ["MINION", "ASSASSIN", "MORGANA", "MORDRED", "OBERON"]:
+            # Evil players know their teammates (except Oberon)
+            if role != "OBERON":
+                evil_teammates = [p for p, r in role_assignments.items() 
+                                if r in ["MINION", "ASSASSIN", "MORGANA", "MORDRED"] 
+                                and p != player]
+                player_meta["teammates"] = evil_teammates
+        
+        meta_priv_all[player] = player_meta
+    
+    return meta_priv_all
 
 def assign_role(name: str, meta_priv) -> str:
     return meta_priv["GM_SYSTEM"]["roles"][name]
