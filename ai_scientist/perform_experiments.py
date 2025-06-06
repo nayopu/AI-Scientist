@@ -35,6 +35,10 @@ def run_experiment(
     docker_image: str = "ai-scientist:latest",
     client=None,
     model: str = "gpt-4o-mini",
+    num_players: int = 5,
+    max_turns: int = 100,
+    player_model: str = "openrouter:deepseek/deepseek-r1-0528",
+    gm_model: str = None,
 ):
     """Run ``experiment.py`` either locally or inside a Docker container.
 
@@ -55,6 +59,14 @@ def run_experiment(
         LLM client object (for determining API type).
     model : str, optional
         LLM model name to pass to experiment.py.
+    num_players : int, optional
+        Number of players in the social deduction game.
+    max_turns : int, optional
+        Maximum number of turns before game ends.
+    player_model : str, optional
+        Model specification for players in format 'api:model_name'.
+    gm_model : str, optional
+        Model specification for GM in format 'api:model_name'.
     """
     cwd = osp.abspath(folder_name)
     if use_docker and shutil.which("docker") is None:
@@ -98,7 +110,12 @@ def run_experiment(
             f"--out_dir=run_{run_num}",
             f"--model={model}",
             f"--api={api}",
+            f"--num_players={num_players}",
+            f"--max_turns={max_turns}",
+            f"--player_model={player_model}",
         ]
+        if gm_model:
+            command.append(f"--gm_model={gm_model}")
         run_cwd = None
     else:
         command = [
@@ -107,7 +124,12 @@ def run_experiment(
             f"--out_dir=run_{run_num}",
             f"--model={model}",
             f"--api={api}",
+            f"--num_players={num_players}",
+            f"--max_turns={max_turns}",
+            f"--player_model={player_model}",
         ]
+        if gm_model:
+            command.append(f"--gm_model={gm_model}")
         run_cwd = cwd
     try:
         result = subprocess.run(
@@ -220,6 +242,10 @@ def perform_experiments(
     docker_image: str = "ai-scientist:latest",
     client=None,
     model: str = "gpt-4o-mini",
+    num_players: int = 5,
+    max_turns: int = 100,
+    player_model: str = "openrouter:deepseek/deepseek-r1-0528",
+    gm_model: str = None,
 ) -> bool:
     ## RUN EXPERIMENT
     current_iter = 0
@@ -245,6 +271,10 @@ def perform_experiments(
             docker_image=docker_image,
             client=client,
             model=model,
+            num_players=num_players,
+            max_turns=max_turns,
+            player_model=player_model,
+            gm_model=gm_model,
         )
         if return_code == 0:
             run += 1

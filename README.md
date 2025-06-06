@@ -313,6 +313,21 @@ python launch_scientist.py --experiment grokking --max-ideas 2
 python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api duckduckgo
 python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api perplexity
 python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api openai
+
+# Customize game parameters
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
+  --num-players 7 --max-turns 150 --player-model "openai:gpt-4o-mini"
+
+# Use different models for players and GM
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
+  --player-model "openrouter:anthropic/claude-3-5-sonnet" \
+  --gm-model "openai:gpt-4o"
+
+# Run with custom game settings and search API
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
+  --num-players 6 --max-turns 200 \
+  --player-model "openrouter:deepseek/deepseek-r1-0528" \
+  --search-api perplexity
 ```
 
 ### Command Line Arguments
@@ -330,6 +345,15 @@ The following command line arguments are available:
 - `--docker-image`: Docker image to use (default: "ai-scientist:latest")
 - `--max-ideas`: Maximum number of ideas to generate (default: 5)
 - `--engine`: Scholar engine to use for citations (choices: "semanticscholar", "openalex", default: "semanticscholar")
+
+#### Game-Specific Arguments
+
+For social deduction game experiments, the following additional arguments are available:
+
+- `--num-players`: Number of players in the social deduction game (default: 5)
+- `--max-turns`: Maximum number of turns before game ends (default: 100)
+- `--player-model`: Model specification for players in format 'api:model_name' (default: "openrouter:deepseek/deepseek-r1-0528")
+- `--gm-model`: Model specification for GM in format 'api:model_name' (if different from players, default: None)
 
 **Search API Options:**
 - `--search-api duckduckgo` (free, no API key required)
@@ -492,6 +516,22 @@ The social deduction game template supports three search options:
 - `--search-api openai` (requires `OPENAI_API_KEY`)
 
 Set the appropriate environment variables before running experiments.
+
+**How do I customize game parameters for social deduction games?**
+
+You can customize the game setup using the following arguments:
+- `--num-players N`: Set the number of players (default: 5)
+- `--max-turns N`: Set maximum turns before game ends (default: 100)
+- `--player-model "api:model"`: Specify the model for players (default: "openrouter:deepseek/deepseek-r1-0528")
+- `--gm-model "api:model"`: Specify a different model for the Game Master (optional)
+
+Example:
+```bash
+python launch_scientist.py --experiment social_deduction_game \
+  --num-players 7 --max-turns 150 \
+  --player-model "openai:gpt-4o-mini" \
+  --gm-model "openai:gpt-4o"
+```
 
 **How do I add support for a new foundation model?**
 

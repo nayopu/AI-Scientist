@@ -90,6 +90,31 @@ def parse_arguments():
         choices=["semanticscholar", "openalex"],
         help="Scholar engine to use for citations",
     )
+    # Game-specific arguments
+    parser.add_argument(
+        "--num-players",
+        type=int,
+        default=5,
+        help="Number of players in the social deduction game (default: 5)",
+    )
+    parser.add_argument(
+        "--max-turns",
+        type=int,
+        default=100,
+        help="Maximum number of turns before game ends (default: 100)",
+    )
+    parser.add_argument(
+        "--player-model",
+        type=str,
+        default="openrouter:deepseek/deepseek-r1-0528",
+        help="Model specification for players in format 'api:model_name' (default: openrouter:deepseek/deepseek-r1-0528)",
+    )
+    parser.add_argument(
+        "--gm-model",
+        type=str,
+        default=None,
+        help="Model specification for GM in format 'api:model_name' (if different from players)",
+    )
     return parser.parse_args()
 
 
@@ -131,6 +156,10 @@ def worker(
         docker_image,
         experiment="social_deduction_game",
         engine="semanticscholar",
+        num_players=5,
+        max_turns=100,
+        player_model="openrouter:deepseek/deepseek-r1-0528",
+        gm_model=None,
 ):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
     print(f"Worker {gpu_id} started.")
@@ -155,6 +184,10 @@ def worker(
             log_file=True,
             experiment=experiment,
             engine=engine,
+            num_players=num_players,
+            max_turns=max_turns,
+            player_model=player_model,
+            gm_model=gm_model,
         )
         print(f"Completed idea: {idea['Name']}, Success: {success}")
     print(f"Worker {gpu_id} finished.")
@@ -173,6 +206,10 @@ def do_idea(
         log_file=False,
         experiment="social_deduction_game",
         engine="semanticscholar",
+        num_players=5,
+        max_turns=100,
+        player_model="openrouter:deepseek/deepseek-r1-0528",
+        gm_model=None,
 ):
     ## CREATE PROJECT FOLDER
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -246,6 +283,10 @@ def do_idea(
                 docker_image=docker_image,
                 client=client,
                 model=client_model,
+                num_players=num_players,
+                max_turns=max_turns,
+                player_model=player_model,
+                gm_model=gm_model,
             )
         except Exception as e:
             print(f"Error during experiments: {e}")
@@ -440,6 +481,10 @@ if __name__ == "__main__":
                     args.docker_image,
                     args.experiment,
                     args.engine,
+                    args.num_players,
+                    args.max_turns,
+                    args.player_model,
+                    args.gm_model,
                 ),
             )
             p.start()
@@ -470,6 +515,10 @@ if __name__ == "__main__":
                     args.docker_image,
                     experiment=args.experiment,
                     engine=args.engine,
+                    num_players=args.num_players,
+                    max_turns=args.max_turns,
+                    player_model=args.player_model,
+                    gm_model=args.gm_model,
                 )
                 print(f"Completed idea: {idea['Name']}, Success: {success}")
             except Exception as e:

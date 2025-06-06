@@ -569,26 +569,59 @@ async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, meta_
     
     return pkgs
 
-async def run_game(rules_module: str, num_players: int = 5, api_source: str = "openai", 
-                  model_name: str = "gpt-4o-mini", gm_model_name: str = None, 
-                  lang: str = "en", out_dir: str = "game_logs") -> Dict[str, Any]:
+def parse_model_spec(model_spec: str) -> Tuple[str, str]:
+    """
+    Parse a model specification in the format 'api:model_name'.
+    
+    Args:
+        model_spec: Model specification like "openai:gpt-4o-mini" or "openrouter:some-model"
+    
+    Returns:
+        Tuple of (api_source, model_name)
+    
+    Raises:
+        ValueError: If the format is invalid
+    """
+    if ":" not in model_spec:
+        raise ValueError(f"Invalid model specification '{model_spec}'. Expected format: 'api:model_name'")
+    
+    parts = model_spec.split(":", 1)
+    if len(parts) != 2:
+        raise ValueError(f"Invalid model specification '{model_spec}'. Expected format: 'api:model_name'")
+    
+    api_source, model_name = parts
+    api_source = api_source.lower().strip()
+    model_name = model_name.strip()
+    
+    if api_source not in ["openai", "openrouter"]:
+        raise ValueError(f"Unsupported API source: {api_source}. Must be 'openai' or 'openrouter'")
+    
+    if not model_name:
+        raise ValueError("Model name cannot be empty")
+    
+    return api_source, model_name
+
+async def run_game(rules_module: str, num_players: int = 5, player_model: str = "openai:gpt-4o-mini", 
+                  gm_model: str = None, 
+                  lang: str = "en", out_dir: str = "game_logs", max_turns: int = 100) -> Dict[str, Any]:
     """
     Run a social deduction game programmatically.
     
     Args:
         rules_module: Name of the rules module to import
         num_players: Number of players (default: 5)
-        api_source: API source ("openai" or "openrouter", default: "openai")
-        model_name: Model name for players (default: "gpt-4o-mini")  
-        gm_model_name: Model name for GM (if different from players)
+        player_model: Model specification for players in format "api:model_name" (default: "openai:gpt-4o-mini")
+        gm_model: Model specification for GM in format "api:model_name" (if different from players)
         lang: Language code (default: "en")
         out_dir: Directory to store game logs (default: "game_logs")
+        max_turns: Maximum number of turns before game ends (default: 100)
     
     Returns:
         Dict containing game results with keys:
         - success: bool indicating if game completed successfully
-        - winner: str or None indicating the winner
+        - winner: str or None indicating the winner (None if max turns reached)
         - turn_count: int number of turns played
+        - max_turns_reached: bool indicating if game ended due to turn limit
         - error: str error message if game failed
     """
     try:
@@ -601,11 +634,25 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
         meta_pub = rules.init_meta_pub(names)     # phase / alive / dead など
         meta_priv_all = rules.init_meta_priv(names)   # 役職など - now returns dict with keys for each participant
 
+        # Parse model specifications
+        try:
+            player_api, player_model_name = parse_model_spec(player_model)
+            
+            # Use GM model if specified, otherwise use player model
+            if gm_model:
+                gm_api, gm_model_name = parse_model_spec(gm_model)
+            else:
+                gm_api, gm_model_name = player_api, player_model_name
+                
+        except ValueError as e:
+            error_msg = f"Error parsing model specification: {e}"
+            return {"success": False, "error": error_msg, "winner": None, "turn_count": 0}
+
         # Create LLM instances
         try:
-            player_llm = create_llm(api_source, model_name)
-            gm_llm = create_llm(api_source, gm_model_name or model_name)
-            system_llm = create_llm(api_source, gm_model_name or model_name)
+            player_llm = create_llm(player_api, player_model_name)
+            gm_llm = create_llm(gm_api, gm_model_name)
+            system_llm = create_llm(gm_api, gm_model_name)
         except ValueError as e:
             error_msg = f"Error: {e}\nPlease set the required API key environment variable"
             return {"success": False, "error": error_msg, "winner": None, "turn_count": 0}
@@ -644,7 +691,6 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
         dm_log: List[Tuple[int, str, str, str]] = []  # [(turn, sender, receiver, text)]
         turn = 0
         winner: str | None = None
-        max_turns = 100  # Safety limit to prevent infinite games
         
         try:
             while winner is None and turn < max_turns:
@@ -749,7 +795,8 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                 winner = meta_pub.get("winner")
 
             # Log game end using new event system
-            game_completed = winner is not None and turn < max_turns
+            max_turns_reached = turn >= max_turns
+            game_completed = winner is not None and not max_turns_reached
             game_end_event = GameEndEvent(
                 winner=winner,
                 total_turns=turn,
@@ -778,6 +825,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                 "success": True,
                 "winner": winner,
                 "turn_count": turn,
+                "max_turns_reached": max_turns_reached,
                 "game_completed": game_completed,
                 "error": None
             }
@@ -788,11 +836,18 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
             
             # Create and save game summary JSON for experiment.py
             try:
+                current_turn = locals().get('turn', 0)
+                current_max_turns_reached = current_turn >= max_turns
+                current_winner = locals().get('winner')
+                current_game_completed = current_winner is not None and not current_max_turns_reached
+                
                 game_summary = {
                     "success": True,
-                    "game_completed": locals().get('winner') is not None and locals().get('turn', 0) < max_turns,
-                    "winner": locals().get('winner'),
-                    "turn_count": locals().get('turn', 0),
+                    "game_completed": current_game_completed,
+                    "winner": current_winner,
+                    "turn_count": current_turn,
+                    "max_turns": max_turns,
+                    "max_turns_reached": current_max_turns_reached,
                     "total_messages": len(locals().get('public_log', [])) + len(locals().get('dm_log', [])),
                     "public_messages": len(locals().get('public_log', [])),
                     "dm_messages": len(locals().get('dm_log', [])),
@@ -827,6 +882,8 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                     "game_completed": False,
                     "winner": None,
                     "turn_count": locals().get('turn', 0),
+                    "max_turns": max_turns,
+                    "max_turns_reached": locals().get('turn', 0) >= max_turns,
                     "total_messages": 0,
                     "public_messages": 0,
                     "dm_messages": 0,
@@ -851,6 +908,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
             "success": False,
             "winner": None,
             "turn_count": locals().get('turn', 0),
+            "max_turns_reached": locals().get('turn', 0) >= max_turns,
             "game_completed": False,
             "error": error_msg
         }
@@ -860,27 +918,27 @@ async def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--rules", required=True)
     ap.add_argument("--players", type=int, default=5)
-    ap.add_argument("--api", choices=["openai", "openrouter"], default="openai",
-                    help="API source to use (OpenAI or OpenRouter)")
-    ap.add_argument("--model", default="gpt-4o-mini",
-                    help="Model name for players")
+    ap.add_argument("--model", default="openai:gpt-4o-mini",
+                    help="Model specification for players in format 'api:model_name' (e.g., 'openai:gpt-4o-mini', 'openrouter:some-model')")
     ap.add_argument("--gm-model", default=None,
-                    help="Model name for GM (if different from players)")
+                    help="Model specification for GM in format 'api:model_name' (if different from players)")
     ap.add_argument("--lang", default="en")
     ap.add_argument("--out", default="game_logs",
                     help="Directory to store game logs. Will create two files: "
                          "game_log.json (detailed log) and game_summary.txt (evaluation summary)")
+    ap.add_argument("--max-turns", type=int, default=100,
+                    help="Maximum number of turns before game ends (default: 100)")
     args = ap.parse_args()
 
     # Call the run_game function with parsed arguments
     result = await run_game(
         rules_module=args.rules,
         num_players=args.players,
-        api_source=args.api,
-        model_name=args.model,
-        gm_model_name=args.gm_model,
+        player_model=args.model,
+        gm_model=args.gm_model,
         lang=args.lang,
-        out_dir=args.out
+        out_dir=args.out,
+        max_turns=args.max_turns
     )
     
     if not result["success"]:

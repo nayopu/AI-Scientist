@@ -21,8 +21,14 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--out_dir", type=str, required=True)
     parser.add_argument("--idea", type=str, help="JSON string of the idea to implement")
-    parser.add_argument("--baseline_game", type=str, default="werewolf", 
-                        help="Baseline game to compare against")
+    parser.add_argument("--max_turns", type=int, default=100,
+                        help="Maximum number of turns before game ends (default: 100)")
+    parser.add_argument("--num_players", type=int, default=5,
+                        help="Number of players in the game (default: 5)")
+    parser.add_argument("--player_model", type=str, default="openrouter:deepseek/deepseek-r1-0528",
+                        help="Model specification for players in format 'api:model_name' (default: openrouter:deepseek/deepseek-r1-0528)")
+    parser.add_argument("--gm_model", type=str, default=None,
+                        help="Model specification for GM in format 'api:model_name' (if different from players)")
     return parser.parse_args()
 
 def generate_rule_file(idea: Dict[str, Any], output_path: str) -> bool:
@@ -180,9 +186,18 @@ Generate a complete, working Python rule file that implements this specific soci
         raise e  # Re-raise the error instead of falling back
 
 def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int = 5, 
-                       max_turns: int = 50) -> Dict:
+                       max_turns: int = 100, player_model: str = "openrouter:deepseek/deepseek-r1-0528",
+                       gm_model: str = None) -> Dict:
     """
     Run a game simulation and capture the results.
+    
+    Args:
+        rule_module: Name of the rules module to use
+        out_dir: Directory to save game logs
+        num_players: Number of players (default: 5)
+        max_turns: Maximum number of turns (default: 100)
+        player_model: Model specification for players in format "api:model_name" (default: "openrouter:deepseek/deepseek-r1-0528")
+        gm_model: Model specification for GM in format "api:model_name" (if different from players)
     """
     try:
         # Import the run_game function from sdg_core
@@ -204,9 +219,10 @@ def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int 
             result = asyncio.run(run_game(
                 rules_module=rule_module,
                 num_players=num_players,
-                api_source="openrouter",  # Default to OpenAI, could be made configurable
-                model_name="deepseek/deepseek-r1-0528",  # Default model, could be made configurable
-                out_dir=out_dir
+                player_model=player_model,
+                gm_model=gm_model,
+                out_dir=out_dir,
+                max_turns=max_turns
             ))
         except Exception as e:
             return {"success": False, "error": f"Failed to run game: {str(e)}", "dialogue": []}
@@ -233,6 +249,8 @@ def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int 
                 "game_completed": game_summary_data["game_completed"],
                 "winner": game_summary_data["winner"],
                 "turn_count": game_summary_data["turn_count"],
+                "max_turns": game_summary_data.get("max_turns", max_turns),
+                "max_turns_reached": game_summary_data.get("max_turns_reached", False),
                 "total_messages": game_summary_data["total_messages"],
                 "dialogue": [],  # Empty for now, raw text will be used for LLM analysis
                 "game_summary_text": game_summary_text
@@ -257,9 +275,26 @@ def evaluate_game_quality(new_game_results: Dict, baseline_results: Dict, rule_f
     
     metrics = {}
     
-    # Basic completion metrics (same as before)
-    metrics["completion_rate"] = 1.0 if new_game_results.get("game_completed", False) else 0.0
-    baseline_completion = 1.0 if baseline_results.get("game_completed", False) else 0.0
+    # Basic completion metrics (updated to consider max turns)
+    new_game_completed = new_game_results.get("game_completed", False)
+    new_max_turns_reached = new_game_results.get("max_turns_reached", False)
+    baseline_completed = baseline_results.get("game_completed", False)
+    baseline_max_turns_reached = baseline_results.get("max_turns_reached", False)
+    
+    # Give partial credit for reaching max turns (game didn't crash, just took too long)
+    if new_game_completed:
+        metrics["completion_rate"] = 1.0
+    elif new_max_turns_reached:
+        metrics["completion_rate"] = 0.7  # Partial credit for reaching max turns
+    else:
+        metrics["completion_rate"] = 0.0
+    
+    if baseline_completed:
+        baseline_completion = 1.0
+    elif baseline_max_turns_reached:
+        baseline_completion = 0.7
+    else:
+        baseline_completion = 0.0
     
     # ═══════════════════════════════════════════════════════════════════════
     # RULE ANALYSIS - Analyze the generated game rules
@@ -549,7 +584,14 @@ def run_experiment(args=None):
     
     # Test the new game
     print("Running new game simulation...")
-    new_game_results = run_game_simulation(rule_file_name, args.out_dir)
+    new_game_results = run_game_simulation(
+        rule_file_name, 
+        args.out_dir, 
+        num_players=args.num_players,
+        max_turns=args.max_turns,
+        player_model=args.player_model,
+        gm_model=args.gm_model
+    )
     
     if not new_game_results["success"]:
         print(f"New game failed: {new_game_results.get('error', 'Unknown error')}")
@@ -580,6 +622,8 @@ def run_experiment(args=None):
             "game_completed": baseline_summary_data["game_completed"],
             "winner": baseline_summary_data["winner"],
             "turn_count": baseline_summary_data["turn_count"],
+            "max_turns": baseline_summary_data.get("max_turns", 100),
+            "max_turns_reached": baseline_summary_data.get("max_turns_reached", False),
             "total_messages": baseline_summary_data["total_messages"],
             "dialogue": [],  # Empty for now, raw text will be used for LLM analysis
             "game_summary_text": baseline_summary_text
@@ -593,6 +637,8 @@ def run_experiment(args=None):
             "game_completed": True,
             "winner": "VILLAGERS", 
             "turn_count": 57,
+            "max_turns": 100,
+            "max_turns_reached": False,
             "total_messages": 45,
             "dialogue": [],
             "game_summary_text": ""
@@ -611,6 +657,13 @@ def run_experiment(args=None):
         "engagement_score": {"means": evaluation["engagement"], "stds": 0.0},
         "overall_quality": {"means": evaluation["overall_score"], "stds": 0.0},
         "beats_baseline": {"means": 1.0 if evaluation["beats_baseline"] else 0.0, "stds": 0.0},
+        "max_turns_reached": {"means": 1.0 if new_game_results.get("max_turns_reached", False) else 0.0, "stds": 0.0},
+        "game_stats": {
+            "new_game_turns": new_game_results.get("turn_count", 0),
+            "new_game_max_turns": new_game_results.get("max_turns", 100),
+            "new_game_completed": new_game_results.get("game_completed", False),
+            "new_game_max_turns_reached": new_game_results.get("max_turns_reached", False)
+        },
         "detailed_analysis": evaluation.get("detailed_analysis", {})
     }
     
