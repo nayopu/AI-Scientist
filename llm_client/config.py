@@ -17,7 +17,10 @@ class LLMConfig:
         """Load configuration from environment variables."""
         # Read model specification from environment
         # Format: API_PROVIDER:MODEL_NAME (e.g., "anthropic:claude-3-5-sonnet-20241022")
-        model_spec = os.environ.get("AI_SCIENTIST_MODEL", "openai:gpt-4o-mini")
+        try:
+            model_spec = os.environ["AI_SCIENTIST_MODEL"]
+        except KeyError:
+            raise ValueError("AI_SCIENTIST_MODEL environment variable is not set")
         
         try:
             self.api_provider, self.model_name = model_spec.split(":", 1)

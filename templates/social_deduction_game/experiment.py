@@ -29,6 +29,11 @@ def parse_args():
                         help="Model specification for players in format 'api:model_name' (default: openrouter:deepseek/deepseek-r1-0528)")
     parser.add_argument("--gm_model", type=str, default=None,
                         help="Model specification for GM in format 'api:model_name' (if different from players)")
+    # Legacy arguments for compatibility - these are handled by the unified client system
+    parser.add_argument("--model", type=str, default=None,
+                        help="Legacy model argument (handled by AI_SCIENTIST_MODEL env var)")
+    parser.add_argument("--api", type=str, default=None,
+                        help="Legacy API argument (handled by unified client)")
     return parser.parse_args()
 
 def generate_rule_file(idea: Dict[str, Any], output_path: str) -> bool:
@@ -60,11 +65,15 @@ def generate_rule_file(idea: Dict[str, Any], output_path: str) -> bool:
             )
         else:
             # For OpenAI-compatible APIs (including OpenRouter, DeepSeek, etc.)
+            base_url = getattr(client, 'base_url', None)
+            # Convert URL object to string if needed
+            if base_url is not None:
+                base_url = str(base_url)
             llm_client = ChatOpenAI(
                 model=model_name,
                 temperature=0.1,
                 openai_api_key=client.api_key,
-                openai_api_base=getattr(client, 'base_url', None)
+                openai_api_base=base_url
             )
         
         # Read werewolf.py as an example
@@ -582,10 +591,13 @@ def run_experiment(args=None):
     if not success:
         return {"error": "Failed to generate rule file"}
     
+    # Convert rule file name to module format
+    # Convert path separators and dashes to dots for Python module format
+    rule_module = str(Path(args.out_dir) / rule_file_name).replace('/', '.').replace('-', '_')
     # Test the new game
     print("Running new game simulation...")
     new_game_results = run_game_simulation(
-        rule_file_name, 
+        rule_module, 
         args.out_dir, 
         num_players=args.num_players,
         max_turns=args.max_turns,

@@ -328,6 +328,12 @@ python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
   --num-players 6 --max-turns 200 \
   --player-model "openrouter:deepseek/deepseek-r1-0528" \
   --search-api perplexity
+
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
+  --num-players 3 --max-turns 10 \
+    --gm-model "openai:o3-mini" \
+  --player-model "openrouter:deepseek/deepseek-r1-0528" \
+  --search-api openai
 ```
 
 ### Command Line Arguments
