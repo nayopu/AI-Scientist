@@ -1,0 +1,18 @@
+{
+  "success": true,
+  "game_completed": true,
+  "winner": "VILLAGERS",
+  "turn_count": 57,
+  "total_messages": 47,
+  "public_messages": 35,
+  "dm_messages": 12,
+  "final_alive": ["P2", "P3"],
+  "final_dead": ["P5", "P1", "P4"],
+  "role_assignments": {
+    "P1": "VILLAGER",
+    "P2": "DOCTOR", 
+    "P3": "SEER",
+    "P4": "WEREWOLF",
+    "P5": "VILLAGER"
+  }
+} 

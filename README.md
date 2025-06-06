@@ -82,7 +82,7 @@ pip install -r requirements.txt
 
 ### Supported Models and API Keys
 
-We support a wide variety of models through multiple APIs. The model specification follows a unified format: `api:model_name`. For example:
+The system uses environment variables to configure the LLM model and API keys. The model is specified through the `AI_SCIENTIST_MODEL` environment variable in the format `provider:model_name`. For example:
 - `openai:gpt-4o-mini`
 - `openrouter:llama-3.1-405b-instruct`
 - `anthropic:claude-3-5-sonnet-20240620`
@@ -125,7 +125,7 @@ export VERTEXAI_LOCATION="REGION"         # for Aider/LiteLLM call
 export VERTEXAI_PROJECT="PROJECT_ID"      # for Aider/LiteLLM call
 ```
 
-#### DeepSeek API (deepseek-chat, deepseek-reasoner)
+#### DeepSeek API (deepseek-coder, deepseek-reasoner)
 By default, this uses the `DEEPSEEK_API_KEY` environment variable.
 
 #### OpenRouter API (Llama3.1)
@@ -154,6 +154,7 @@ Our code can also optionally use a Semantic Scholar API Key (`S2_API_KEY`) for h
 Be sure to provide the key for the model used for your runs, e.g.:
 
 ```bash
+export AI_SCIENTIST_MODEL="openai:gpt-4o-mini"  # or your preferred model
 export OPENAI_API_KEY="YOUR KEY HERE"
 export S2_API_KEY="YOUR KEY HERE"
 ```
@@ -300,18 +301,35 @@ This section provides instructions for setting up each of the three templates us
 ```bash
 conda activate ai_scientist
 # Run traditional scientific research experiments
-python launch_scientist.py --model "openai:gpt-4o-2024-05-13" --experiment nanoGPT_lite --num-ideas 2
-python launch_scientist.py --model "anthropic:claude-3-5-sonnet-20241022" --experiment nanoGPT_lite --num-ideas 2
+python launch_scientist.py --experiment nanoGPT_lite --max-ideas 2
+python launch_scientist.py --experiment 2d_diffusion --max-ideas 2
+python launch_scientist.py --experiment grokking --max-ideas 2
 ```
 
 ### Game Design Experiments
 
 ```bash
 # Run social deduction game design with different search APIs
-python launch_scientist.py --model "openai:gpt-4o-2024-05-13" --experiment social_deduction_game --num-ideas 2 --search-api duckduckgo
-python launch_scientist.py --model "anthropic:claude-3-5-sonnet-20241022" --experiment social_deduction_game --num-ideas 2 --search-api perplexity
-python launch_scientist.py --model "openai:gpt-4o-2024-05-13" --experiment social_deduction_game --num-ideas 2 --search-api openai
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api duckduckgo
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api perplexity
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api openai
 ```
+
+### Command Line Arguments
+
+The following command line arguments are available:
+
+- `--search-api`: Search API for novelty checking (choices: "perplexity", "openai", "duckduckgo", default: "perplexity")
+- `--skip-idea-generation`: Skip idea generation and use existing ideas
+- `--skip-novelty-check`: Skip novelty checking of ideas
+- `--experiment`: Type of experiment to run (default: "social_deduction_game")
+- `--parallel`: Run experiments in parallel
+- `--writeup`: Writeup format to use (default: "latex")
+- `--improvement`: Enable writeup improvement
+- `--docker`: Use Docker for experiments
+- `--docker-image`: Docker image to use (default: "ai-scientist:latest")
+- `--max-ideas`: Maximum number of ideas to generate (default: 5)
+- `--engine`: Scholar engine to use for citations (choices: "semanticscholar", "openalex", default: "semanticscholar")
 
 **Search API Options:**
 - `--search-api duckduckgo` (free, no API key required)
@@ -508,15 +526,18 @@ You can use this image like this:
 
 ```bash
 # Endpoint Script
-docker run -e OPENAI_API_KEY=$OPENAI_API_KEY -v `pwd`/templates:/app/AI-Scientist/templates <AI_SCIENTIST_IMAGE> \
-  --model gpt-4o-2024-05-13 \
+docker run -e AI_SCIENTIST_MODEL="openai:gpt-4o-mini" \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
+  -v `pwd`/templates:/app/AI-Scientist/templates \
+  <AI_SCIENTIST_IMAGE> \
   --experiment 2d_diffusion \
-  --num-ideas 2
+  --max-ideas 2
 ```
 
 ```bash
 # Interactive
-docker run -it -e OPENAI_API_KEY=$OPENAI_API_KEY \
+docker run -it -e AI_SCIENTIST_MODEL="openai:gpt-4o-mini" \
+  -e OPENAI_API_KEY=$OPENAI_API_KEY \
   --entrypoint /bin/bash \
   <AI_SCIENTIST_IMAGE>
 ```

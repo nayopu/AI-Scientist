@@ -757,6 +757,23 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
             )
             logger.log_event(game_end_event)
             
+            # Count total messages for summary
+            total_messages = len(public_log) + len(dm_log)
+            
+            # Create game summary JSON for experiment.py usage
+            game_summary = {
+                "success": True,
+                "game_completed": game_completed,
+                "winner": winner,
+                "turn_count": turn,
+                "total_messages": total_messages,
+                "public_messages": len(public_log),
+                "dm_messages": len(dm_log),
+                "final_alive": meta_pub.get("alive", []),
+                "final_dead": meta_pub.get("dead", []),
+                "role_assignments": role_assignments
+            }
+            
             return {
                 "success": True,
                 "winner": winner,
@@ -768,14 +785,68 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
         finally:
             # Save all logs even if the game was interrupted
             logger.save_logs()
+            
+            # Create and save game summary JSON for experiment.py
+            try:
+                game_summary = {
+                    "success": True,
+                    "game_completed": locals().get('winner') is not None and locals().get('turn', 0) < max_turns,
+                    "winner": locals().get('winner'),
+                    "turn_count": locals().get('turn', 0),
+                    "total_messages": len(locals().get('public_log', [])) + len(locals().get('dm_log', [])),
+                    "public_messages": len(locals().get('public_log', [])),
+                    "dm_messages": len(locals().get('dm_log', [])),
+                    "final_alive": locals().get('meta_pub', {}).get("alive", []),
+                    "final_dead": locals().get('meta_pub', {}).get("dead", []),
+                    "role_assignments": locals().get('role_assignments', {})
+                }
+                
+                # Save game summary JSON
+                os.makedirs(out_dir, exist_ok=True)
+                summary_json_path = Path(out_dir) / "game_summary.json"
+                with open(summary_json_path, 'w', encoding='utf-8') as f:
+                    json.dump(game_summary, f, indent=2, ensure_ascii=False)
+                
+                ConsoleLogger.log_info(f"Game summary JSON saved to: {summary_json_path}")
+            except Exception as summary_error:
+                ConsoleLogger.log_warning(f"Failed to save game summary JSON: {summary_error}")
+            
             ConsoleLogger.log_info(f"Logs saved to directory: {out_dir}")
     except Exception as e:
         error_msg = f"Game execution error: {str(e)}\nTraceback:\n{traceback.format_exc()}"
         ConsoleLogger.log_error(error_msg)
+        
         # Try to save logs if logger exists
         if 'logger' in locals():
             logger.save_logs()
+            
+            # Save error game summary JSON
+            try:
+                error_summary = {
+                    "success": False,
+                    "game_completed": False,
+                    "winner": None,
+                    "turn_count": locals().get('turn', 0),
+                    "total_messages": 0,
+                    "public_messages": 0,
+                    "dm_messages": 0,
+                    "final_alive": [],
+                    "final_dead": [],
+                    "role_assignments": locals().get('role_assignments', {}),
+                    "error": error_msg
+                }
+                
+                os.makedirs(out_dir, exist_ok=True)
+                summary_json_path = Path(out_dir) / "game_summary.json"
+                with open(summary_json_path, 'w', encoding='utf-8') as f:
+                    json.dump(error_summary, f, indent=2, ensure_ascii=False)
+                
+                ConsoleLogger.log_info(f"Error game summary JSON saved to: {summary_json_path}")
+            except Exception as summary_error:
+                ConsoleLogger.log_warning(f"Failed to save error game summary JSON: {summary_error}")
+            
             ConsoleLogger.log_info(f"Logs saved to directory: {out_dir} (after error)")
+        
         return {
             "success": False,
             "winner": None,

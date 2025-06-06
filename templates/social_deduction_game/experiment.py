@@ -215,67 +215,31 @@ def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int 
         if not result["success"]:
             return {"success": False, "error": result.get("error", "Unknown game error"), "dialogue": []}
         
-        # Load the game summary log (for evaluation)
-        summary_file = Path(out_dir) / "game_summary.txt"
-        detailed_file = Path(out_dir) / "game_log.json"
+        # Load the game summary JSON (new structured format)
+        summary_json_file = Path(out_dir) / "game_summary.json"
+        summary_text_file = Path(out_dir) / "game_summary.txt"
         
         try:
-            with open(summary_file, 'r') as f:
+            # Load structured data from JSON
+            with open(summary_json_file, 'r') as f:
+                game_summary_data = json.load(f)
+            
+            # Load conversation text for LLM analysis
+            with open(summary_text_file, 'r') as f:
                 game_summary_text = f.read()
-            with open(detailed_file, 'r') as f:
-                game_detailed = json.load(f)
+            
+            return {
+                "success": game_summary_data["success"],
+                "game_completed": game_summary_data["game_completed"],
+                "winner": game_summary_data["winner"],
+                "turn_count": game_summary_data["turn_count"],
+                "total_messages": game_summary_data["total_messages"],
+                "dialogue": [],  # Empty for now, raw text will be used for LLM analysis
+                "game_summary_text": game_summary_text
+            }
+                
         except Exception as e:
             return {"success": False, "error": f"Failed to load log files: {e}", "dialogue": []}
-        
-        # Parse information from summary text log
-        dialogue = []
-        game_completed = result["game_completed"]
-        winner = result["winner"]
-        turn_count = result["turn_count"]
-        
-        # Parse conversations from summary text
-        lines = game_summary_text.split('\n')
-        for line in lines:
-            line = line.strip()
-            # Match conversation lines like: [01] P3▶ALL: message
-            # or [01] P3▶DM(P1,P2): message
-            if line.startswith('[') and ']' in line and ('▶ALL:' in line or '▶DM(' in line):
-                try:
-                    # Extract turn number
-                    turn_part = line.split(']')[0][1:]
-                    turn = int(turn_part)
-                    
-                    # Extract speaker and message
-                    rest = line.split('] ', 1)[1]
-                    if '▶ALL:' in rest:
-                        speaker = rest.split('▶ALL:')[0]
-                        message = rest.split('▶ALL:', 1)[1].strip()
-                        is_dm = False
-                    elif '▶DM(' in rest:
-                        speaker = rest.split('▶DM(')[0]
-                        message = rest.split('): ', 1)[1].strip()
-                        is_dm = True
-                    else:
-                        continue
-                        
-                    dialogue.append({
-                        "turn": turn,
-                        "speaker": speaker,
-                        "message": message,
-                        "is_dm": is_dm
-                    })
-                except (ValueError, IndexError):
-                    continue
-        
-        return {
-            "success": True,
-            "game_completed": game_completed,
-            "winner": winner,
-            "turn_count": turn_count,
-            "dialogue": dialogue,
-            "total_messages": len(dialogue),
-            "game_summary_text": game_summary_text
-        }
         
     except ImportError as e:
         return {"success": False, "error": f"Failed to import sdg_core: {e}", "dialogue": []}
@@ -593,32 +557,50 @@ def run_experiment(args=None):
         # This is where you'd use LLM to fix issues based on error messages
         return {"error": f"Game simulation failed: {new_game_results.get('error', '')}"}
     
-    # Run baseline game for comparison
-    print("Running baseline game simulation...")
-    baseline_rule_module = f"sample_rules.{args.baseline_game}"
-    baseline_out_dir = str(Path(args.out_dir) / "baseline")
-    baseline_results = run_game_simulation(baseline_rule_module, baseline_out_dir)
+    # Load baseline game results from existing logs instead of running simulation
+    print("Loading baseline game results from existing logs...")
+    baseline_logs_dir = Path(__file__).parent / "baseline_logs"
     
-    if not baseline_results["success"]:
-        print("Warning: Baseline game failed, loading from file...")
-        # Try to load from baseline file
-        baseline_file = Path(__file__).parent / "run_0" / "baseline_game_results.json"
-        if baseline_file.exists():
-            with open(baseline_file, 'r') as f:
-                baseline_results = json.load(f)
-        else:
-            baseline_results = {
-                "success": True,
-                "game_completed": True,
-                "turn_count": 15,
-                "total_messages": 45,
-                "dialogue": []
-            }
+    try:
+        # Load baseline game summary from JSON and text files
+        baseline_summary_json_file = baseline_logs_dir / "game_summary.json"
+        baseline_summary_text_file = baseline_logs_dir / "game_summary.txt"
+        
+        # Load structured data from JSON
+        with open(baseline_summary_json_file, 'r') as f:
+            baseline_summary_data = json.load(f)
+        
+        # Load conversation text for LLM analysis
+        with open(baseline_summary_text_file, 'r') as f:
+            baseline_summary_text = f.read()
+        
+        # Create baseline results
+        baseline_results = {
+            "success": baseline_summary_data["success"],
+            "game_completed": baseline_summary_data["game_completed"],
+            "winner": baseline_summary_data["winner"],
+            "turn_count": baseline_summary_data["turn_count"],
+            "total_messages": baseline_summary_data["total_messages"],
+            "dialogue": [],  # Empty for now, raw text will be used for LLM analysis
+            "game_summary_text": baseline_summary_text
+        }
+        print(f"Loaded baseline results: {baseline_results['turn_count']} turns, {baseline_results['total_messages']} messages")
+            
+    except Exception as e:
+        print(f"Warning: Failed to load baseline logs: {e}")
+        baseline_results = {
+            "success": True,
+            "game_completed": True,
+            "winner": "VILLAGERS", 
+            "turn_count": 57,
+            "total_messages": 45,
+            "dialogue": [],
+            "game_summary_text": ""
+        }
     
     # Evaluate game quality
     print("Evaluating game quality...")
     evaluation = evaluate_game_quality(new_game_results, baseline_results, str(rule_file_path))
-    
 
     # Convert to expected format
     formatted_results = {

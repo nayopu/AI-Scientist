@@ -142,9 +142,10 @@ Always respond with valid JSON containing:
 def init_meta_pub(players: List[str]):
     return {"phase": "discussion",
             "alive": list(players),
-            "dead": []}
+            "dead": [],
+            "winner": None}
 
-def init_meta_priv(players: List[str]):
+def init_meta_priv(players: List[str]) -> Dict:
     # Assign roles based on player count
     num_players = len(players)
     
@@ -176,7 +177,7 @@ def init_meta_priv(players: List[str]):
         "roles": role_assignments,
         "witch_potions": {"save": True, "kill": True},  # Witch's available potions
         "protected": None,  # Who the doctor protected this night
-        "seer_results": {}  # Seer's investigation history
+        "seer_results": {},  # Seer's investigation history
     }
     
     # Each player's private meta
