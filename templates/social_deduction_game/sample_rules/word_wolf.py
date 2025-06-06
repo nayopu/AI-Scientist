@@ -143,6 +143,7 @@ def init_meta_priv(players: List[str]) -> Dict:
         "roles": roles,
         "words": _WORDS_PER_PLAYER.copy(),
         "pair": _PAIR,
+        "winner": None
     }
     
     # Each player's private meta

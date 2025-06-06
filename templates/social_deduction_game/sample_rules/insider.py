@@ -133,40 +133,14 @@ def init_meta_pub(players: List[str]) -> Dict:
     }
 
 def init_meta_priv(players: List[str]) -> Dict:
-    """Assign 1 Master, 1 Insider, rest Commoners; store secret word placeholder."""
-    roles_list = ["MASTER", "INSIDER"] + ["COMMONER"] * (len(players) - 2)
-    random.shuffle(roles_list)
-    role_assignments = {p: r for p, r in zip(players, roles_list)}
-    
-    # Create private meta structure
-    meta_priv_all = {}
-    
-    # GM_SYSTEM private meta (shared by GM and System)
-    meta_priv_all["GM_SYSTEM"] = {
-        "roles": role_assignments,
-        "secret_word": "<SECRET_WORD>"
-    }
-    
-    # Each player's private meta
-    for player in players:
-        role = role_assignments[player]
-        player_meta = {
-            "role": role
+    """Private meta information - roles and secret word"""
+    return {
+        "GM_SYSTEM": {
+            "roles": {},  # Will be filled by assign_role
+            "secret_word": None,  # Will be set by GM
+            "winner": None
         }
-        
-        # Add role-specific private information
-        if role == "INSIDER":
-            # Insider knows the secret word (will be set by GM)
-            player_meta["knows_word"] = True
-        elif role == "MASTER":
-            # Master knows the secret word (will be set by GM)
-            player_meta["knows_word"] = True
-        else:  # COMMONER
-            player_meta["knows_word"] = False
-        
-        meta_priv_all[player] = player_meta
-    
-    return meta_priv_all
+    }
 
 def assign_role(name: str, meta_priv: Dict) -> str:
     """Return this player's role."""

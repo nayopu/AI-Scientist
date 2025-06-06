@@ -12,6 +12,7 @@ Changes
 * Add support for different API sources (OpenAI/OpenRouter)
 * Allow different model names for GM and players
 * Separate private meta information for each player, with GM and System sharing private meta
+* Modularized logging system for better code organization
 """
 
 from __future__ import annotations
@@ -32,6 +33,12 @@ from concurrent.futures import ThreadPoolExecutor
 import asyncio
 from pydantic import BaseModel, Field
 import warnings
+
+# Import the new logging system
+from game_logging import (
+    GameEventLogger, SetupEvent, BidEvent, MessageEvent, 
+    SystemDecisionEvent, MetaUpdateEvent, GameEndEvent, ConsoleLogger
+)
 
 
 def create_llm(api_source: str, model_name: str, temperature: float = 0.1) -> ChatOpenAI:
@@ -78,96 +85,6 @@ def create_llm(api_source: str, model_name: str, temperature: float = 0.1) -> Ch
         raise ValueError(f"Unsupported API source: {api_source}. Must be 'openai' or 'openrouter'")
 
 
-class GameLogger:
-    def __init__(self, out_dir: str):
-        """
-        Initialize game logger with output directory.
-        
-        Args:
-            out_dir: Directory to store log files
-        """
-        self.out_dir = Path(out_dir)
-        self.out_dir.mkdir(parents=True, exist_ok=True)
-        
-        # Open log files for immediate writing
-        self.detailed_file = open(self.out_dir / "game_log.json", 'w', encoding='utf-8')
-        self.summary_file = open(self.out_dir / "game_summary.txt", 'w', encoding='utf-8')
-        
-        # Start JSON array for detailed log
-        self.detailed_file.write("[\n")
-        self.first_detailed_entry = True
-        
-        # Write header for summary log
-        self.summary_file.write("=== SOCIAL DEDUCTION GAME LOG ===\n\n")
-        self.summary_file.flush()
-        
-        # Track previous meta state to detect actual changes
-        self.prev_pub_meta = {}
-        self.prev_priv_meta = {}
-    
-    def log_detailed(self, entry: Dict[str, Any]):
-        """Add entry to detailed log immediately."""
-        if not self.first_detailed_entry:
-            self.detailed_file.write(",\n")
-        else:
-            self.first_detailed_entry = False
-        
-        json.dump(entry, self.detailed_file, ensure_ascii=False, indent=2)
-        self.detailed_file.flush()
-    
-    def log_summary(self, entry_type: str, data: Dict[str, Any]):
-        """Add entry to summary log immediately in chronological order."""
-        if entry_type == "setup":
-            self.summary_file.write(f"GAME SETUP:\n")
-            roles = data.get("roles", {})
-            for player, role in roles.items():
-                self.summary_file.write(f"  {player}: {role}\n")
-            self.summary_file.write("\n")
-            
-            
-        elif entry_type == "conversation":
-            turn = data.get("turn", 0)
-            speaker = data.get("speaker", "")
-            recipients = data.get("recipients", [])
-            is_dm = data.get("is_dm", False)
-            message = data.get("message", "")
-            
-            if is_dm:
-                recipients_str = ",".join(recipients)
-                self.summary_file.write(f"[{turn:02d}] {speaker}▶DM({recipients_str}): {message}\n")
-            else:
-                self.summary_file.write(f"[{turn:02d}] {speaker}▶ALL: {message}\n")
-            
-        elif entry_type == "result":
-            winner = data.get("winner")
-            self.summary_file.write(f"\nGAME RESULT: Winner = {winner}\n")
-        
-        self.summary_file.flush()
-    
-    def save_logs(self):
-        """Close log files properly."""
-        try:
-            # Close JSON array for detailed log
-            self.detailed_file.write("\n]\n")
-            self.detailed_file.close()
-            
-            # Close summary log
-            self.summary_file.write("\n=== END OF GAME ===\n")
-            self.summary_file.close()
-        except Exception as e:
-            print(f"Warning: Error closing log files: {e}")
-    
-    def __del__(self):
-        """Ensure files are closed when object is destroyed."""
-        try:
-            if hasattr(self, 'detailed_file') and not self.detailed_file.closed:
-                self.detailed_file.write("\n]\n")
-                self.detailed_file.close()
-            if hasattr(self, 'summary_file') and not self.summary_file.closed:
-                self.summary_file.close()
-        except:
-            pass
-
 def clean_json_response(response: str) -> dict:
     """
     Clean and validate JSON response from LLM.
@@ -210,8 +127,8 @@ def clean_json_response(response: str) -> dict:
     try:
         return json.loads(response)
     except json.JSONDecodeError as e:
-        print(f"Warning: JSON cleaning failed: {e}")
-        print(f"Original response: {response}")
+        ConsoleLogger.log_warning(f"JSON cleaning failed: {e}")
+        ConsoleLogger.log_warning(f"Original response: {response}")
         # Try one more time with more aggressive cleaning
         try:
             # Remove any non-JSON text
@@ -233,7 +150,7 @@ class AgentResponse(BaseModel):
             response = clean_json_response(response)
         
         if not isinstance(response, dict):
-            print(f"Warning: Invalid response type: {type(response)}")
+            ConsoleLogger.log_warning(f"Invalid response type: {type(response)}")
             return cls(bid=0.0, msg="", to="ALL", reason="Invalid response format")
         
         # Ensure required fields exist with defaults
@@ -282,7 +199,7 @@ class Agent:
                 return response.model_dump()
                 
             except Exception as e:
-                print(f"Warning: Error in agent {self.name}'s response (attempt {attempt + 1}/{self.max_retries}): {e}")
+                ConsoleLogger.log_warning(f"Error in agent {self.name}'s response (attempt {attempt + 1}/{self.max_retries}): {e}")
                 if attempt == self.max_retries - 1:
                     # Return a safe default response on final attempt
                     return {
@@ -318,7 +235,7 @@ class Agent:
                 return response.model_dump()
                 
             except Exception as e:
-                print(f"Warning: Error in agent {self.name}'s response (attempt {attempt + 1}/{self.max_retries}): {e}")
+                ConsoleLogger.log_warning(f"Error in agent {self.name}'s response (attempt {attempt + 1}/{self.max_retries}): {e}")
                 if attempt == self.max_retries - 1:
                     # Return a safe default response on final attempt
                     return {
@@ -452,7 +369,7 @@ class GameSystem(Agent):
         super().__init__("SYSTEM", None, sys_prompt, llm)
         # System agent doesn't participate in bidding/messaging
         
-        # Meta update and win condition check chain
+        # Combined system processing chain for speaker selection, DM processing, and meta updates
         self.system_chain = ChatPromptTemplate.from_messages([
             SystemMessage(content=sys_prompt),
             ("human",
@@ -462,13 +379,36 @@ class GameSystem(Agent):
 {meta_pub}
 === PRIVATE META (All participants) ===
 {meta_priv}
-Message history format is <turn>: <sender>▶<recipient>: <message>
+=== ALL SUBMITTED BIDS AND MESSAGES ===
+{all_submissions}
 
 TURN STRUCTURE:
-You are the SYSTEM agent that executes step 3 of each turn:
-1. Bidding Phase: All players and GM submit bids (completed)
-2. Speaking Phase: Highest bidder's message is delivered (completed)
+You are the SYSTEM agent that executes the core decision-making phase of each turn:
+1. Bidding Phase: All players and GM submit bids and messages (completed)
+2. **System Decision Phase (YOUR ROLE)**: Select which messages to execute and in what order
 3. **System Update Phase (YOUR ROLE)**: Update game state and check win conditions
+
+Your responsibilities:
+- Analyze all submitted bids and messages from players and GM
+- Decide which public message (if any) should be executed first
+- Decide which DMs should be executed (can be multiple DMs in one turn for efficiency)
+- For DMs, you can allow unlimited exchanges within this turn to facilitate voting/ability phases
+- Update public and private meta information based on executed messages
+- You MUST check win conditions EVERY turn and update the winner field accordingly
+  - If win conditions are met, set winner to appropriate team (e.g. "WEREWOLF" or "VILLAGER")
+
+Message Selection Guidelines:
+- Consider both bid values and message content when making decisions
+- Higher bids indicate stronger desire to speak, but content relevance is equally important
+- For public messages: select only ONE public message per turn (or none if only DMs are relevant)
+- For DMs: you can select MULTIPLE DMs to execute simultaneously for game efficiency
+- Prioritize messages that advance the game state (voting, abilities, phase transitions)
+- GM messages about phase management should generally be prioritized
+
+DM Processing:
+- DMs can be processed simultaneously and multiple times per turn
+- This is especially useful for voting phases, ability usage, and private communications
+- You decide which DMs from the current submissions should be executed
 
 Meta information structure:
 - Public meta: visible to all players including the GM
@@ -476,37 +416,125 @@ Meta information structure:
   - GM and SYSTEM share the same private meta section (GM_SYSTEM)
   - Each player can only see their own private meta section
 
-Your responsibilities:
-- Analyze the most recent message and all conversation history
-- Update public meta information ONLY with information that has already been publicly announced or revealed
-- Update private meta information for ALL participants based on game events and private communications
-- Check if any win conditions have been met
-- This happens AUTOMATICALLY after each speaking phase
-
-Based on the conversation history and current game state:
-1. Determine if any meta information needs to be updated
-2. Check if any win conditions have been met
-
 Return ONLY valid JSON with the following structure:
-{{"update_pub": {{...}}, "update_priv": {{"GM_SYSTEM": {{...}}, "P1": {{...}}, "P2": {{...}}, ...}}, 
-"winner": null|"TEAM_NAME", "reason": "explanation"}}
+{{
+  "selected_messages": [
+    {{"speaker": "P1", "to": ["ALL"], "message": "...", "reason": "why this message was selected"}},
+    {{"speaker": "GM", "to": ["P2", "P3"], "message": "...", "reason": "why this DM was selected"}},
+    ...
+  ],
+  "update_pub": {{...}},
+  "update_priv": {{"GM_SYSTEM": {{...}}, "P1": {{...}}, "P2": {{...}}, ...}},
+  "reason": "overall explanation of decisions made"
+}}
 
-Note: Only include fields that have changes. For example:
-- If only public meta changes: {{"update_pub": {{...}}, "reason": "..."}}
-- If only specific private meta changes: {{"update_priv": {{"P1": {{...}}, "P3": {{...}}}}, "reason": "..."}}
-- If only winner changes: {{"winner": "TEAM_NAME", "reason": "..."}}
-- If nothing changes: {{"reason": "No updates needed"}}
-
-The update_priv should contain updates for any participant whose private information has changed.
-Each player's private meta should contain information relevant only to that player (e.g., team members, special abilities, investigation results).
-GM_SYSTEM private meta contains all game management information visible to both GM and SYSTEM.
+Notes:
+- selected_messages: Array of messages to execute (can be empty, single public, multiple DMs, or mix)
+- Only include update fields that have actual changes
+- If no messages are selected, return empty selected_messages array
+- Each selected message should include the original speaker, recipients, and content
+- The "to" field should be an array: ["ALL"] for public, ["P1","P2"] for DMs
 """
         )]) | llm | SimpleJsonOutputParser()
     
+    def process_turn_with_all_submissions(self, meta_pub: Dict, meta_priv_all: Dict, all_submissions: Dict) -> dict:
+        """
+        Process an entire turn: select messages to execute, update meta, and check win conditions.
+        
+        Args:
+            meta_pub: Current public meta information
+            meta_priv_all: Current private meta information for all participants
+            all_submissions: Dict with agent names as keys and their {bid, msg, to, reason} as values
+        
+        Returns: 
+            dict {
+                "selected_messages": [...],
+                "update_pub": {...}, 
+                "update_priv": {...}, 
+                "winner": null|str, 
+                "reason": "..."
+            }
+        """
+        history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
+                    for turn, sender, recv, txt in self.mem_log[-30:])
+        
+        # Format all submissions for the prompt
+        submissions_text = []
+        for agent_name, submission in all_submissions.items():
+            bid = submission.get("bid", 0.0)
+            msg = submission.get("msg", "").strip()
+            to = submission.get("to", "ALL")
+            reason = submission.get("reason", "")
+            submissions_text.append(f"{agent_name}: bid={bid}, to={to}, msg='{msg}', reason='{reason}'")
+        
+        submissions_str = "\n".join(submissions_text)
+        
+        for attempt in range(self.max_retries):
+            try:
+                response = self.system_chain.invoke({
+                    "history": history,
+                    "meta_pub": json.dumps(meta_pub, ensure_ascii=False),
+                    "meta_priv": json.dumps(meta_priv_all, ensure_ascii=False),
+                    "all_submissions": submissions_str
+                })
+                
+                # Clean and validate the response
+                if isinstance(response, str):
+                    response = clean_json_response(response)
+                
+                if not response or not isinstance(response, dict):
+                    ConsoleLogger.log_warning(f"Invalid response from System (attempt {attempt + 1}/{self.max_retries}): {response}")
+                    if attempt == self.max_retries - 1:
+                        return {"selected_messages": [], "reason": "Failed to get valid system response"}
+                    time.sleep(0.5)
+                    continue
+                
+                # Validate response structure
+                if "selected_messages" not in response:
+                    response["selected_messages"] = []
+                
+                # Ensure selected_messages is a list
+                if not isinstance(response["selected_messages"], list):
+                    response["selected_messages"] = []
+                
+                # Validate each selected message
+                valid_messages = []
+                for msg in response["selected_messages"]:
+                    if isinstance(msg, dict) and "speaker" in msg and "to" in msg and "message" in msg:
+                        # Ensure 'to' is a list
+                        if isinstance(msg["to"], str):
+                            if msg["to"] == "ALL":
+                                msg["to"] = ["ALL"]
+                            else:
+                                msg["to"] = [x.strip() for x in msg["to"].split(",")]
+                        elif not isinstance(msg["to"], list):
+                            msg["to"] = ["ALL"]
+                        valid_messages.append(msg)
+                
+                response["selected_messages"] = valid_messages
+                
+                # Ensure other fields are of correct type
+                if "update_pub" in response and not isinstance(response["update_pub"], dict):
+                    response["update_pub"] = {}
+                if "update_priv" in response and not isinstance(response["update_priv"], dict):
+                    response["update_priv"] = {}
+                if "winner" in response and response["winner"] not in [None, "WEREWOLF", "VILLAGER"]:
+                    response["winner"] = None
+                if "reason" not in response:
+                    response["reason"] = "No reason provided"
+                
+                return response
+                
+            except Exception as e:
+                ConsoleLogger.log_warning(f"Error in System processing (attempt {attempt + 1}/{self.max_retries}): {e}")
+                if attempt == self.max_retries - 1:
+                    return {"selected_messages": [], "reason": f"System processing error: {str(e)}"}
+                time.sleep(0.5)
+
     def process_game_state(self, meta_pub: Dict, meta_priv_all: Dict) -> dict:
         """
-        Process game state to update meta and check win conditions.
-        Returns: dict {"update_pub": {...}, "update_priv": {...}, "winner": null|str, "reason": "..."}
+        Legacy method for backward compatibility.
+        This is now replaced by process_turn_with_all_submissions but kept for existing code.
         """
         history = "\n".join(f"{turn}: {sender}▶{recv}: {txt}" 
                     for turn, sender, recv, txt in self.mem_log[-30:])
@@ -516,7 +544,8 @@ GM_SYSTEM private meta contains all game management information visible to both 
                 response = self.system_chain.invoke({
                     "history": history,
                     "meta_pub": json.dumps(meta_pub, ensure_ascii=False),
-                    "meta_priv": json.dumps(meta_priv_all, ensure_ascii=False)
+                    "meta_priv": json.dumps(meta_priv_all, ensure_ascii=False),
+                    "all_submissions": "Legacy mode - no submissions provided"
                 })
                 
                 # Clean and validate the response
@@ -524,7 +553,7 @@ GM_SYSTEM private meta contains all game management information visible to both 
                     response = clean_json_response(response)
                 
                 if not response or not isinstance(response, dict):
-                    print(f"Warning: Invalid response from System (attempt {attempt + 1}/{self.max_retries}): {response}")
+                    ConsoleLogger.log_warning(f"Invalid response from System (attempt {attempt + 1}/{self.max_retries}): {response}")
                     if attempt == self.max_retries - 1:
                         return {"reason": "Failed to get valid system response"}
                     time.sleep(0.5)
@@ -533,7 +562,7 @@ GM_SYSTEM private meta contains all game management information visible to both 
                 # Validate response structure
                 valid_keys = {"update_pub", "update_priv", "winner", "reason"}
                 if not any(key in response for key in valid_keys):
-                    print(f"Warning: System response missing required keys (attempt {attempt + 1}/{self.max_retries})")
+                    ConsoleLogger.log_warning(f"System response missing required keys (attempt {attempt + 1}/{self.max_retries})")
                     if attempt == self.max_retries - 1:
                         return {"reason": "Invalid system response structure"}
                     time.sleep(0.5)
@@ -552,7 +581,7 @@ GM_SYSTEM private meta contains all game management information visible to both 
                 return response
                 
             except Exception as e:
-                print(f"Warning: Error in System processing (attempt {attempt + 1}/{self.max_retries}): {e}")
+                ConsoleLogger.log_warning(f"Error in System processing (attempt {attempt + 1}/{self.max_retries}): {e}")
                 if attempt == self.max_retries - 1:
                     return {"reason": f"System processing error: {str(e)}"}
                 time.sleep(0.5)
@@ -603,7 +632,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
         names = [f"P{i+1}" for i in range(num_players)]
 
         # Initialize logger
-        logger = GameLogger(out_dir)
+        logger = GameEventLogger(out_dir)
 
         meta_pub = rules.init_meta_pub(names)     # phase / alive / dead など
         meta_priv_all = rules.init_meta_priv(names)   # 役職など - now returns dict with keys for each participant
@@ -628,19 +657,16 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
         
         # Log role assignments
         role_assignments = {name: agents[name].role for name in names}
-        print(f"\nRole Assignments: {json.dumps(role_assignments, ensure_ascii=False)}")
         
-        # Log game setup in both detailed and summary logs
-        setup_info = {
-            "phase": "role_assignment",
-            "roles": role_assignments,
-            "initial_meta": {
+        # Log game setup using new event system
+        setup_event = SetupEvent(
+            roles=role_assignments,
+            initial_meta={
                 "public": meta_pub,
                 "private": meta_priv_all
             }
-        }
-        logger.log_detailed(setup_info)
-        logger.log_summary("setup", setup_info)
+        )
+        logger.log_event(setup_event)
 
         # GM
         agents["GM"] = GameMaster("GM",
@@ -651,7 +677,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                                 system_llm)
 
         # Print and log initial meta information
-        print(f"\nInitial Meta Information:\nPublic Meta: {json.dumps(meta_pub, ensure_ascii=False)}\nPrivate Meta: {json.dumps(meta_priv_all, ensure_ascii=False)}")
+        logger.log_initial_meta(meta_pub, meta_priv_all)
 
         # ログ
         public_log: List[Tuple[int, str]] = []  # [(turn, text)]
@@ -666,107 +692,79 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                 # ❶ 各エージェントが bid+msg を同時提出 (並列処理)
                 bids, pkgs = await parallel_bidding(agents, turn, meta_pub, meta_priv_all, public_log)
                     
-                # 全エージェントの出力をログに追加
+                # Log all agent bids using new event system
                 for agent_name, pkg in pkgs.items():
-                    log_entry = {
-                        "turn": turn,
-                        "phase": "bid",
-                        "agent": agent_name,
-                        "bid": float(pkg["bid"]),
-                        "msg": pkg["msg"].strip(),
-                        "to": pkg["to"],
-                        "reason": pkg.get("reason", "")
-                    }
-                    logger.log_detailed(log_entry)
+                    bid_event = BidEvent(
+                        turn=turn,
+                        agent=agent_name,
+                        bid=float(pkg["bid"]),
+                        msg=pkg["msg"].strip(),
+                        to=pkg["to"],
+                        reason=pkg.get("reason", "")
+                    )
+                    logger.log_event(bid_event)
 
-                # ❷ 最高 bid のメッセージを採用 (GM が最高 bid の場合は GM が発言)
-                max_bid = max(bids.values())
-                max_bidders = [n for n, b in bids.items() if b == max_bid]
-                # If GM is among max bidders, choose GM. Otherwise random choice
-                speaker = "GM" if "GM" in max_bidders else random.choice(max_bidders)
-                pkg = pkgs[speaker]
-                utter = pkg["msg"].strip()
-                # Convert to "ALL" if all players are recipients
-                recipients = [x.strip() for x in pkg["to"].split(",")]
-                if all(name in recipients for name in names):
-                    recipients = ["ALL"]
+                # ❂ System agent が全提出を分析して発言者・DM・meta更新・勝利判定を決定
+                system_response = game_system.process_turn_with_all_submissions(meta_pub, meta_priv_all, pkgs)
 
-                # 選択結果をログに記録
-                selection_entry = {
-                    "turn": turn,
-                    "phase": "selection",
-                    "selected_speaker": speaker,
-                    "max_bid": max_bid
-                }
-                logger.log_detailed(selection_entry)
+                # Log system decision using new event system
+                system_decision_event = SystemDecisionEvent(turn, system_response)
+                logger.log_event(system_decision_event)
 
-                if utter:
-                    # 公開ログ更新
-                    if "ALL" in recipients:
-                        public_log.append((turn, f"{speaker}: {utter}"))
-                        print(f"[{turn:02}] {speaker}▶ALL: {utter}")
-                    else:
-                        # DMの場合
-                        for recipient in recipients:
-                            dm_log.append((turn, speaker, recipient, utter))
-                        recipients_str = ",".join(recipients)
-                        print(f"[{turn:02}] {speaker}▶DM({recipients_str}): {utter}")
+                # ❸ 選択されたメッセージを実行 (複数可能、特にDM)
+                selected_messages = system_response.get("selected_messages", [])
+                
+                for msg_data in selected_messages:
+                    speaker = msg_data["speaker"]
+                    recipients = msg_data["to"]  # Already a list from validation
+                    message = msg_data["message"].strip()
+                    selection_reason = msg_data.get("reason", "")
                     
-                    # 各エージェントの private memory に追加
-                    if "ALL" in recipients:
-                        for agent in agents.values():
-                            agent.mem_log.append((turn, speaker, "ALL", utter))
-                        # Also add to game system's memory
-                        game_system.mem_log.append((turn, speaker, "ALL", utter))
-                    else:
-                        # 発言者のログに記録
-                        agents[speaker].mem_log.append((turn, speaker, ",".join(recipients), utter))
-                        # 受信者のログに記録
-                        for r in recipients:
-                            agents[r].mem_log.append((turn, speaker, r, utter))
-                        # Game system sees all messages
-                        game_system.mem_log.append((turn, speaker, ",".join(recipients), utter))
-                    
-                    # メッセージ実行をログに記録
-                    message_entry = {
-                        "turn": turn, 
-                        "phase": "message",
-                        "speaker": speaker,
-                        "to": recipients, 
-                        "is_dm": "ALL" not in recipients,
-                        "msg": utter
-                    }
-                    logger.log_detailed(message_entry)
-                    
-                    # Add to summary log
-                    logger.log_summary("conversation", {
-                        "turn": turn,
-                        "speaker": speaker,
-                        "recipients": recipients,
-                        "is_dm": "ALL" not in recipients,
-                        "message": utter
-                    })
+                    if message:
+                        is_dm = "ALL" not in recipients
+                        
+                        # Update game logs and agent memories
+                        if not is_dm:
+                            # Public message
+                            public_log.append((turn, f"{speaker}: {message}"))
+                            ConsoleLogger.log_info(f"Turn {turn} - {speaker}: {message}")
+                            
+                            # Add to all agent memories
+                            for agent in agents.values():
+                                agent.mem_log.append((turn, speaker, "ALL", message))
+                            game_system.mem_log.append((turn, speaker, "ALL", message))
+                            
+                        else:
+                            # DM - multiple recipients possible
+                            for recipient in recipients:
+                                dm_log.append((turn, speaker, recipient, message))
+                                ConsoleLogger.log_info(f"Turn {turn} - {speaker}▶{recipient}: {message}")
+                            recipients_str = ",".join(recipients)
+                            
+                            # Add to sender's memory
+                            agents[speaker].mem_log.append((turn, speaker, recipients_str, message))
+                            # Add to each recipient's memory
+                            for r in recipients:
+                                agents[r].mem_log.append((turn, speaker, r, message))
+                            # Game system sees all messages
+                            game_system.mem_log.append((turn, speaker, recipients_str, message))
+                        
+                        # Log message execution using new event system
+                        message_event = MessageEvent(
+                            turn=turn,
+                            speaker=speaker,
+                            recipients=recipients,
+                            message=message,
+                            is_dm=is_dm,
+                            selection_reason=selection_reason
+                        )
+                        logger.log_event(message_event)
 
-                # ❸ GameSystem によるメタ更新と勝利判定
-                system_response = game_system.process_game_state(meta_pub, meta_priv_all)
-
-                # System更新をログに記録
-                system_entry = {
-                    "turn": turn,
-                    "phase": "system_update",
-                    "system_response": system_response,
-                }
-                logger.log_detailed(system_entry)
-
-                # 返って来た dict でメタを書き換え
+                # ❹ Meta更新と勝利判定（System agentが既に実行済み）
                 update_pub = system_response.get("update_pub", {})
                 update_priv_all = system_response.get("update_priv", {})
                 
                 if update_pub or update_priv_all:
-                    # Store before state
-                    meta_pub_before = meta_pub.copy()
-                    meta_priv_all_before = meta_priv_all.copy()
-                    
                     # Apply updates
                     if update_pub:
                         meta_pub.update(update_pub)
@@ -779,57 +777,46 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                                 else:
                                     meta_priv_all[participant] = updates
                     
-                    # Log meta information changes
-                    print(f"[{turn:02}] System Update:")
-                    if update_pub:
-                        print(f"  Public: {meta_pub_before} → {meta_pub}")
-                    if update_priv_all:
-                        print(f"  Private: {meta_priv_all_before} → {meta_priv_all}")
-                    
-                    # Log meta changes in summary
-                    logger.log_summary("meta_change", {
-                        "turn": turn,
-                        "public_changes": update_pub,
-                        "private_changes": update_priv_all
-                    })
+                    # Log meta update using new event system
+                    meta_update_event = MetaUpdateEvent(
+                        turn=turn,
+                        public_changes=update_pub,
+                        private_changes=update_priv_all
+                    )
+                    logger.log_event(meta_update_event)
 
-                # ❹ 勝利判定
+                # ❺ 勝利判定
                 winner = system_response.get("winner")
 
-            if turn >= max_turns and winner is None:
-                print(f"*** Game reached maximum turns ({max_turns}) without a winner ***")
-            else:
-                print(f"*** Game End. Winner = {winner} ***")
-            
-            # ゲーム終了をログに記録
-            end_entry = {
-                "phase": "end",
-                "winner": winner,
-                "total_turns": turn
-            }
-            logger.log_detailed(end_entry)
-            logger.log_summary("result", end_entry)
+            # Log game end using new event system
+            game_completed = winner is not None and turn < max_turns
+            game_end_event = GameEndEvent(
+                winner=winner,
+                total_turns=turn,
+                completed=game_completed
+            )
+            logger.log_event(game_end_event)
             
             return {
                 "success": True,
                 "winner": winner,
                 "turn_count": turn,
-                "game_completed": winner is not None,
+                "game_completed": game_completed,
                 "error": None
             }
             
         finally:
             # Save all logs even if the game was interrupted
             logger.save_logs()
-            print(f"Logs saved to directory: {out_dir}")
+            ConsoleLogger.log_info(f"Logs saved to directory: {out_dir}")
 
     except Exception as e:
         error_msg = f"Game execution error: {str(e)}"
-        print(f"Error: {error_msg}")
+        ConsoleLogger.log_error(error_msg)
         # Try to save logs if logger exists
         if 'logger' in locals():
             logger.save_logs()
-            print(f"Logs saved to directory: {out_dir} (after error)")
+            ConsoleLogger.log_info(f"Logs saved to directory: {out_dir} (after error)")
         return {
             "success": False,
             "winner": None,
@@ -867,7 +854,7 @@ async def main():
     )
     
     if not result["success"]:
-        print(f"Game failed: {result['error']}")
+        ConsoleLogger.log_error(f"Game failed: {result['error']}")
         sys.exit(1)
 
 

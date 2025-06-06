@@ -132,59 +132,14 @@ def init_meta_pub(players: List[str]):
             "alive": list(players),
             "dead": []}
 
-def init_meta_priv(players: List[str]):
-    # Assign roles based on player count
-    num_players = len(players)
-    
-    if num_players < 5:
-        # Small game: 1 werewolf, rest villagers
-        roles = ["WEREWOLF"] + ["VILLAGER"]*(num_players-1)
-    elif num_players < 8:
-        # Medium game: 1-2 werewolves, 1 seer, 1 doctor, rest villagers
-        num_wolves = 2 if num_players >= 6 else 1
-        roles = ["WEREWOLF"]*num_wolves + ["SEER", "DOCTOR"]
-        roles += ["VILLAGER"]*(num_players - len(roles))
-    else:
-        # Large game: 2+ werewolves, all special roles
-        num_wolves = max(2, num_players // 4)
-        roles = ["WEREWOLF"]*num_wolves + ["SEER", "DOCTOR", "HUNTER", "WITCH"]
-        roles += ["VILLAGER"]*(num_players - len(roles))
-    
-    random.shuffle(roles)
-    role_assignments = {p: r for p, r in zip(players, roles)}
-    
-    # Find werewolf teammates
-    werewolves = [p for p, r in role_assignments.items() if r == "WEREWOLF"]
-    
-    # Create private meta structure
-    meta_priv_all = {}
-    
-    # GM_SYSTEM private meta (shared by GM and System)
-    meta_priv_all["GM_SYSTEM"] = {
-        "roles": role_assignments,
-        "witch_potions": {"save": True, "kill": True},  # Witch's available potions
-        "protected": None,  # Who the doctor protected this night
-        "seer_results": {}  # Seer's investigation history
-    }
-    
-    # Each player's private meta
-    for player in players:
-        role = role_assignments[player]
-        player_meta = {
-            "role": role
+def init_meta_priv(players: List[str]) -> Dict:
+    """Private meta information - roles and special states"""
+    return {
+        "GM_SYSTEM": {
+            "roles": {},  # Will be filled by assign_role
+            "winner": None
         }
-        
-        # Add role-specific private information
-        if role == "WEREWOLF":
-            # Werewolves know their teammates
-            player_meta["teammates"] = [w for w in werewolves if w != player]
-        elif role in ["SEER", "DOCTOR", "HUNTER", "WITCH", "VILLAGER"]:
-            # Other roles don't have teammates but might have other private info
-            pass
-            
-        meta_priv_all[player] = player_meta
-    
-    return meta_priv_all
+    }
 
 def assign_role(name: str, meta_priv) -> str:
     return meta_priv["GM_SYSTEM"]["roles"][name]
