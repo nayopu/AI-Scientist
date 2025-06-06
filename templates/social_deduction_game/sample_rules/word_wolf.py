@@ -72,27 +72,40 @@ TALKING RULES
 """,
 
     # ── System agent guideline ────────────────────────────
-    "system_guideline": """You are the SYSTEM agent managing the game state for Word-Wolf.
+    "system_guideline": """You are the GameSystem agent that acts as both SYSTEM and GM for Word-Wolf.
 
-Your responsibilities:
-1. Update meta information based on game events
-2. Check win conditions after each turn
+Your dual responsibilities:
+1. Act as GM - moderate discussion, manage voting, announce results
+2. Update meta information and check win conditions
+
+As GM, you should:
+- Moderate discussion phase and determine when to move to voting
+- Announce vote phase and request DMs from players
+- Announce vote results and execute the voted player
+- Never reveal any keyword publicly
+- Provide game flow announcements
+
+As SYSTEM, you should:
+- Update meta information based on game events
+- Check win conditions after each vote execution
+- Track alive/dead players
 
 Meta update rules:
-- When GM announces "Vote phase", update phase to "vote"
-- When GM announces vote results:
+- When you announce "Vote phase", update phase to "vote"
+- When you announce vote results:
   - Remove executed player(s) from alive list and add to dead list
   - Set phase to "end" after the vote execution
-- When GM announces "Discussion phase", update phase to "discussion"
+- When you announce "Discussion phase", update phase to "discussion"
 
 Win condition rules (check after vote execution):
 - CITIZENS win if at least one Wolf is dead (executed)
 - WOLVES win if phase is "end" and at least one Wolf is still alive
 
 Always respond with valid JSON containing:
-- update_pub: public meta changes (phase, alive, dead)
+- selected_messages: your GM messages and selected player messages
+- update_pub: public meta changes (phase, alive, dead, winner)
 - update_priv: private meta changes (if any)
-- reason: explanation of updates/win
+- reason: explanation of decisions and updates
 """,
 }
 
@@ -136,8 +149,8 @@ def init_meta_priv(players: List[str]) -> Dict:
     # Create private meta structure
     meta_priv_all = {}
     
-    # GM_SYSTEM private meta (shared by GM and System)
-    meta_priv_all["GM_SYSTEM"] = {
+    # GM private meta (for the GameSystem that acts as GM)
+    meta_priv_all["GM"] = {
         "roles": roles,
         "words": _WORDS_PER_PLAYER.copy(),
         "pair": _PAIR,
@@ -164,7 +177,7 @@ def init_meta_priv(players: List[str]) -> Dict:
 
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["GM_SYSTEM"]["roles"][name]
+    return meta_priv["GM"]["roles"][name]
 
 
 # ---------- プロンプト ----------
@@ -178,7 +191,8 @@ def player_sys_prompt(name: str, role: str, lang: str) -> str:
     )
 
 
-def gm_sys_prompt(lang: str) -> str:
+def system_sys_prompt() -> str:
+    """GameSystem agent prompt - combines GM and system responsibilities."""
     citizen_word, wolf_word = _PAIR if _PAIR else ("???", "???")
     gm_secret = (
         f"GM-only info:\n"
@@ -187,12 +201,6 @@ def gm_sys_prompt(lang: str) -> str:
     )
     return (
         f"{RULEBOOK['common']}\n"
-        f"{gm_secret}{RULEBOOK['gm_guideline']}\n"
-        f"You are the GM. Speak in {lang}."
+        f"{gm_secret}{RULEBOOK['gm_guideline']}\n{RULEBOOK['system_guideline']}\n"
+        f"You are the GameSystem agent that acts as both GM and game state manager."
     )
-
-
-def system_sys_prompt() -> str:
-    """System agent prompt for handling meta updates and win condition checks."""
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['system_guideline']}\n"
-            f"You are the game system agent managing the game state.")

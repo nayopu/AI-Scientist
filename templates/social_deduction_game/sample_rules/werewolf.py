@@ -100,18 +100,30 @@ RULE ENFORCEMENT GUIDELINES
 • If a player tries to discuss during night: "GM: No discussion is allowed during the night phase."
 =====================================================================
 """,
-    "system_guideline": """You are the SYSTEM agent managing the game state for Werewolf.
+    "system_guideline": """You are the GameSystem agent that acts as both SYSTEM and GM for Werewolf.
 
-Your responsibilities:
-1. Update meta information based on game events
-2. Check win conditions after each turn
+Your dual responsibilities:
+1. Act as GM - communicate with players, manage phases, announce results
+2. Update meta information and check win conditions
+
+As GM, you should:
+- Announce phase changes with clear messages
+- Request DMs for votes and special abilities
+- Announce results of votes and night actions
+- Provide investigation results to Seer via DM
+- Coordinate special role actions
+
+As SYSTEM, you should:
+- Update meta information based on game events
+- Check win conditions after each turn
+- Track special role actions in private meta
 
 Meta update rules:
-- When GM announces "Vote phase", update phase to "vote"
-- When GM announces vote results after all players have voted, remove executed player from alive list and add to dead list
-- When GM announces "Night phase", update phase to "night"
-- When GM announces night kill results, remove killed player from alive list and add to dead list
-- When GM announces "Discussion phase", update phase to "discussion"
+- When you announce "Vote phase", update phase to "vote"
+- When you announce vote results after all players have voted, remove executed player from alive list and add to dead list
+- When you announce "Night phase", update phase to "night"
+- When you announce night kill results, remove killed player from alive list and add to dead list
+- When you announce "Discussion phase", update phase to "discussion"
 - Track special role actions in meta_priv (seer investigations, doctor protections, witch potions)
 
 Win condition rules:
@@ -119,9 +131,10 @@ Win condition rules:
 - WEREWOLVES win when Werewolves >= non-Werewolves among living players
 
 Always respond with valid JSON containing:
-- update_pub: public meta changes (phase, alive, dead)
+- selected_messages: your GM messages and selected player messages
+- update_pub: public meta changes (phase, alive, dead, winner)
 - update_priv: private meta changes (special role states)
-- reason: explanation of updates/win
+- reason: explanation of decisions and updates
 """
 }
 
@@ -159,8 +172,8 @@ def init_meta_priv(players: List[str]) -> Dict:
     # Create private meta structure
     meta_priv_all = {}
     
-    # GM_SYSTEM private meta (shared by GM and System)
-    meta_priv_all["GM_SYSTEM"] = {
+    # GM private meta (for the GameSystem that acts as GM)
+    meta_priv_all["GM"] = {
         "roles": role_assignments,
         "witch_potions": {"save": True, "kill": True},  # Witch's available potions
         "protected": None,  # Who the doctor protected this night
@@ -187,7 +200,7 @@ def init_meta_priv(players: List[str]) -> Dict:
     return meta_priv_all
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["GM_SYSTEM"]["roles"][name]
+    return meta_priv["GM"]["roles"][name]
 
 # ---------- プロンプト ----------
 def player_sys_prompt(name: str, role: str, lang: str) -> str:
@@ -196,11 +209,7 @@ def player_sys_prompt(name: str, role: str, lang: str) -> str:
     return (f"{RULEBOOK['common']}\n{RULEBOOK['role'][role]}\n"
             f"You are {name}. Speak in {lang}.")
 
-def gm_sys_prompt(lang: str) -> str:
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['gm_guideline']}\n"
-            f"You are the GM. Speak in {lang}.")
-
 def system_sys_prompt() -> str:
-    # system agent prompt for handling meta updates and win condition checks
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['system_guideline']}\n"
-            f"You are the game system agent managing the game state.")
+    # GameSystem agent prompt - combines GM and system responsibilities
+    return (f"{RULEBOOK['common']}\n{RULEBOOK['gm_guideline']}\n{RULEBOOK['system_guideline']}\n"
+            f"You are the GameSystem agent that acts as both GM and game state manager.")

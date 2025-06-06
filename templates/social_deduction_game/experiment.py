@@ -88,14 +88,13 @@ DETAILED REQUIREMENTS:
    - init_meta_priv(players) function  
    - assign_role(name, meta_priv) function
    - player_sys_prompt(name, role, lang) function
-   - gm_sys_prompt(lang) function
-   - system_sys_prompt() function
+   - system_sys_prompt() function (NOTE: NO gm_sys_prompt function - GameSystem handles both GM and system roles)
 
 2. RULEBOOK CONTENT:
    - "common": Write complete public rules explaining victory conditions, all possible roles, phase sequence, and game mechanics
    - "role": Create specific role descriptions for each role in your game (no generic placeholders like [ROLE_1])
-   - "gm_guideline": Detailed GM instructions for running the game, handling each phase, announcing results
-   - "system_guideline": Instructions for the system agent to update game state and check win conditions
+   - "gm_guideline": Detailed GM instructions for running the game, handling each phase, announcing results, sending DMs to players
+   - "system_guideline": Instructions for the GameSystem agent that acts as both GM and system manager
 
 3. GAME MECHANICS: Implement the specific mechanics described in the game idea:
    - Define concrete roles mentioned in the description (e.g., if description mentions "Spy" and "Agent", create those exact roles)
@@ -112,21 +111,38 @@ DETAILED REQUIREMENTS:
 5. GAME STATE MANAGEMENT:
    - init_meta_pub: Set up public game state variables (phase, alive players, scores, etc.)
    - init_meta_priv: Handle role assignments, faction setup, and private information distribution
+   - Use "GM" (not "GM_SYSTEM") as the key for GameSystem's private meta information
    - Ensure proper role distribution based on player count
 
 6. PROMPT FUNCTIONS:
    - player_sys_prompt: Combine public rules + role description + player identity
-   - gm_sys_prompt: Combine public rules + GM guidelines
-   - system_sys_prompt: Provide system agent instructions
+   - system_sys_prompt: Combine public rules + GM guidelines + system guidelines (GameSystem acts as both GM and system manager)
+
+7. GAMESYSTEM ARCHITECTURE:
+   - The GameSystem agent acts as both GM and system manager
+   - It decides when to speak as GM based on game state and player submissions
+   - It can send DMs to specific players for role-specific information
+   - It updates game state and checks win conditions
+   - Response format includes: selected_messages, update_pub, update_priv, reason
+
+8. SYSTEM_GUIDELINE REQUIREMENTS:
+   - Must describe dual responsibilities: GM communication and system management
+   - Include GM responsibilities: phase announcements, DM coordination, rule enforcement
+   - Include system responsibilities: meta updates, win condition checks
+   - Specify JSON response format with selected_messages array
+   - Include examples of when to send DMs to players (investigation results, role coordination, etc.)
 
 CRITICAL RULES:
 - NO placeholder content like [ROLE_1], [FACTION_1] - use actual role names from the game idea
 - NO generic roles - implement the specific roles described in the game concept
 - Include complete victory conditions, not placeholders
 - Write full rule descriptions, not outlines
+- NO gm_sys_prompt function - only system_sys_prompt that combines both responsibilities
+- Use "GM" (not "GM_SYSTEM") for private meta key
 - The file must be immediately playable without further editing
+- Follow the new GameSystem architecture where one agent handles both GM and system roles
 
-Generate a complete, working Python rule file that implements this specific social deduction game idea. The output should be valid Python code ready to run."""
+Generate a complete, working Python rule file that implements this specific social deduction game idea. The output should be valid Python code ready to run with the new GameSystem architecture."""
 
         # Get LLM response using LangChain API
         from langchain.prompts import ChatPromptTemplate

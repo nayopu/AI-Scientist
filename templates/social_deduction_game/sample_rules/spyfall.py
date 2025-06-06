@@ -84,17 +84,29 @@ RULE ENFORCEMENT
 """,
 
     # System agent guideline
-    "system_guideline": """You are the SYSTEM agent managing the game state for Spyfall.
+    "system_guideline": """You are the GameSystem agent that acts as both SYSTEM and GM for Spyfall.
 
-Your responsibilities:
-1. Update meta information based on game events
-2. Check win conditions after each turn
+Your dual responsibilities:
+1. Act as GM - manage discussion, voting, and spy guess phases
+2. Update meta information and check win conditions
+
+As GM, you should:
+- Announce phase changes and manage flow
+- Request votes via DM during vote phase
+- Reveal vote results and player roles
+- Prompt Spy for location guess when appropriate
+- Provide game announcements and enforcement
+
+As SYSTEM, you should:
+- Update meta information based on game events
+- Check win conditions after each turn
+- Track special actions (spy guesses)
 
 Meta update rules:
-- When GM announces "Vote phase", update phase to "vote"
-- When GM announces vote results, remove executed player from alive list and add to dead list
-- When GM announces "Discussion phase", update phase to "discussion"
-- When Spy DMs a location guess to GM, record it in meta_priv as spy_guess
+- When you announce "Vote phase", update phase to "vote"
+- When you announce vote results, remove executed player from alive list and add to dead list
+- When you announce "Discussion phase", update phase to "discussion"
+- When Spy DMs a location guess to you, record it in meta_priv as spy_guess
 
 Win condition rules:
 - LOCALS win if the Spy is voted out (not in alive list)
@@ -103,9 +115,10 @@ Win condition rules:
   b) Spy correctly guesses the location (spy_guess matches secret location)
 
 Always respond with valid JSON containing:
-- update_pub: public meta changes
-- update_priv: private meta changes  
-- reason: explanation of updates/win
+- selected_messages: your GM messages and selected player messages
+- update_pub: public meta changes (phase, alive, winner)
+- update_priv: private meta changes (spy_guess)
+- reason: explanation of decisions and updates
 """
 }
 
@@ -128,8 +141,8 @@ def init_meta_priv(players: List[str]) -> Dict:
     # Create private meta structure
     meta_priv_all = {}
     
-    # GM_SYSTEM private meta (shared by GM and System)
-    meta_priv_all["GM_SYSTEM"] = {
+    # GM private meta (for the GameSystem that acts as GM)
+    meta_priv_all["GM"] = {
         "roles": role_assignments,     # mapping player → role
         "location": CURRENT_LOCATION,  # secret location
         "spy_guess": None,             # later: {"player": name, "guess": str, "correct": bool}
@@ -155,7 +168,7 @@ def init_meta_priv(players: List[str]) -> Dict:
     return meta_priv_all
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["GM_SYSTEM"]["roles"][name]
+    return meta_priv["GM"]["roles"][name]
 
 ###############################################################################
 # Prompt builders
@@ -169,12 +182,8 @@ def player_sys_prompt(name: str, role: str, lang: str) -> str:
 
     return f"{RULEBOOK['common']}\n{role_text}\nYou are {name}. Speak in {lang}."
 
-def gm_sys_prompt(lang: str) -> str:
-    """GM sees everything, including the location."""
-    return (f"{RULEBOOK['common']}\nSecret location = {CURRENT_LOCATION}\n"
-            f"{RULEBOOK['gm_guideline']}\nYou are the GM. Speak in {lang}.")
-
 def system_sys_prompt() -> str:
-    """System agent prompt for handling meta updates and win condition checks."""
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['system_guideline']}\n"
-            f"You are the game system agent managing the game state.")
+    """GameSystem agent prompt - combines GM and system responsibilities."""
+    return (f"{RULEBOOK['common']}\nSecret location = {CURRENT_LOCATION}\n"
+            f"{RULEBOOK['gm_guideline']}\n{RULEBOOK['system_guideline']}\n"
+            f"You are the GameSystem agent that acts as both GM and game state manager.")

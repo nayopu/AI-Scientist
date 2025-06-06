@@ -87,7 +87,24 @@ END & WIN CHECK
     # Guidance for the hidden System agent
     # ─────────────────────────────────────────────────────────────────────────
     "system_guideline": """
-You are the SYSTEM agent tracking game state for Insider.
+You are the GameSystem agent that acts as both SYSTEM and GM for Insider.
+
+Your dual responsibilities:
+1. Act as GM - manage phases, choose secret word, collect votes, announce results
+2. Update meta information and check win conditions
+
+As GM, you should:
+- Choose and DM the secret word to Master and Insider at game start
+- Announce phase transitions
+- Manage question phase (enforce yes/no/don't know answers)
+- Announce when word is guessed correctly
+- Collect votes via DM and announce accused player
+- Enforce game rules and timing
+
+As SYSTEM, you should:
+- Track game state and phase transitions
+- Update public and private meta information
+- Check win conditions after each major event
 
 Public meta you maintain:
   phase            – "question" | "discussion" | "vote"
@@ -99,13 +116,13 @@ Private meta you maintain:
   secret_word      – string
 
 UPDATE RULES
-• When GM says "Question phase begins"            → phase = "question"
-• When GM announces the correct word              → phase = "discussion", word_guessed = true
-• When GM says "Vote phase"                       → phase = "vote"
-• When GM announces "<NAME> is accused ..."         → accused = <NAME>
+• When you say "Question phase begins"            → phase = "question"
+• When you announce the correct word              → phase = "discussion", word_guessed = true
+• When you say "Vote phase"                       → phase = "vote"
+• When you announce "<NAME> is accused ..."         → accused = <NAME>
 
 WIN CHECK
-• If phase == "question" and GM says "time's up" AND word_guessed == false  
+• If phase == "question" and you say "time's up" AND word_guessed == false  
     → everyone loses → winner = "NONE"
 • If phase == "vote" and accused is set:  
     – If roles[accused] == "INSIDER" → winner = "COMMONS"  
@@ -113,6 +130,7 @@ WIN CHECK
 
 Always respond with valid JSON:
 {
+  "selected_messages": [...],
   "update_pub":  { …changes to public meta… },
   "update_priv": { …changes to private meta… },
   "winner": null | "COMMONS" | "INSIDER" | "NONE",
@@ -141,8 +159,8 @@ def init_meta_priv(players: List[str]) -> Dict:
     # Create private meta structure
     meta_priv_all = {}
     
-    # GM_SYSTEM private meta (shared by GM and System)
-    meta_priv_all["GM_SYSTEM"] = {
+    # GM private meta (for the GameSystem that acts as GM)
+    meta_priv_all["GM"] = {
         "roles": role_assignments,
         "secret_word": None,  # Will be set by GM
         "winner": None
@@ -166,7 +184,7 @@ def init_meta_priv(players: List[str]) -> Dict:
 
 def assign_role(name: str, meta_priv: Dict) -> str:
     """Return this player's role."""
-    return meta_priv["GM_SYSTEM"]["roles"][name]
+    return meta_priv["GM"]["roles"][name]
 
 ###############################################################################
 #  PROMPT HELPERS
@@ -175,10 +193,6 @@ def player_sys_prompt(name: str, role: str, lang: str) -> str:
     return (f"{RULEBOOK['common']}\n{RULEBOOK['role'][role]}\n"
             f"You are {name}. Speak in {lang}.")
 
-def gm_sys_prompt(lang: str) -> str:
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['gm_guideline']}\n"
-            f"You are the GM. Speak in {lang}.")
-
 def system_sys_prompt() -> str:
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['system_guideline']}\n"
-            f"You are the game system agent.")
+    return (f"{RULEBOOK['common']}\n{RULEBOOK['gm_guideline']}\n{RULEBOOK['system_guideline']}\n"
+            f"You are the GameSystem agent that acts as both GM and game state manager.")

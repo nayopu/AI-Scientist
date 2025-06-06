@@ -100,7 +100,23 @@ RULE ENFORCEMENT
 
     # ----------------------------------------------------------- SYSTEM GUIDE
     "system_guideline": r"""
-You are the SYSTEM agent tracking Avalon.
+You are the GameSystem agent that acts as both SYSTEM and GM for Avalon.
+
+Your dual responsibilities:
+1. Act as GM - manage proposals, voting, missions, and announcements
+2. Update meta information and check win conditions
+
+As GM, you should:
+- Prompt leaders for team proposals
+- Manage voting phases and announce results
+- Handle mission execution and results
+- Manage assassination phase if needed
+- Provide role-specific information via DMs
+
+As SYSTEM, you should:
+- Track game state and phase transitions
+- Update public and private meta information
+- Check win conditions after each action
 
 PUBLIC META KEYS
 phase              : "proposal" | "vote" | "mission" |
@@ -118,8 +134,8 @@ rejected_in_row    : int
 assassination_used : bool
 
 UPDATE RULES (examples)
-• On GM prompt "propose": phase→"proposal"
-• On GM prompt "Everyone DM me 'Approve'": phase→"vote"
+• When you prompt "propose": phase→"proposal"
+• When you prompt "Everyone DM me 'Approve'": phase→"vote"
 • After vote result approved: phase→"mission", proposal_attempt→1
 • After vote result rejected: proposal_attempt++, leader→next player
 • After five rejects: winner="EVIL"
@@ -134,7 +150,7 @@ WIN CHECKS
   correctly.
 Always output valid JSON:
 {
- "update_pub": {...}, "update_priv": {...},
+ "selected_messages": [...], "update_pub": {...}, "update_priv": {...},
  "reason": "..."
 }
 """
@@ -193,8 +209,8 @@ def init_meta_priv(players: List[str]) -> Dict:
     # Create private meta structure
     meta_priv_all = {}
     
-    # GM_SYSTEM private meta (shared by GM and System)
-    meta_priv_all["GM_SYSTEM"] = {
+    # GM private meta (for the GameSystem that acts as GM)
+    meta_priv_all["GM"] = {
         "roles": role_assignments,
         "rejected_in_row": 0,
         "assassination_used": False,
@@ -221,7 +237,7 @@ def init_meta_priv(players: List[str]) -> Dict:
     return meta_priv_all
 
 def assign_role(name: str, meta_priv) -> str:
-    return meta_priv["GM_SYSTEM"]["roles"][name]
+    return meta_priv["GM"]["roles"][name]
 
 ###############################################################################
 #  PROMPT HELPERS
@@ -230,10 +246,6 @@ def player_sys_prompt(name: str, role: str, lang: str="en") -> str:
     return (f"{RULEBOOK['common']}\n{RULEBOOK['role'][role]}\n"
             f"You are {name}. Speak in {lang}.")
 
-def gm_sys_prompt(lang: str="en") -> str:
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['gm_guideline']}\n"
-            f"You are the GM. Speak in {lang}.")
-
 def system_sys_prompt() -> str:
-    return (f"{RULEBOOK['common']}\n{RULEBOOK['system_guideline']}\n"
-            f"You are the SYSTEM agent managing the game state.")
+    return (f"{RULEBOOK['common']}\n{RULEBOOK['gm_guideline']}\n{RULEBOOK['system_guideline']}\n"
+            f"You are the GameSystem agent that acts as both GM and game state manager.")

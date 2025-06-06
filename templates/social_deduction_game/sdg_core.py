@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 """
-Social-Deduction Engine v3
+Social-Deduction Engine v4
 --------------------------
 Changes
 * Combine bid and talk into a single call
 * Store only conversation history in mem_log
 * Remove status/winner from public meta
 * Display and save DM contents in logs
-* Separate Agent and GameMaster
+* Removed separate GameMaster agent - GameSystem now acts as both System and GM
+* GameSystem decides when to speak as GM based on game state and player submissions
 * Implement LLM reasoning for GM meta updates
 * Add support for different API sources (OpenAI/OpenRouter)
 * Allow different model names for GM and players
-* Separate private meta information for each player, with GM and System sharing private meta
+* Separate private meta information for each player, with GM having its own private meta
 * Modularized logging system for better code organization
 """
 
@@ -177,9 +178,9 @@ class Agent:
         self.max_retries = 3
 
     async def decide_async(self, turn: int, meta_pub, meta_priv_all, public_log) -> dict:
-        # Extract private meta for this agent (GM and System share the same private meta, players see only their own)
-        if isinstance(self, GameMaster) or isinstance(self, GameSystem):
-            meta_priv = meta_priv_all.get("GM_SYSTEM", {})
+        # Extract private meta for this agent (GM system sees GM meta, players see only their own)
+        if isinstance(self, GameSystem):
+            meta_priv = meta_priv_all.get("GM", {})
         else:
             meta_priv = meta_priv_all.get(self.name, {})
         
@@ -213,9 +214,9 @@ class Agent:
                 await asyncio.sleep(0.5)
 
     def decide(self, turn: int, meta_pub, meta_priv_all, public_log) -> dict:
-        # Extract private meta for this agent (GM and System share the same private meta, players see only their own)
-        if isinstance(self, GameMaster) or isinstance(self, GameSystem):
-            meta_priv = meta_priv_all.get("GM_SYSTEM", {})
+        # Extract private meta for this agent (GM system sees GM meta, players see only their own)
+        if isinstance(self, GameSystem):
+            meta_priv = meta_priv_all.get("GM", {})
         else:
             meta_priv = meta_priv_all.get(self.name, {})
         
@@ -265,15 +266,15 @@ class Player(Agent):
 
 TURN STRUCTURE:
 Each turn follows this exact sequence:
-1. **Bidding Phase**: All players and GM submit bids and messages simultaneously
-2. **System Decision Phase**: System agent analyzes all submissions and decides which messages to execute
+1. **Bidding Phase**: All players submit bids and messages simultaneously
+2. **System Decision Phase**: System (which also acts as GM) analyzes all submissions, decides whether to speak as GM, and selects which player messages to execute
 3. **Message Execution**: Selected messages are delivered (can be multiple DMs in one turn)
 4. **System Update**: Game state is updated and win conditions are checked
 This cycle repeats until a winner is determined.
 
 Important mechanics:
-- All players and GM bid simultaneously in each turn
-- The System agent decides which messages to execute based on both bid values and content
+- All players bid simultaneously in each turn
+- The System (GM) decides which messages to execute based on both bid values and content, and whether it needs to speak as GM
 - Multiple DMs can be executed in a single turn for efficiency
 - This is especially useful for voting phases and ability usage
 - The conversation follows a strict pattern: bid → system decision → message execution → system update
@@ -308,72 +309,11 @@ Respond ONLY JSON:
         self.main_chain = prompt | llm | parser
 
 
-class GameMaster(Player):
-    def __init__(self, name: str, sys_prompt: str, llm: ChatOpenAI):
-        super().__init__(name, None, sys_prompt, llm)
-        parser = SimpleJsonOutputParser()
-        prompt = ChatPromptTemplate.from_messages([
-            SystemMessage(content=sys_prompt),
-            ("human",
-             """
-=== RECENT CONVERSATIONS (<turn>: <sender>▶<recipient>: <message>) ===
-{history}
-=== PUBLIC META ===
-{meta_pub}
-=== PRIVATE META ===
-{meta_priv}
 
-TURN STRUCTURE:
-Each turn follows this exact sequence:
-1. **Bidding Phase**: All players and GM submit bids and messages simultaneously
-2. **System Decision Phase**: System agent analyzes all submissions and decides which messages to execute
-3. **Message Execution**: Selected messages are delivered (can be multiple DMs in one turn)
-4. **System Update**: Game state is updated and win conditions are checked
-This cycle repeats until a winner is determined.
-
-Important mechanics:
-- All players and GM bid simultaneously in each turn
-- The System agent decides which messages to execute based on both bid values and content
-- Multiple DMs can be executed in a single turn for efficiency
-- This is especially useful for voting phases and ability usage
-- The conversation follows a strict pattern: bid → system decision → message execution → system update
-- This applies to both public messages and DMs
-
-DM Guidelines:
-- You can submit DMs to specific players or groups of players
-- Multiple DMs can be processed in a single turn
-- This is particularly useful for:
-  - Announcing phase changes to specific players
-  - Giving secret investigation results
-  - Coordinating with specific player groups
-- The System agent will decide which DMs to execute based on game state and content
-
-Bidding guidelines:
-- Bid to speak (0-1) and *optionally* send a message.
-- Higher bids indicate stronger desire to speak.
-- Consider the current phase and game state when bidding.
-- Use 1.0 bids only when:
-  - Announcing phase changes (e.g., starting vote phase, night phase)
-  - Enforcing rules or correcting player behavior
-  - DMing specific players or player groups to give secret investigation results
-- Use lower bids (0.3-0.7) for general game management and responses.
-- Use 0.0 bids when you don't need to talk
-- Use 0.0 when you are waiting for players' DMs for their votes, abilities, selections, etc.
-
-Message guidelines:
-- Use "to": "ALL" for public messages visible to everyone (e.g., announcing phase changes, correcting player behavior, etc.)
-- Use "to": "P1,P2,..." to send DMs to specific players (e.g., secret investigation results, ability results, etc.)
-Remember that DMs are only visible to the specified recipients.
-
-Respond ONLY JSON:
-{{"bid": <0.0-1.0 (float)>, "msg": <string>, "to": "ALL"|"P1,P2,...", "reason": <free text>}}"""),
-        ])
-        self.main_chain = prompt | llm | parser
 
 class GameSystem(Agent):
     def __init__(self, sys_prompt: str, llm: ChatOpenAI):
-        super().__init__("SYSTEM", None, sys_prompt, llm)
-        # System agent doesn't participate in bidding/messaging
+        super().__init__("GM", None, sys_prompt, llm)  # Now acts as GM
         
         # Combined system processing chain for speaker selection, DM processing, and meta updates
         self.system_chain = ChatPromptTemplate.from_messages([
@@ -389,53 +329,77 @@ class GameSystem(Agent):
 {all_submissions}
 
 TURN STRUCTURE:
-You are the SYSTEM agent that executes the core decision-making phase of each turn:
-1. Bidding Phase: All players and GM submit bids and messages (completed)
-2. **System Decision Phase (YOUR ROLE)**: Select which messages to execute and in what order
+You are now the SYSTEM agent that also acts as the GM. You execute the core decision-making phase of each turn:
+1. Bidding Phase: All players submit bids and messages (completed)
+2. **System Decision Phase (YOUR ROLE)**: Analyze submissions, decide whether you (GM) need to speak, select which messages to execute
 3. **System Update Phase (YOUR ROLE)**: Update game state and check win conditions
 
-Your responsibilities:
-- Analyze all submitted bids and messages from players and GM
-- Decide which public message (if any) should be executed first
+Your dual responsibilities as SYSTEM + GM:
+- Analyze all submitted bids and messages from players
+- Determine if you (as GM) need to speak for game management (phase changes, rule enforcement, announcements)
+- If you need to speak as GM, include your own message in selected_messages with speaker "GM"
+- Decide which player messages (if any) should be executed
 - Decide which DMs should be executed (can be multiple DMs in one turn for efficiency)
-- For DMs, you can allow unlimited exchanges within this turn to facilitate voting/ability phases
 - Update public and private meta information based on executed messages
 - You MUST check win conditions EVERY turn and update the winner field in `update_pub` accordingly
   - If win conditions are met, set winner to appropriate team (e.g. "WEREWOLF" or "VILLAGER")
 
+GM Speech Decision Guidelines:
+- You should speak as GM when:
+  - Announcing phase changes (e.g., "Day phase begins", "Night phase begins", "Voting phase starts")
+  - Announcing game results (e.g., player elimination, investigation results)
+  - Enforcing rules or correcting player behavior
+  - Providing game status updates or clarifications
+  - Starting or ending voting phases
+- You should NOT speak as GM when:
+  - Players are having normal discussion
+  - No game management actions are needed
+  - Waiting for player inputs (votes, abilities, etc.)
+
+GM DM Guidelines:
+- You should send DMs to specific players when:
+  - Providing secret investigation results (e.g., Seer's investigation results)
+  - Announcing special role ability results privately (e.g., Doctor's protection status)
+  - Requesting private actions from specific roles (e.g., "Seer, DM me who you want to investigate")
+  - Informing players of their role-specific status changes
+  - Responding to private queries from players about their abilities
+  - Coordinating with specific player groups (e.g., informing Werewolves of each other)
+- You should send DMs to multiple players when:
+  - Informing teammates about each other (e.g., telling Werewolves who their partners are)
+  - Providing group-specific information (e.g., Mafia team coordination)
+  - Announcing phase-specific instructions to role groups
+
 Message Selection Guidelines:
 - Consider both bid values and message content when making decisions
 - Higher bids indicate stronger desire to speak, but content relevance is equally important
-- For public messages: select only ONE public message per turn (or none if only DMs are relevant)
+- For public messages: you can select ONE player message AND/OR your own GM message per turn
 - For DMs: you can select MULTIPLE DMs to execute simultaneously for game efficiency
 - Prioritize messages that advance the game state (voting, abilities, phase transitions)
-- GM messages about phase management should generally be prioritized
-
-DM Processing:
-- DMs can be processed simultaneously and multiple times per turn
-- This is especially useful for voting phases, ability usage, and private communications
-- You decide which DMs from the current submissions should be executed
+- Your GM messages should take priority when game management is needed
 
 Meta information structure:
-- Public meta: visible to all players including the GM
-- Private meta: separated by participant (GM_SYSTEM, P1, P2, P3, etc.)
-  - GM and SYSTEM share the same private meta section (GM_SYSTEM)
+- Public meta: visible to all players including you (GM)
+- Private meta: separated by participant (GM, P1, P2, P3, etc.)
+  - You (GM) have your own private meta section
   - Each player can only see their own private meta section
 
 Return ONLY valid JSON with the following structure:
 {{
   "selected_messages": [
+    {{"speaker": "GM", "to": ["ALL"], "message": "Day phase begins. Discuss and vote for someone to eliminate.", "reason": "announcing phase change"}},
     {{"speaker": "P1", "to": ["ALL"], "message": "...", "reason": "why this message was selected"}},
-    {{"speaker": "GM", "to": ["P2", "P3"], "message": "...", "reason": "why this DM was selected"}},
+    {{"speaker": "GM", "to": ["P2"], "message": "Your investigation of P3 shows: WEREWOLF", "reason": "providing Seer investigation result"}},
+    {{"speaker": "GM", "to": ["P4", "P5"], "message": "You are Werewolf teammates. Decide on tonight's victim.", "reason": "coordinating Werewolf team"}},
     ...
   ],
   "update_pub": {{...}},
-  "update_priv": {{"GM_SYSTEM": {{...}}, "P1": {{...}}, "P2": {{...}}, ...}},
+  "update_priv": {{"GM": {{...}}, "P1": {{...}}, "P2": {{...}}, ...}},
   "reason": "overall explanation of decisions made"
 }}
 
 Notes:
-- selected_messages: Array of messages to execute (can be empty, single public, multiple DMs, or mix)
+- selected_messages: Array of messages to execute (can include your own GM messages)
+- You can speak as GM by including messages with speaker "GM"
 - Only include update fields that have actual changes
 - If no messages are selected, return empty selected_messages array
 - Each selected message should include the original speaker, recipients, and content
@@ -587,10 +551,11 @@ Notes:
                     return {"reason": f"System processing error: {str(e)}"}
                 time.sleep(0.5)
 
-async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, meta_priv_all, public_log) -> Tuple[Dict[str, float], Dict[str, dict]]:
+async def parallel_bidding(agents: Dict[str, Player], turn: int, meta_pub, meta_priv_all, public_log) -> Dict[str, dict]:
     """
-    Execute bidding phase in parallel for all agents.
-    Returns tuple of (bids dict, packages dict)
+    Execute bidding phase in parallel for all player agents.
+    GameSystem (GM) does not participate in bidding - it decides whether to speak based on player submissions.
+    Returns dict of packages with agent names as keys.
     """
     tasks = []
     for agent in agents.values():
@@ -667,11 +632,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
         )
         logger.log_event(setup_event)
 
-        # GM
-        agents["GM"] = GameMaster("GM",
-                                 rules.gm_sys_prompt(lang), gm_llm)
-        
-        # Create GameSystem agent
+        # Create GameSystem agent (which now acts as GM)
         game_system = GameSystem(rules.system_sys_prompt(), 
                                 system_llm)
 
@@ -688,10 +649,10 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
         try:
             while winner is None and turn < max_turns:
                 turn += 1
-                # ❶ 各エージェントが bid+msg を同時提出 (並列処理)
+                # ❶ 各プレイヤーエージェントが bid+msg を同時提出 (並列処理)
                 pkgs = await parallel_bidding(agents, turn, meta_pub, meta_priv_all, public_log)
                     
-                # Log all agent bids using new event system
+                # Log all player bids using new event system
                 for agent_name, pkg in pkgs.items():
                     bid_event = BidEvent(
                         turn=turn,
@@ -703,7 +664,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                     )
                     logger.log_event(bid_event)
 
-                # ❂ System agent が全提出を分析して発言者・DM・meta更新・勝利判定を決定
+                # ❂ GameSystem (GM) が全提出を分析して自分の発言・プレイヤー発言選択・DM・meta更新・勝利判定を決定
                 system_response = game_system.process_turn_with_all_submissions(meta_pub, meta_priv_all, pkgs)
 
                 # Log system decision using new event system
@@ -738,11 +699,13 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                                 dm_log.append((turn, speaker, recipient, message))
                             recipients_str = ",".join(recipients)
                             
-                            # Add to sender's memory
-                            agents[speaker].mem_log.append((turn, speaker, recipients_str, message))
-                            # Add to each recipient's memory
+                            # Add to sender's memory (if sender is a player)
+                            if speaker in agents:
+                                agents[speaker].mem_log.append((turn, speaker, recipients_str, message))
+                            # Add to each recipient's memory (if recipient is a player)
                             for r in recipients:
-                                agents[r].mem_log.append((turn, speaker, r, message))
+                                if r in agents:
+                                    agents[r].mem_log.append((turn, speaker, r, message))
                             # Game system sees all messages
                             game_system.mem_log.append((turn, speaker, recipients_str, message))
                         
