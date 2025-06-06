@@ -67,8 +67,7 @@ TALKING RULES
 • After collecting all votes, announce:  "GM: <name> is executed."
   (Resolve ties randomly.)
 • Move the executed player(s) from "alive" to "dead" in public meta.
-• Then call check_end(). If a winner is decided, announce it and set
-  public meta "phase" to "end".
+• If a winner is decided, system will update public meta "winner" and "phase" to "end".
 =====================================================================
 """,
 
@@ -93,7 +92,6 @@ Win condition rules (check after vote execution):
 Always respond with valid JSON containing:
 - update_pub: public meta changes (phase, alive, dead)
 - update_priv: private meta changes (if any)
-- winner: null or "CITIZENS" or "WOLVES"
 - reason: explanation of updates/win
 """,
 }
@@ -112,7 +110,7 @@ def _choose_roles(players: List[str]) -> Dict[str, str]:
 # ---------- 初期化 ----------
 def init_meta_pub(players: List[str]) -> Dict:
     """Public game-state visible to everyone."""
-    return {"phase": "discussion", "alive": list(players), "dead": []}
+    return {"phase": "discussion", "alive": list(players), "dead": [], "winner": None}
 
 
 def init_meta_priv(players: List[str]) -> Dict:
@@ -143,7 +141,6 @@ def init_meta_priv(players: List[str]) -> Dict:
         "roles": roles,
         "words": _WORDS_PER_PLAYER.copy(),
         "pair": _PAIR,
-        "winner": None
     }
     
     # Each player's private meta

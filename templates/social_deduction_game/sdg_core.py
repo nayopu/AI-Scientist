@@ -400,7 +400,7 @@ Your responsibilities:
 - Decide which DMs should be executed (can be multiple DMs in one turn for efficiency)
 - For DMs, you can allow unlimited exchanges within this turn to facilitate voting/ability phases
 - Update public and private meta information based on executed messages
-- You MUST check win conditions EVERY turn and update the winner field accordingly
+- You MUST check win conditions EVERY turn and update the winner field in `update_pub` accordingly
   - If win conditions are met, set winner to appropriate team (e.g. "WEREWOLF" or "VILLAGER")
 
 Message Selection Guidelines:
@@ -457,7 +457,6 @@ Notes:
                 "selected_messages": [...],
                 "update_pub": {...}, 
                 "update_priv": {...}, 
-                "winner": null|str, 
                 "reason": "..."
             }
         """
@@ -524,8 +523,6 @@ Notes:
                     response["update_pub"] = {}
                 if "update_priv" in response and not isinstance(response["update_priv"], dict):
                     response["update_priv"] = {}
-                if "winner" in response and response["winner"] not in [None, "WEREWOLF", "VILLAGER"]:
-                    response["winner"] = None
                 if "reason" not in response:
                     response["reason"] = "No reason provided"
                 
@@ -566,7 +563,7 @@ Notes:
                     continue
                 
                 # Validate response structure
-                valid_keys = {"update_pub", "update_priv", "winner", "reason"}
+                valid_keys = {"update_pub", "update_priv", "reason"}
                 if not any(key in response for key in valid_keys):
                     ConsoleLogger.log_warning(f"System response missing required keys (attempt {attempt + 1}/{self.max_retries})")
                     if attempt == self.max_retries - 1:
@@ -579,8 +576,6 @@ Notes:
                     response["update_pub"] = {}
                 if "update_priv" in response and not isinstance(response["update_priv"], dict):
                     response["update_priv"] = {}
-                if "winner" in response and response["winner"] not in [None, "WEREWOLF", "VILLAGER"]:
-                    response["winner"] = None
                 if "reason" not in response:
                     response["reason"] = "No reason provided"
                 
@@ -731,7 +726,6 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                         if not is_dm:
                             # Public message
                             public_log.append((turn, f"{speaker}: {message}"))
-                            ConsoleLogger.log_info(f"Turn {turn} - {speaker}: {message}")
                             
                             # Add to all agent memories
                             for agent in agents.values():
@@ -742,7 +736,6 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                             # DM - multiple recipients possible
                             for recipient in recipients:
                                 dm_log.append((turn, speaker, recipient, message))
-                                ConsoleLogger.log_info(f"Turn {turn} - {speaker}▶{recipient}: {message}")
                             recipients_str = ",".join(recipients)
                             
                             # Add to sender's memory
@@ -790,7 +783,7 @@ async def run_game(rules_module: str, num_players: int = 5, api_source: str = "o
                     logger.log_event(meta_update_event)
 
                 # ❺ 勝利判定
-                winner = system_response.get("winner")
+                winner = meta_pub.get("winner")
 
             # Log game end using new event system
             game_completed = winner is not None and turn < max_turns

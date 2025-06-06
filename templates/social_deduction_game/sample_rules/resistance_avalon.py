@@ -135,7 +135,7 @@ WIN CHECKS
 Always output valid JSON:
 {
  "update_pub": {...}, "update_priv": {...},
- "winner": null|"GOOD"|"EVIL", "reason": "..."
+ "reason": "..."
 }
 """
 }
@@ -181,7 +181,8 @@ def init_meta_pub(players: List[str]) -> Dict:
         proposal_attempt=1,
         score={"success": 0, "fail": 0},
         mission_results=[None, None, None, None, None],
-        pending_team=[]
+        pending_team=[],
+        winner=None
     )
 
 def init_meta_priv(players: List[str]) -> Dict:
@@ -197,7 +198,6 @@ def init_meta_priv(players: List[str]) -> Dict:
         "roles": role_assignments,
         "rejected_in_row": 0,
         "assassination_used": False,
-        "winner": None
     }
     
     # Each player's private meta

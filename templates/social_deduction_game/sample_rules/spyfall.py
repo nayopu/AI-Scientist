@@ -105,7 +105,6 @@ Win condition rules:
 Always respond with valid JSON containing:
 - update_pub: public meta changes
 - update_priv: private meta changes  
-- winner: null or "LOCALS" or "SPY"
 - reason: explanation of updates/win
 """
 }
@@ -115,7 +114,7 @@ Always respond with valid JSON containing:
 ###############################################################################
 def init_meta_pub(players: List[str]) -> Dict:
     """Public meta visible to everyone"""
-    return {"phase": "discussion", "alive": list(players)}
+    return {"phase": "discussion", "alive": list(players), "winner": None}
 
 def init_meta_priv(players: List[str]) -> Dict:
     """Private meta organized by participant"""
@@ -134,7 +133,6 @@ def init_meta_priv(players: List[str]) -> Dict:
         "roles": role_assignments,     # mapping player → role
         "location": CURRENT_LOCATION,  # secret location
         "spy_guess": None,             # later: {"player": name, "guess": str, "correct": bool}
-        "winner": None
     }
     
     # Each player's private meta

@@ -121,7 +121,6 @@ Win condition rules:
 Always respond with valid JSON containing:
 - update_pub: public meta changes (phase, alive, dead)
 - update_priv: private meta changes (special role states)
-- winner: null or "VILLAGERS" or "WEREWOLVES"
 - reason: explanation of updates/win
 """
 }
@@ -130,7 +129,8 @@ Always respond with valid JSON containing:
 def init_meta_pub(players: List[str]):
     return {"phase": "discussion",
             "alive": list(players),
-            "dead": []}
+            "dead": [],
+            "winner": None}
 
 def init_meta_priv(players: List[str]) -> Dict:
     # Assign roles based on player count
@@ -165,7 +165,6 @@ def init_meta_priv(players: List[str]) -> Dict:
         "witch_potions": {"save": True, "kill": True},  # Witch's available potions
         "protected": None,  # Who the doctor protected this night
         "seer_results": {},  # Seer's investigation history
-        "winner": None
     }
     
     # Each player's private meta
