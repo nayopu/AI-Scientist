@@ -1,0 +1,123 @@
+% Custom command definitions for D&D item cards
+% Add your command definitions here
+
+\newcommand{\ItemTags}[4]{% #1=item type, #2=rarity, #3=0 for no attunement, #3=1 for attunement, #3=2 for special attunement, #4=special attunement req
+    \ifnum#3=0
+        \textbf{#1, #2 }\\[0.25ex]
+        \\[0.25ex]
+        
+    \fi
+    
+    \ifnum#3=1
+        \textbf{#1, #2 (requires attunement)}
+        \\[0.25ex]
+        
+    \fi
+
+    \ifnum#3=2
+        \textbf{#1, #2 (requires attunement by a #4)}
+        \\[0.25ex]
+        
+    \fi
+    
+    
+}
+
+\newcommand{\FlavorText}[2]{%#1=1 for flavor text, #2=flavor text
+    \ifnum#1=1
+        #2
+        \\[0.25ex]
+        
+    \fi
+}
+
+\newcommand{\ChargeMechanics}[9]{% #1=total charges, #2=dice num, #3=dice sides, #4=modifier, #5=reset time, #6=1 for special charge condition, #7=special charge condition, #8=1 for last charge effect, #9=last charge effect
+    \ifnum#1>1
+        This item has #1 charges and regains #2d#3 + #4 expended charges daily at #5.
+        \ifnum#6=1
+            #7 
+        \fi
+        \ifnum#8=1
+            #9 
+        \fi
+        \\[0.25ex]
+        
+    \fi
+    \ifnum#1=1
+        This item has #1 charge and regains #2d#3 + #4 expended charges daily at #5.
+        \ifnum#6=1
+            #7 
+        \fi
+        \ifnum#8=1
+            #9 
+        \fi
+        \\[0.25ex]
+        
+    \fi
+    
+}
+
+\newcommand{\SpellCasting}[6]{% #1=1 for spellcasting, #2=spell bonus, #3=spell bonus condition, #4=1 for additional spell effects, #5=spells, #6=additional spell effects
+  \ifnum#1=1
+    \textbf{Spells. }
+    \ifnum#2>0
+        You gain a +#2 bonus to your spell #3
+    \fi
+    #5
+    \ifnum#4=1
+        #6
+    \fi
+    \\[0.25ex]
+    
+  \fi
+  
+}
+\newcommand{\CurseText}[2]{% #1=1 for curse, #2 for curse text
+  \ifnum#1=1
+    \textbf{Curse.} #2
+    \\[0.25ex]
+    
+  \fi
+}
+\newcommand{\BonusText}[3]{% #1=1 for bonus text, #2 for title, #3 for text
+  \ifnum#1=1
+    \textbf{#2.} #3 
+    \\[0.25ex]
+    
+  \fi
+}
+
+% \begin{itemcard}{Item Name}
+%     \begin{center}
+%       \begin{tcolorbox}[width=\linewidth, boxrule=3.0pt, colframe=black, colback=white, boxsep=0pt, top=0pt, bottom=0pt, left=0pt, right=0pt, center={yshift=-5mm}]
+        
+%         \includegraphics[width=\linewidth]{item_pics/item.png} 
+%         % Replace with your image file name %
+        
+%       \end{tcolorbox}
+%     \end{center}
+%     \begin{lowerpart}
+%         % Any where you see {___ Flag}, replacing it a {1} turns on that command.
+        
+%         % \ItemTags{Type}{Rarity}{Attunement Type}{Special Attunement Requirement}
+%         % {Attunement Type} = {0}, No Attunement
+%         % {Attunement Type} = {1}, Attunement
+%         % {Attunement Type} = {2}, Attunement with conditions
+        
+%         % \FlavorText{Flavor Flag}{Flavor text placeholder}
+        
+%         % \ChargeMechanics{Total # of Charges}{# of Dice}{# of Sides}{Modifier}{Reset Time}{Special Recharge Flag}{Special Recharge Text}{Last Charge Effect Flag}{Last Charge Effect Text}
+        
+%         % \SpellCasting{Spellcasting Flag}{Spell Bonus}{Spell Bonus Condition}{Additional Effect Flag}{Spells List}{Additional Spell Effects}
+%         % \BonusText{Bonus Flag}{Bonus Title}{Bonus Text}
+%         % \CurseText{Curse Flag}{Curse Description}
+
+
+%         \ItemTags{Type (subtype)}{rarity}{2}{creature}
+%         \FlavorText{1}{You can do multiple cards of different sizes in one go in case you want to print them off.}
+%         \CurseText{1}{It doesn't make separate PNGs for each item card. 
+%         It also doesn't allow for giving each card a different color scheme.}
+%     \end{lowerpart}
+% \end{itemcard}
+
+% \end{document}

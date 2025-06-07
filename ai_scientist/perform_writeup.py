@@ -156,7 +156,7 @@ def compile_latex(cwd, pdf_file, timeout=30):
                 print(f"Failed to copy PDF: {copy_error}")
 
 def compile_role_cards(cwd, timeout=30):
-    """Compile all role card LaTeX files in the directory."""
+    """Compile all role card LaTeX files in the directory using the D&D-style template."""
     print("GENERATING ROLE CARDS")
     
     # Find all role card tex files
@@ -169,18 +169,40 @@ def compile_role_cards(cwd, timeout=30):
         print(f"Compiling role card: {filename}")
         
         try:
-            result = subprocess.run(
+            # Run pdflatex multiple times for proper compilation
+            commands = [
                 ["pdflatex", "-interaction=nonstopmode", filename],
-                cwd=cwd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                timeout=timeout,
-            )
+                ["pdflatex", "-interaction=nonstopmode", filename]  # Second pass for cross-references
+            ]
+            
+            for command in commands:
+                result = subprocess.run(
+                    command,
+                    cwd=cwd,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    timeout=timeout,
+                )
             
             pdf_file = osp.join(cwd, f"{base_name}.pdf")
             if osp.exists(pdf_file):
                 print(f"Successfully generated: {pdf_file}")
+                
+                # Also try to generate PNG for transparency if possible
+                try:
+                    subprocess.run(
+                        ["convert", "-density", "300", f"{base_name}.pdf", f"{base_name}.png"],
+                        cwd=cwd,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        timeout=timeout,
+                    )
+                    png_file = osp.join(cwd, f"{base_name}.png")
+                    if osp.exists(png_file):
+                        print(f"Successfully generated PNG: {png_file}")
+                except:
+                    pass  # PNG generation is optional
             else:
                 print(f"Failed to generate PDF for: {filename}")
                 
@@ -475,17 +497,17 @@ Ensure the citation is well-integrated into the text.'''
     return aider_prompt, False
 
 
-# Social deduction game manual section tips (Dragonbane style)
+# Social deduction game manual section tips (Nier Automata style)
 game_manual_section_tips = {
     "Title": """
 - Should be catchy and descriptive of the game concept
 - Include the core theme or unique mechanic
 - Make it memorable and engaging
 - Consider the target audience
-- Use fantasy-themed language when appropriate
+- Use atmospheric and mysterious language when appropriate
 """,
     "Game Overview": """
-- Brief overview of the game concept and mechanics in a Dragonbane-style box
+- Brief overview of the game concept and mechanics in a Nier Automata-style nierbox
 - What makes this game unique in the social deduction genre
 - Number of players and approximate play time
 - Target audience and complexity level
@@ -535,15 +557,15 @@ def perform_game_manual_writeup(
         idea, folder_name, coder, cite_client, cite_model, num_cite_rounds=10, engine="semanticscholar"
 ):
     """
-    Generate a game manual using Dragonbane-style template with image generation.
+    Generate a game manual using Nier Automata-style template with OpenAI image generation.
     """
     import os.path as osp
     
     # Import image generation capabilities
     try:
         import sys
-        sys.path.append(osp.dirname(folder_name))
-        from image_generator import GameImageGenerator, create_game_config_from_rules
+        sys.path.append(osp.dirname(osp.dirname(folder_name)))  # Go up to AI-Scientist directory
+        from ai_scientist.image_generator import GameImageGenerator, create_game_config_from_rules
         image_generator = GameImageGenerator()
         generate_images = True
     except Exception as e:
@@ -551,9 +573,9 @@ def perform_game_manual_writeup(
         generate_images = False
     
     # CURRENTLY ASSUMES LATEX
-    title_overview_prompt = f"""We've provided the `latex/template.tex` file for a social deduction game manual using Dragonbane-style formatting. We will be filling it in section by section.
+    title_overview_prompt = f"""We've provided the `latex/template.tex` file for a social deduction game manual using Nier Automata-style formatting. We will be filling it in section by section.
 
-First, please fill in the "Title" and "Game Overview" sections of the manual. Note that this template uses a special dragonbox for the game overview instead of a traditional abstract.
+First, please fill in the "Title" and "Game Overview" sections of the manual. Note that this template uses a special nierbox for the game overview instead of a traditional abstract.
 
 This is for the game idea: {idea['Title']}
 Description: {idea['Experiment']}
@@ -563,7 +585,7 @@ Some tips are provided below:
 {game_manual_section_tips["Game Overview"]}
 
 The title should be engaging and reflect the unique aspects of this social deduction game.
-The game overview should be placed in the dragonbox and give readers a clear understanding of what the game is about, how many players it supports, and what makes it interesting.
+The game overview should be placed in the nierbox with title "Game at a Glance" and give readers a clear understanding of what the game is about, how many players it supports, and what makes it interesting.
 
 Be sure to first name the file and use *SEARCH/REPLACE* blocks to perform these edits.
 Update the cover image comment to show the path will be cover_image.png when generated.
@@ -578,7 +600,7 @@ Update the cover image comment to show the path will be cover_image.png when gen
         "Rules and Gameplay",
         "Strategy and Mastery",
     ]:
-        section_prompt = f"""Please fill in the {section} section of the game manual using the Dragonbane template structure.
+        section_prompt = f"""Please fill in the {section} section of the game manual using the Nier Automata template structure.
 
 This is for the game idea: {idea['Title']}
 Description: {idea['Experiment']}
@@ -586,11 +608,12 @@ Description: {idea['Experiment']}
 Some tips are provided below:
 {game_manual_section_tips[section]}
 
-Important: Use the Dragonbane template elements like:
-- segment environments for two-column layout
-- dragonbox, demonbox, and emptybox for special content
-- coloritem, bolditem, and secretitem for lists
-- proper part and chapter divisions
+Important: Use the Nier Automata template elements like:
+- nierbox for important information boxes
+- nierquote for atmospheric quotes
+- nierquotebox for special highlighted content
+- wrapfigure with nierbox for side information
+- proper atmospheric styling with the Nier Automata theme
 
 Be sure to make this section complete and self-contained. Players should be able to understand and play the game based on this manual.
 Focus on clarity, completeness, and ensuring players can actually reproduce and play this game.
@@ -613,15 +636,15 @@ Focus on:
 - **Completeness** – can someone reproduce the game from this manual?
 - **Clarity** – is it easy to understand for the target audience?
 - **Conciseness** – avoid unnecessary verbosity while maintaining completeness
-- **Dragonbane Style** – proper use of template elements and fantasy theming
+- **Nier Automata Style** – proper use of template elements and atmospheric theming
 
 Pay particular attention to fixing any errors such as:
 - Unclear or missing rules
-- Inconsistent terminology  
+- Inconsistent terminology
 - Missing information needed to play
 - Overly complex explanations
 - Gaps in the game flow or mechanics
-- Improper use of Dragonbane template elements
+- Improper use of Nier Automata template elements
 """
         coder_out = coder.run(refinement_prompt)
 
@@ -659,30 +682,35 @@ Replace the commented includegraphics line with the actual image inclusion."""
             print(f"Error generating images: {e}")
 
     # Generate role cards if we have role information
-    if generate_images:
-        try:
-            role_card_prompt = f"""Now let's create individual role cards using the role_card_template.tex file.
+    try:
+        role_card_prompt = f"""Now let's create individual role cards using the D&D-style role card template.
 
 Based on the roles defined in the game manual and rule files, create a separate LaTeX file for each role card.
 Name these files like role_card_[rolename].tex in the latex directory.
 
 Each role card should include:
-- Role name and type
-- Image (if generated)
-- Objective
-- Special abilities  
+- Role name and type/alignment
+- Generated role image (if available)
+- Objective description
+- Special abilities and powers
 - Victory condition
-- Strategy tip
-- Any warnings or special notes
+- Strategy tip for playing the role
+- Any warnings or important notes
 
-Use the \\createrolecard command from the role_card_template.tex.
+Use one of these role card commands with these parameters:
+\\createrolecard{{Role Name}}{{Role Type}}{{role_image.png}}{{Objective}}{{Abilities}}{{Victory}}{{Strategy}}{{Warnings}}
+\\createtownrolecard{{Role Name}}{{Role Type}}{{role_image.png}}{{Objective}}{{Abilities}}{{Victory}}{{Strategy}}{{Warnings}} (Blue border)
+\\createmafiarolecard{{Role Name}}{{Role Type}}{{role_image.png}}{{Objective}}{{Abilities}}{{Victory}}{{Strategy}}{{Warnings}} (Red border)
+\\createneutralrolecard{{Role Name}}{{Role Type}}{{role_image.png}}{{Objective}}{{Abilities}}{{Victory}}{{Strategy}}{{Warnings}} (Orange border)
 
-Create these as separate files so they can be compiled individually for printing."""
-            
-            coder_out = coder.run(role_card_prompt)
-            
-        except Exception as e:
-            print(f"Error creating role cards: {e}")
+The role cards should be styled appropriately for each role type (town, mafia, neutral, etc.) using the color schemes defined in roleCardSettings.tex.
+
+Create these as separate files so they can be compiled individually for printing and use during gameplay."""
+        
+        coder_out = coder.run(role_card_prompt)
+        
+    except Exception as e:
+        print(f"Error creating role cards: {e}")
 
     # Add optional citations if needed (fewer for game manuals)
     for _ in range(min(num_cite_rounds, 3)):  # Limit citations for game manuals
@@ -712,14 +740,15 @@ Focus on ensuring the manual is:
 2. **Clear** - Rules and procedures are easy to understand
 3. **Consistent** - Terminology and references are used consistently throughout
 4. **Engaging** - The manual makes the game sound fun and interesting to play
-5. **Dragonbane Style** - Proper use of template elements and theming
+5. **Nier Automata Style** - Proper use of template elements and atmospheric theming
 
 Go through each section and make any final improvements needed. Pay special attention to:
 - Making sure all game mechanics are clearly explained
-- Ensuring role abilities are fully detailed using dragonbox elements
-- Verifying that victory conditions are unambiguous in demonbox format
+- Ensuring role abilities are fully detailed using nierbox elements
+- Verifying that victory conditions are unambiguous
 - Checking that the game flow makes sense from start to finish
-- Ensuring proper use of segment environments and special list items
+- Ensuring proper use of nierbox, nierquote, and wrapfigure environments
+- Maintaining the atmospheric and mysterious tone throughout
 """
     )
     
@@ -943,7 +972,7 @@ if __name__ == "__main__":
         try:
             # Check if this is a social deduction game template
             if "social_deduction_game" in folder_name:
-                print("Detected social deduction game template, using game manual format")
+                print("Detected social deduction game template, using Nier Automata-style game manual format")
                 perform_game_manual_writeup(idea, folder_name, coder, client, client_model, engine=args.engine)
             else:
                 print("Using traditional research paper format")

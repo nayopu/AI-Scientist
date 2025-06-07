@@ -12,7 +12,6 @@
 \tcbuselibrary{skins}
 \usepackage{afterpage}
 \usepackage{ifthen}
-\usepackage{graphicx}
 
 \captionsetup[table]{labelformat=empty,font={sf,sc,bf,},skip=0pt}
 \MakeShortVerb{|}
@@ -22,165 +21,30 @@
   breaklines=true,
 }
 
-% Define colors for role cards
-\definecolor{DragonRed}{RGB}{139, 69, 19}
-\definecolor{DemonGreen}{RGB}{34, 139, 34}
-\definecolor{ScrollBeige}{RGB}{245, 245, 220}
-\definecolor{AncientGold}{RGB}{218, 165, 32}
-\definecolor{MysticPurple}{RGB}{102, 51, 153}
-\definecolor{ShadowBlack}{RGB}{47, 79, 79}
+% Include custom command definitions for role cards
+\input{roleCardCommands.tex}
+\input{roleCardSettings.tex}
 
-% Card dimensions (can be adjusted)
+% Card sizing
+\newboolean{autosizing}
+\setboolean{autosizing}{true} 
 \newlength{\cardwidth}
 \newlength{\cardheight}
-\setlength{\cardwidth}{8.9cm}
-\setlength{\cardheight}{12.7cm}
+\setlength{\cardwidth}{5in}
+\setlength{\cardheight}{7in}
 
-% Auto-scaling option (set to false for fixed size cards)
-\newif\ifautoscale
-\autoscaletrue  % Change to \autoscalefalse for fixed size
-
-% Role card environment
-\newtcolorbox{rolecard}[2][]{
-    enhanced,
-    width=\cardwidth,
-    height=\ifautoscale\relax\else\cardheight\fi,
-    colback=ScrollBeige,
-    colframe=DragonRed,
-    boxrule=2mm,
-    sharp corners,
-    fonttitle=\Large\bfseries\centering,
-    title={#2},
-    coltitle=white,
-    colbacktitle=DragonRed,
-    attach boxed title to top center={yshift=-2mm},
-    boxed title style={boxrule=1mm, colframe=DragonRed},
-    left=3mm,
-    right=3mm,
-    top=5mm,
-    bottom=3mm,
-    #1
-}
-
-% Commands for different card elements
-\newcommand{\roletype}[1]{%
-    \begin{center}
-        \textcolor{DemonGreen}{\textbf{\large #1}}
-    \end{center}
-    \vspace{2mm}
-}
-
-\newcommand{\roleimage}[1]{%
-    \begin{center}
-        \includegraphics[width=0.7\cardwidth]{#1}
-    \end{center}
-    \vspace{2mm}
-}
-
-\newcommand{\roleobjective}[1]{%
-    \textcolor{DragonRed}{\textbf{Objective:}} #1
-    \vspace{2mm}
-}
-
-\newcommand{\roleability}[2]{%
-    \textcolor{MysticPurple}{\textbf{#1:}} #2
-    \vspace{2mm}
-}
-
-\newcommand{\rolevictory}[1]{%
-    \textcolor{AncientGold}{\textbf{Victory Condition:}} #1
-    \vspace{2mm}
-}
-
-\newcommand{\rolestrategy}[1]{%
-    \textcolor{ShadowBlack}{\textbf{Strategy Tip:}} \textit{#1}
-    \vspace{2mm}
-}
-
-\newcommand{\rolewarning}[1]{%
-    \begin{center}
-        \textcolor{DragonRed}{\textbf{\small #1}}
-    \end{center}
-}
-
-% Back of card environment for two-sided cards
-\newtcolorbox{rolebackcard}[1][]{
-    enhanced,
-    width=\cardwidth,
-    height=\ifautoscale\relax\else\cardheight\fi,
-    colback=ScrollBeige!50,
-    colframe=DemonGreen,
-    boxrule=2mm,
-    sharp corners,
-    left=3mm,
-    right=3mm,
-    top=3mm,
-    bottom=3mm,
-    #1
-}
-
-% Command to create a single role card
-\newcommand{\createrolecard}[8]{
-    \begin{tikzpicture}
-        \node[inner sep=0pt] {
-            \begin{rolecard}{#1}
-                \roletype{#2}
-                \ifx\relax#3\relax\else\roleimage{#3}\fi
-                \roleobjective{#4}
-                \roleability{Special Ability}{#5}
-                \rolevictory{#6}
-                \rolestrategy{#7}
-                \ifx\relax#8\relax\else\rolewarning{#8}\fi
-            \end{rolecard}
-        };
-    \end{tikzpicture}
-}
-
-% Command to create a two-sided role card
-\newcommand{\createtwosidedrolecard}[9]{
-    % Front side
-    \begin{tikzpicture}
-        \node[inner sep=0pt] {
-            \begin{rolecard}{#1}
-                \roletype{#2}
-                \ifx\relax#3\relax\else\roleimage{#3}\fi
-                \roleobjective{#4}
-                \roleability{Special Ability}{#5}
-                \rolevictory{#6}
-                \rolestrategy{#7}
-                \ifx\relax#8\relax\else\rolewarning{#8}\fi
-            \end{rolecard}
-        };
-    \end{tikzpicture}
-    
-    \newpage
-    
-    % Back side
-    \begin{tikzpicture}
-        \node[inner sep=0pt] {
-            \begin{rolebackcard}
-                \begin{center}
-                    \textcolor{DemonGreen}{\textbf{\Large #1}}\\
-                    \vspace{3mm}
-                    \textcolor{DragonRed}{\textbf{Reference Card}}
-                \end{center}
-                \vspace{5mm}
-                
-                #9
-                
-                \vfill
-                \begin{center}
-                    \textcolor{ShadowBlack}{\small Keep this information secret!}
-                end{center}
-            \end{rolebackcard}
-        };
-    \end{tikzpicture}
-}
-
-% Template for bulk card generation
 \begin{document}
 
-% Example role card - this will be replaced by generated content
-\createrolecard{[ROLE NAME]}{[ROLE TYPE]}{[IMAGE FILE]}{[OBJECTIVE TEXT]}{[ABILITY TEXT]}{[VICTORY TEXT]}{[STRATEGY TEXT]}{[WARNING TEXT]}
+\ifthenelse{\boolean{autosizing}}{
+    % Auto-sizing role card template
+    \createrolecard{Detective}{Town}{img/paper.jpg}{Find and eliminate all threats to the town}{Once per night, investigate a player to learn their alignment}{All mafia and harmful neutrals are eliminated}{Share your investigation results carefully - false claims are common}{Be careful not to reveal yourself too early to the mafia}
+}{
+    % Fixed-size role card template
+    \begin{tikzpicture}
+        \node[minimum width=\cardwidth, minimum height=\cardheight, draw, rectangle, fill=white] at (0,0) {
+            \createrolecard{Detective}{Town}{img/paper.jpg}{Find and eliminate all threats to the town}{Once per night, investigate a player to learn their alignment}{All mafia and harmful neutrals are eliminated}{Share your investigation results carefully}{Be careful not to reveal yourself too early}
+        };
+    \end{tikzpicture}
+}
 
 \end{document} 

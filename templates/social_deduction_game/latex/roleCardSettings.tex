@@ -1,0 +1,143 @@
+% Role card layout and styling settings
+% Adapted from D&D item card tcolorbox settings to match the original aesthetic
+
+% Color definitions for different role types
+\definecolor{towncolor}{RGB}{65, 105, 225}
+\definecolor{mafiacolor}{RGB}{220, 20, 60}
+\definecolor{neutralcolor}{RGB}{255, 140, 0}
+\definecolor{specialcolor}{RGB}{148, 0, 211}
+
+% Auto-sizing role card environment (matches itemcardauto style)
+\newtcolorbox{rolecardauto}[2][]{
+  arc=5mm,
+  outer arc=5mm,
+  colback=DimGray,
+  colframe=black,
+  boxrule=3pt,
+  leftrule=3pt,
+  rightrule=3pt,
+  fonttitle=\large\bfseries,
+  coltitle=black,
+  colbacktitle=WhiteSmoke,
+  enhanced,
+  attach boxed title to top center={yshift=-5mm},
+  boxed title style={boxrule=3pt,colframe=black, colback=WhiteSmoke,arc=5mm,outer arc=5mm},
+  title=#2,
+  #1
+}
+
+% Fixed-size role card environment (matches itemcard style)
+\newtcolorbox{rolecard}[2][equal height group=A, width=\cardwidth, height=\cardheight]{
+  arc=5mm,
+  outer arc=5mm,
+  colback=DimGray,
+  colframe=black,
+  colbacktitle=black,
+  coltitle=WhiteSmoke,
+  boxrule=3pt,
+  leftrule=3pt,
+  rightrule=3pt,
+  fonttitle=\large\bfseries,
+  enhanced,
+  attach boxed title to top left={xshift=1cm,yshift*=-\tcboxedtitleheight},
+  boxed title style={boxrule=1mm, frame code={
+  \path[fill=tcbcolback!30!black]
+  ([yshift=-1mm,xshift=-1mm]frame.north west)
+  arc[start angle=0,end angle=180,radius=1mm]
+  ([yshift=-1mm,xshift=1mm]frame.north east)
+  arc[start angle=180,end angle=0,radius=1mm];
+  \path[left color=tcbcolback!60!black,right color=tcbcolback!60!black,
+  middle color=tcbcolback!80!black]
+  ([xshift=-2mm]frame.north west) -- ([xshift=2mm]frame.north east)
+  [rounded corners=1mm]-- ([xshift=1mm,yshift=-1mm]frame.north east)
+  -- (frame.south east) -- (frame.south west)
+  -- ([xshift=-1mm,yshift=-1mm]frame.north west)
+  [sharp corners]-- cycle;
+  },interior engine=empty,
+  },
+  title=#2,
+  #1
+}
+
+% Auto-sizing lower part (matches lowerpartauto style)
+\newtcolorbox{lowerpartauto}[1][]{
+  boxrule=3.0pt,
+  colframe=black,
+  coltext=black,
+  enhanced,
+  borderline={0.5mm}{0mm}{black},
+  interior style={
+    fill overzoom image=img/paper.jpg,
+    fill image opacity=1,
+  },
+  #1
+}
+
+% Fixed-size lower part (matches lowerpart style)
+\newtcolorbox{lowerpart}[1][height=0.425\cardheight]{
+  boxrule=3.0pt,
+  colframe=black,
+  coltext=black,
+  enhanced,
+  borderline={0.5mm}{0mm}{black},
+  interior style={
+    fill overzoom image=img/paper.jpg,
+    fill image opacity=1,
+  },
+  #1
+}
+
+% Role type specific styling with D&D aesthetic
+\newtcolorbox{townroleauto}[2][]{
+  arc=5mm,
+  outer arc=5mm,
+  colback=DimGray,
+  colframe=towncolor,
+  boxrule=3pt,
+  leftrule=3pt,
+  rightrule=3pt,
+  fonttitle=\large\bfseries,
+  coltitle=white,
+  colbacktitle=towncolor,
+  enhanced,
+  attach boxed title to top center={yshift=-5mm},
+  boxed title style={boxrule=3pt,colframe=towncolor, colback=towncolor,arc=5mm,outer arc=5mm},
+  title=#2,
+  #1
+}
+
+\newtcolorbox{mafiaroleauto}[2][]{
+  arc=5mm,
+  outer arc=5mm,
+  colback=DimGray,
+  colframe=mafiacolor,
+  boxrule=3pt,
+  leftrule=3pt,
+  rightrule=3pt,
+  fonttitle=\large\bfseries,
+  coltitle=white,
+  colbacktitle=mafiacolor,
+  enhanced,
+  attach boxed title to top center={yshift=-5mm},
+  boxed title style={boxrule=3pt,colframe=mafiacolor, colback=mafiacolor,arc=5mm,outer arc=5mm},
+  title=#2,
+  #1
+}
+
+\newtcolorbox{neutralroleauto}[2][]{
+  arc=5mm,
+  outer arc=5mm,
+  colback=DimGray,
+  colframe=neutralcolor,
+  boxrule=3pt,
+  leftrule=3pt,
+  rightrule=3pt,
+  fonttitle=\large\bfseries,
+  coltitle=white,
+  colbacktitle=neutralcolor,
+  enhanced,
+  attach boxed title to top center={yshift=-5mm},
+  boxed title style={boxrule=3pt,colframe=neutralcolor, colback=neutralcolor,arc=5mm,outer arc=5mm},
+  title=#2,
+  #1
+} 

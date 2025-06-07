@@ -1,0 +1,144 @@
+% Custom command definitions for Social Deduction Game role cards
+% Adapted from D&D item card commands to match the original aesthetic
+
+% Role card creation command using D&D styling
+% \createrolecard{name}{type}{image}{objective}{abilities}{victory}{strategy}{warnings}
+\newcommand{\createrolecard}[8]{
+    \begin{rolecardauto}{#1}
+        \begin{center}
+            \begin{tcolorbox}[width=\linewidth, boxrule=3.0pt, colframe=black, boxsep=0pt, top=0pt, bottom=0pt, left=0pt, right=0pt, enhanced, borderline={0.5mm}{0mm}{black}, interior style={fill overzoom image=img/paper.jpg, fill image opacity=1}]
+                \includegraphics[width=\linewidth]{#3}
+            \end{tcolorbox}
+        \end{center}
+        
+        \begin{lowerpartauto}
+            \RoleType{#2}
+            \RoleObjective{#4}
+            \RoleAbilities{#5}
+            \VictoryCondition{#6}
+            \StrategyTip{#7}
+            \RoleWarnings{#8}
+        \end{lowerpartauto}
+    \end{rolecardauto}
+}
+
+% Town role card with blue coloring
+\newcommand{\createtownrolecard}[8]{
+    \begin{townroleauto}{#1}
+        \begin{center}
+            \begin{tcolorbox}[width=\linewidth, boxrule=3.0pt, colframe=black, boxsep=0pt, top=0pt, bottom=0pt, left=0pt, right=0pt, enhanced, borderline={0.5mm}{0mm}{black}, interior style={fill overzoom image=img/paper.jpg, fill image opacity=1}]
+                \includegraphics[width=\linewidth]{#3}
+            \end{tcolorbox}
+        \end{center}
+        
+        \begin{lowerpartauto}
+            \RoleType{#2}
+            \RoleObjective{#4}
+            \RoleAbilities{#5}
+            \VictoryCondition{#6}
+            \StrategyTip{#7}
+            \RoleWarnings{#8}
+        \end{lowerpartauto}
+    \end{townroleauto}
+}
+
+% Mafia role card with red coloring
+\newcommand{\createmafiarolecard}[8]{
+    \begin{mafiaroleauto}{#1}
+        \begin{center}
+            \begin{tcolorbox}[width=\linewidth, boxrule=3.0pt, colframe=black, boxsep=0pt, top=0pt, bottom=0pt, left=0pt, right=0pt, enhanced, borderline={0.5mm}{0mm}{black}, interior style={fill overzoom image=img/paper.jpg, fill image opacity=1}]
+                \includegraphics[width=\linewidth]{#3}
+            \end{tcolorbox}
+        \end{center}
+        
+        \begin{lowerpartauto}
+            \RoleType{#2}
+            \RoleObjective{#4}
+            \RoleAbilities{#5}
+            \VictoryCondition{#6}
+            \StrategyTip{#7}
+            \RoleWarnings{#8}
+        \end{lowerpartauto}
+    \end{mafiaroleauto}
+}
+
+% Neutral role card with orange coloring
+\newcommand{\createneutralrolecard}[8]{
+    \begin{neutralroleauto}{#1}
+        \begin{center}
+            \begin{tcolorbox}[width=\linewidth, boxrule=3.0pt, colframe=black, boxsep=0pt, top=0pt, bottom=0pt, left=0pt, right=0pt, enhanced, borderline={0.5mm}{0mm}{black}, interior style={fill overzoom image=img/paper.jpg, fill image opacity=1}]
+                \includegraphics[width=\linewidth]{#3}
+            \end{tcolorbox}
+        \end{center}
+        
+        \begin{lowerpartauto}
+            \RoleType{#2}
+            \RoleObjective{#4}
+            \RoleAbilities{#5}
+            \VictoryCondition{#6}
+            \StrategyTip{#7}
+            \RoleWarnings{#8}
+        \end{lowerpartauto}
+    \end{neutralroleauto}
+}
+
+% Role type header
+\newcommand{\RoleType}[1]{
+    \textbf{\large #1 Role}\\[0.5ex]
+}
+
+% Role objective
+\newcommand{\RoleObjective}[1]{
+    \textbf{Objective: }#1\\[0.25ex]
+}
+
+% Role abilities
+\newcommand{\RoleAbilities}[1]{
+    \textbf{Special Abilities: }#1\\[0.25ex]
+}
+
+% Victory condition
+\newcommand{\VictoryCondition}[1]{
+    \textbf{Victory Condition: }#1\\[0.25ex]
+}
+
+% Strategy tip
+\newcommand{\StrategyTip}[1]{
+    \textbf{Strategy Tip: }\textit{#1}\\[0.25ex]
+}
+
+% Role warnings
+\newcommand{\RoleWarnings}[1]{
+    \ifx\relax#1\relax
+    \else
+        \textbf{Warning: }#1\\[0.25ex]
+    \fi
+}
+
+% Conditional text helpers
+\newcommand{\RoleTag}[2]{
+    \textbf{#1: }#2\\[0.25ex]
+}
+
+\newcommand{\FlavorQuote}[1]{
+    \begin{center}
+    \textit{"#1"}
+    \end{center}
+    \\[0.25ex]
+}
+
+% Alignment-based coloring
+\newcommand{\AlignmentColor}[2]{
+    \ifnum#1=1
+        \textcolor{blue}{\textbf{#2}}
+    \fi
+    \ifnum#1=2
+        \textcolor{red}{\textbf{#2}}
+    \fi
+    \ifnum#1=3
+        \textcolor{orange}{\textbf{#2}}
+    \fi
+    \ifnum#1=0
+        \textbf{#2}
+    \fi
+} 
