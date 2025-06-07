@@ -104,7 +104,7 @@ class GameImageGenerator:
             return False
     
     def generate_cover_image(self, game_config: Dict) -> Optional[str]:
-        """Generate a cover image for the game manual.
+        """Generate a cover image for the game manual using LLM-generated visual description.
         
         Args:
             game_config: Dictionary containing game information
@@ -112,14 +112,11 @@ class GameImageGenerator:
         Returns:
             Local filepath of the generated cover image, or None if failed
         """
-        title = game_config.get('title', 'Social Deduction Game')
-        theme = game_config.get('theme', 'mysterious')
-        setting = game_config.get('setting', 'fantasy')
+        # Generate cover description using LLM
+        cover_description = self._generate_cover_description(game_config)
         
-        prompt = f"Atmospheric illustration for {theme} social deduction game, {setting} environment. Group of mysterious figures in shadows, dramatic lighting, intrigue and suspense atmosphere. Digital artwork, no text, no words, no book elements, pure illustration only, cinematic composition"
-        
-        print(f"Generating cover image with prompt: {prompt[:100]}...")
-        url = self.generate_image(prompt, 'cover', "1024x1024")
+        print(f"Generating cover image with prompt: {cover_description[:100]}...")
+        url = self.generate_image(cover_description, 'cover', "1024x1024")
         if not url:
             print("Failed to generate cover image URL")
             return None
@@ -141,8 +138,11 @@ class GameImageGenerator:
         Returns:
             Local filepath of the generated role image, or None if failed
         """
-        # Create a prompt specifically for pure character illustration without any text elements
-        prompt = f"Character portrait illustration, {game_theme} setting, mysterious person. Digital artwork, portrait style, atmospheric lighting. IMPORTANT: absolutely no text, no words, no letters, no writing, no symbols, no labels, no titles anywhere in the image. Pure character art only, clean artwork without any textual elements whatsoever"
+        # Create a prompt that incorporates the specific role characteristics
+        # Extract key visual elements from role description while avoiding game mechanics
+        role_visual_hint = self._extract_visual_elements(role_name, role_description)
+        
+        prompt = f"Character portrait illustration of a {role_visual_hint}, {game_theme} setting. Digital artwork, portrait style, atmospheric lighting, detailed character design. IMPORTANT: absolutely no text, no words, no letters, no writing, no symbols, no labels, no titles anywhere in the image. Pure character art only, clean artwork without any textual elements whatsoever"
         
         url = self.generate_image(prompt, 'role_card', "1024x1024")
         if not url:
@@ -155,6 +155,154 @@ class GameImageGenerator:
         if self.download_image(url, filepath):
             return filepath
         return None
+    
+    def _extract_visual_elements(self, role_name: str, role_description: str) -> str:
+        """Extract visual characteristics from role name and description using LLM.
+        
+        Args:
+            role_name: Name of the role
+            role_description: Description of the role's abilities and characteristics
+            
+        Returns:
+            String describing visual characteristics suitable for image generation
+        """
+        try:
+            # Use LLM to generate visual description
+            from llm_client.client import get_response_from_llm, get_llm_client
+            
+            client, model_name = get_llm_client()
+            
+            prompt = f"""Based on this social deduction game role, create a concise visual description for character art generation:
+
+Role Name: {role_name}
+Role Description: {role_description}
+
+Generate a 1-2 sentence visual description focusing on:
+- Physical appearance and clothing style
+- Facial expression or demeanor 
+- Visual elements that convey the role's nature/personality
+- Avoid mentioning specific game mechanics or abilities
+
+The description should be suitable for fantasy/medieval character art generation.
+
+Example format: "A wise scholar with kind eyes and flowing robes, carrying ancient tomes" or "A shadowy figure with calculating gaze, dressed in dark hooded cloak"
+
+Visual description:"""
+
+            system_message = "You are an expert character artist creating visual descriptions for fantasy game characters. Focus on visual appearance, clothing, and demeanor rather than game mechanics."
+            
+            response, _ = get_response_from_llm(
+                prompt,
+                system_message,
+                client=client,
+                model=model_name
+            )
+            
+            # Clean up the response
+            visual_description = response.strip()
+            if visual_description.startswith("Visual description:"):
+                visual_description = visual_description[19:].strip()
+            
+            # Remove any quotes if present
+            visual_description = visual_description.strip('"\'')
+            
+            return visual_description
+            
+        except Exception as e:
+            print(f"Error generating visual description with LLM: {e}")
+            # Fallback to simple description based on role name
+            role_name_lower = role_name.lower()
+            
+            if 'detective' in role_name_lower or 'investigator' in role_name_lower:
+                return 'cunning investigator with sharp eyes, wearing a coat or formal attire'
+            elif 'mediator' in role_name_lower or 'diplomat' in role_name_lower:
+                return 'wise diplomat with calm demeanor, refined and trustworthy appearance'
+            elif 'propagandist' in role_name_lower or 'deceiver' in role_name_lower:
+                return 'persuasive speaker with intense gaze, charismatic but slightly sinister'
+            elif 'defender' in role_name_lower or 'guard' in role_name_lower:
+                return 'loyal protector with noble bearing, sturdy and reliable appearance'
+            elif any(word in role_name_lower for word in ['truth', 'good', 'town', 'village']):
+                return 'honest citizen with noble bearing, trustworthy appearance'
+            elif any(word in role_name_lower for word in ['evil', 'mafia', 'bad', 'chaos']):
+                return 'suspicious character with cunning eyes, deceptive appearance'
+            else:
+                return 'mysterious figure with enigmatic expression'
+    
+    def _generate_cover_description(self, game_config: Dict) -> str:
+        """Generate cover image description using LLM based on game configuration.
+        
+        Args:
+            game_config: Dictionary containing game information including title, theme, setting, and roles
+            
+        Returns:
+            String describing visual elements suitable for cover image generation
+        """
+        try:
+            # Use LLM to generate cover visual description
+            from llm_client.client import get_response_from_llm, get_llm_client
+            
+            client, model_name = get_llm_client()
+            
+            # Extract game information
+            title = game_config.get('title', 'Social Deduction Game')
+            theme = game_config.get('theme', 'fantasy')
+            setting = game_config.get('setting', 'medieval')
+            roles = game_config.get('roles', [])
+            
+            # Create role summary for context
+            role_names = [role.get('name', '') for role in roles[:5]]  # Limit to first 5 roles
+            role_summary = ", ".join(role_names) if role_names else "various mysterious characters"
+            
+            prompt = f"""Create a visual description for a cover image of a social deduction game with these details:
+
+Game Title: {title}
+Theme: {theme}
+Setting: {setting}
+Main Roles in Game: {role_summary}
+
+Generate a detailed 2-3 sentence visual description for an atmospheric cover illustration that:
+- Captures the mood and setting of the game
+- Shows multiple figures that represent the social deduction aspect (hidden identities, intrigue)
+- Uses appropriate atmospheric elements (lighting, environment, composition)
+- Avoids showing specific text, words, or book elements
+- Creates a sense of mystery, tension, and the theme of hidden identities
+
+The description should be suitable for generating a professional game manual cover illustration.
+
+Example format: "A moonlit medieval courtyard where shadowy figures in elaborate robes gather around a central fountain, their faces partially hidden, with dramatic chiaroscuro lighting creating an atmosphere of intrigue and hidden motives."
+
+Visual description:"""
+
+            system_message = "You are an expert concept artist creating visual descriptions for game cover art. Focus on atmosphere, composition, lighting, and visual elements that convey the theme of social deduction and hidden identities."
+            
+            response, _ = get_response_from_llm(
+                prompt,
+                system_message,
+                client=client,
+                model=model_name
+            )
+            
+            # Clean up the response
+            cover_description = response.strip()
+            if cover_description.startswith("Visual description:"):
+                cover_description = cover_description[19:].strip()
+            
+            # Remove any quotes if present
+            cover_description = cover_description.strip('"\'')
+            
+            # Add technical requirements
+            cover_description += ". Digital artwork, cinematic composition, no text, no words, no letters anywhere in the image"
+            
+            return cover_description
+            
+        except Exception as e:
+            print(f"Error generating cover description with LLM: {e}")
+            # Fallback to basic description
+            title = game_config.get('title', 'Social Deduction Game')
+            theme = game_config.get('theme', 'mysterious')
+            setting = game_config.get('setting', 'fantasy')
+            
+            return f"Atmospheric illustration for {theme} social deduction game in {setting} environment. Group of mysterious figures in shadows, dramatic lighting, intrigue and suspense atmosphere. Digital artwork, no text, no words, pure illustration only, cinematic composition"
     
     def generate_game_assets(self, game_config: Dict, output_dir: str = ".") -> Dict[str, str]:
         """Generate all image assets for a social deduction game.

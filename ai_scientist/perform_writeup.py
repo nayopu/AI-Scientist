@@ -24,7 +24,7 @@ def create_llm_client():
         
         # Check if model supports temperature parameter
         # o3-mini and similar models don't support temperature
-        supports_temperature = not (model_name.startswith("o3-") or model_name.startswith("o1-"))
+        supports_temperature = not (model_name.startswith("o3") or model_name.startswith("o1"))
         
         # Create LangChain wrapper for the configured client
         if "claude" in model_name:
@@ -457,6 +457,32 @@ def perform_simplified_writeup(idea: Dict[str, Any], folder_name: str) -> bool:
         import traceback
         traceback.print_exc()
         return False
+
+def perform_writeup(idea: Dict[str, Any], folder_name: str, coder, client, client_model: str, engine: str = "semanticscholar") -> bool:
+    """
+    Standard writeup function for research papers (compatibility function).
+    For social deduction games, this redirects to perform_simplified_writeup.
+    """
+    print("perform_writeup called - redirecting to perform_simplified_writeup for game manual generation")
+    return perform_simplified_writeup(idea, folder_name)
+
+def generate_latex(coder, folder_name: str, pdf_file: str) -> bool:
+    """Generate LaTeX PDF from compiled LaTeX files"""
+    try:
+        latex_dir = osp.join(folder_name, "latex")
+        compile_latex(latex_dir, pdf_file)
+        return True
+    except Exception as e:
+        print(f"Error generating LaTeX: {e}")
+        return False
+
+def perform_game_manual_writeup(idea: Dict[str, Any], folder_name: str, coder, client, client_model: str, engine: str = "semanticscholar") -> bool:
+    """
+    Writeup function specifically for game manuals.
+    This uses the simplified writeup process optimized for social deduction games.
+    """
+    print("Starting game manual writeup...")
+    return perform_simplified_writeup(idea, folder_name)
 
 def main():
     parser = argparse.ArgumentParser(description="Simplified writeup generation for social deduction games")
