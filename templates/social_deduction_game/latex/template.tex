@@ -5,37 +5,8 @@
 \usepackage{eso-pic,graphicx,wrapfig}
 \usepackage{multicol}
 \usepackage{lipsum}
-\usepackage[
-    backend=biber,
-    style=alphabetic
-]{biblatex}
 
 % nierAutomata.cls is loaded automatically by \documentclass
-
-\begin{filecontents}{references.bib}
-@inproceedings{werewolf2009,
-  title={One Night Ultimate Werewolf: A fast social deduction game},
-  author={Alspach, Ted},
-  booktitle={BoardGameGeek},
-  year={2009}
-}
-
-@article{mafia1986,
-  title={Mafia: A party game},
-  author={Plotkin, Dimitry Davidoff},
-  journal={Psychology Department, Moscow State University},
-  year={1986}
-}
-
-@inproceedings{resistance2009,
-  title={The Resistance: A social deduction board game},
-  author={Eskridge, Donald X},
-  booktitle={Indie Boards and Cards},
-  year={2009}
-}
-\end{filecontents}
-
-\addbibresource{references.bib}
 
 \begin{document}
 \AddToShipoutPicture{\input{tikz/background}}
@@ -61,11 +32,11 @@
     \end{tikzpicture}
     \end{center}
 
-    \vspace{3cm}
+    \vspace{0.5cm}
     
     % Cover image placeholder
     \begin{center}
-    % \includegraphics[width=0.6\textwidth]{cover_image.png}
+    \nierimgwrap{\includegraphics[width=0.7\textwidth]{cover_image.png}}
     \end{center}
 
     \vfill
@@ -193,7 +164,5 @@
 [DESIGNER NOTES TO BE FILLED]
 
 This game was designed using AI-assisted game design principles, combining traditional social deduction mechanics with innovative twists to create a unique and engaging experience.
-
-\printbibliography
 
 \end{document} 

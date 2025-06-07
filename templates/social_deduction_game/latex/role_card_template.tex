@@ -36,13 +36,23 @@
 \begin{document}
 
 \ifthenelse{\boolean{autosizing}}{
-    % Auto-sizing role card template
-    \createrolecard{Detective}{Town}{img/paper.jpg}{Find and eliminate all threats to the town}{Once per night, investigate a player to learn their alignment}{All mafia and harmful neutrals are eliminated}{Share your investigation results carefully - false claims are common}{Be careful not to reveal yourself too early to the mafia}
+    % Auto-sizing role card template with placeholders
+    % Replace these placeholders when generating specific role cards:
+    % {ROLE_COMMAND} - The LaTeX command to use (createrolecard, createtownrolecard, etc.)
+    % {ROLE_NAME} - Name of the role (e.g., "Detective", "Mafia Boss")
+    % {ROLE_TYPE} - Type/alignment (e.g., "Town", "Mafia", "Neutral")
+    % {ROLE_IMAGE} - Path to role image (e.g., "detective.png")
+    % {OBJECTIVE} - What the role is trying to achieve
+    % {ABILITIES} - Special abilities and when they can be used
+    % {VICTORY_CONDITION} - How this role wins the game
+    % {STRATEGY} - Tips for playing this role
+    % {WARNINGS} - Important warnings or notes
+    {ROLE_COMMAND}{{ROLE_NAME}}{{ROLE_TYPE}}{{ROLE_IMAGE}}{{OBJECTIVE}}{{ABILITIES}}{{VICTORY_CONDITION}}{{STRATEGY}}{{WARNINGS}}
 }{
-    % Fixed-size role card template
+    % Fixed-size role card template with placeholders
     \begin{tikzpicture}
         \node[minimum width=\cardwidth, minimum height=\cardheight, draw, rectangle, fill=white] at (0,0) {
-            \createrolecard{Detective}{Town}{img/paper.jpg}{Find and eliminate all threats to the town}{Once per night, investigate a player to learn their alignment}{All mafia and harmful neutrals are eliminated}{Share your investigation results carefully}{Be careful not to reveal yourself too early}
+            {ROLE_COMMAND}{{ROLE_NAME}}{{ROLE_TYPE}}{{ROLE_IMAGE}}{{OBJECTIVE}}{{ABILITIES}}{{VICTORY_CONDITION}}{{STRATEGY}}{{WARNINGS}}
         };
     \end{tikzpicture}
 }

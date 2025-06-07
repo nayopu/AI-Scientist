@@ -282,7 +282,7 @@
         ($(iconcenter) + (  0mm, 40mm)$) circle (10mm);
 }
 
-\newcommand{\nierimgwrap}[3]{
+\newcommand{\nierimgwrap}[1]{
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}
@@ -303,8 +303,6 @@
     \draw[fill=main] 
         ($(img.south east) + (0.5mm,-0.5mm)$) rectangle ++(1mm,-1mm);
 \end{tikzpicture}
-\caption{#2}
-\label{#3}
 \end{figure}
 }
 

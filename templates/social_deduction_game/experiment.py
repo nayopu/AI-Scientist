@@ -583,7 +583,7 @@ def run_experiment(args=None):
     print(f"Testing idea: {idea['Name']}")
     
     # Generate rule file
-    rule_file_name = f"{idea['Name']}"
+    rule_file_name = 'rule'
     rule_file_path = Path(args.out_dir) / f"{rule_file_name}.py"
     rule_file_path.parent.mkdir(parents=True, exist_ok=True)
     

@@ -28,7 +28,7 @@ class GameImageGenerator:
         
         # Style presets for different types of images
         self.style_presets = {
-            'cover': "dramatic fantasy art style, book cover illustration, atmospheric lighting, mysterious mood",
+            'cover': "dramatic illustration style, atmospheric lighting, mysterious mood, cinematic composition",
             'role_card': "character portrait, fantasy art style, detailed face, atmospheric background",
             'icon': "simple icon design, clean lines, symbolic representation",
             'background': "atmospheric background, subtle textures, game art style"
@@ -40,7 +40,7 @@ class GameImageGenerator:
         Args:
             prompt: Description of the image to generate
             style: Style preset to use ('cover', 'role_card', 'icon', 'background')
-            size: Image size (256x256, 512x512, or 1024x1024)
+            size: Image size (1024x1024, 1024x1792, or 1792x1024)
             
         Returns:
             URL of the generated image, or None if generation failed
@@ -48,6 +48,7 @@ class GameImageGenerator:
         try:
             # Combine prompt with style preset
             full_prompt = f"{prompt}, {self.style_presets.get(style, '')}"
+            print(f"DALL-E prompt: {full_prompt[:150]}...")
             
             response = self.client.images.generate(
                 model="dall-e-3",
@@ -57,9 +58,17 @@ class GameImageGenerator:
                 n=1,
             )
             
-            return response.data[0].url
+            if response and response.data and len(response.data) > 0:
+                url = response.data[0].url
+                print(f"Successfully generated image URL: {url[:50]}...")
+                return url
+            else:
+                print("DALL-E response was empty or invalid")
+                return None
+                
         except Exception as e:
-            print(f"Error generating image: {e}")
+            print(f"Error generating image with DALL-E: {e}")
+            print(f"Prompt was: {prompt[:100]}...")
             return None
     
     def download_image(self, url: str, filepath: str) -> bool:
@@ -72,18 +81,26 @@ class GameImageGenerator:
         Returns:
             True if successful, False otherwise
         """
+        if not url or url.strip() == "":
+            print(f"Error downloading image: URL is empty or None")
+            return False
+            
         try:
+            print(f"Downloading image from {url[:50]}... to {filepath}")
             response = requests.get(url)
             response.raise_for_status()
             
-            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+            # Create directory if it doesn't exist
+            if filepath and os.path.dirname(filepath):
+                os.makedirs(os.path.dirname(filepath), exist_ok=True)
             
             with open(filepath, 'wb') as f:
                 f.write(response.content)
             
+            print(f"Successfully downloaded image to {filepath}")
             return True
         except Exception as e:
-            print(f"Error downloading image: {e}")
+            print(f"Error downloading image from {url}: {e}")
             return False
     
     def generate_cover_image(self, game_config: Dict) -> Optional[str]:
@@ -99,12 +116,15 @@ class GameImageGenerator:
         theme = game_config.get('theme', 'mysterious')
         setting = game_config.get('setting', 'fantasy')
         
-        prompt = f"Book cover for '{title}', a {theme} social deduction game set in a {setting} world. Dramatic title design, mysterious atmosphere, group of diverse characters in shadows, intrigue and suspense"
+        prompt = f"Atmospheric illustration for {theme} social deduction game, {setting} environment. Group of mysterious figures in shadows, dramatic lighting, intrigue and suspense atmosphere. Digital artwork, no text, no words, no book elements, pure illustration only, cinematic composition"
         
+        print(f"Generating cover image with prompt: {prompt[:100]}...")
         url = self.generate_image(prompt, 'cover', "1024x1024")
         if not url:
+            print("Failed to generate cover image URL")
             return None
         
+        print(f"Generated cover image URL: {url[:50]}...")
         filepath = "cover_image.png"
         if self.download_image(url, filepath):
             return filepath
@@ -121,9 +141,10 @@ class GameImageGenerator:
         Returns:
             Local filepath of the generated role image, or None if failed
         """
-        prompt = f"{role_name} character from a {game_theme} social deduction game. {role_description}. Portrait style, detailed character design, mysterious atmosphere"
+        # Create a prompt specifically for pure character illustration without any text elements
+        prompt = f"Character portrait illustration, {game_theme} setting, mysterious person. Digital artwork, portrait style, atmospheric lighting. IMPORTANT: absolutely no text, no words, no letters, no writing, no symbols, no labels, no titles anywhere in the image. Pure character art only, clean artwork without any textual elements whatsoever"
         
-        url = self.generate_image(prompt, 'role_card', "512x512")
+        url = self.generate_image(prompt, 'role_card', "1024x1024")
         if not url:
             return None
         
@@ -174,7 +195,9 @@ class GameImageGenerator:
                 )
                 
                 if role_path:
-                    assets[f'role_{role_name.lower()}'] = role_path
+                    # Use consistent naming for assets dictionary
+                    safe_name = re.sub(r'[^a-zA-Z0-9_]', '_', role_name.lower())
+                    assets[f'role_{safe_name}'] = role_path
                     print(f"✓ Role image generated: {role_path}")
                 else:
                     print(f"✗ Failed to generate image for {role_name}")
@@ -202,39 +225,97 @@ def create_game_config_from_rules(rule_file_path: str) -> Dict:
     }
     
     try:
-        with open(rule_file_path, 'r', encoding='utf-8') as f:
-            content = f.read()
+        import importlib.util
+        import sys
         
-        # Extract title from filename or content
-        filename = os.path.basename(rule_file_path)
-        if filename.endswith('.py'):
-            config['title'] = filename[:-3].replace('_', ' ').title()
+        # Import the rule module using importlib
+        spec = importlib.util.spec_from_file_location("rule_module", rule_file_path)
+        rule_module = importlib.util.module_from_spec(spec)
+        sys.modules["rule_module"] = rule_module
+        spec.loader.exec_module(rule_module)
         
-        # Look for role definitions
-        role_pattern = r'class\s+(\w+).*?:|def\s+(\w+)_role.*?:|"(\w+)"\s*:\s*{|(\w+)\s*=\s*Role\('
-        roles_found = re.findall(role_pattern, content, re.IGNORECASE)
-        
-        for role_match in roles_found:
-            role_name = next(name for name in role_match if name)
-            if role_name and not role_name.lower() in ['init', 'main', 'game', 'player']:
-                config['roles'].append({
-                    'name': role_name,
-                    'description': f'A {role_name.lower()} character with mysterious abilities'
-                })
-        
-        # Try to detect theme from content
-        if any(word in content.lower() for word in ['vampire', 'werewolf', 'witch', 'magic']):
-            config['theme'] = 'dark fantasy'
-            config['setting'] = 'gothic'
-        elif any(word in content.lower() for word in ['spy', 'agent', 'resistance', 'saboteur']):
-            config['theme'] = 'espionage'
-            config['setting'] = 'modern'
-        elif any(word in content.lower() for word in ['space', 'alien', 'robot', 'cyber']):
-            config['theme'] = 'sci-fi'
-            config['setting'] = 'futuristic'
+        # Extract RULEBOOK dictionary from the module
+        if hasattr(rule_module, 'RULEBOOK'):
+            rulebook = rule_module.RULEBOOK
+            
+            # Extract title from module or file name
+            filename = os.path.basename(rule_file_path)
+            if filename.endswith('.py'):
+                config['title'] = filename[:-3].replace('_', ' ').title()
+            
+            # Extract roles from the role section
+            if 'role' in rulebook:
+                role_content = rulebook['role']
+                
+                for role_name, role_description in role_content.items():
+                    if role_name and not role_name.lower() in ['init', 'main', 'game', 'player']:
+                        # Extract a brief description from the role text
+                        description = role_description.strip()
+                        config['roles'].append({
+                            'name': role_name,
+                            'description': description
+                        })
+            
+            # Try to detect theme from common section content
+            if 'common' in rulebook:
+                content = rulebook['common'].lower()
+                if any(word in content for word in ['vampire', 'werewolf', 'witch', 'magic']):
+                    config['theme'] = 'dark fantasy'
+                    config['setting'] = 'gothic'
+                elif any(word in content for word in ['spy', 'agent', 'resistance', 'saboteur']):
+                    config['theme'] = 'espionage'
+                    config['setting'] = 'modern'
+                elif any(word in content for word in ['space', 'alien', 'robot', 'cyber']):
+                    config['theme'] = 'sci-fi'
+                    config['setting'] = 'futuristic'
+                elif any(word in content for word in ['medieval', 'knight', 'castle', 'kingdom']):
+                    config['theme'] = 'fantasy'
+                    config['setting'] = 'medieval'
+        else:
+            print(f"Warning: RULEBOOK not found in {rule_file_path}, using fallback method")
+            # Fallback to reading file content if RULEBOOK is not available
+            with open(rule_file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Extract title from filename
+            filename = os.path.basename(rule_file_path)
+            if filename.endswith('.py'):
+                config['title'] = filename[:-3].replace('_', ' ').title()
+            
+            # Look for role definitions in fallback mode
+            role_pattern = r'"(\w+)"\s*:\s*"""(.*?)"""'
+            roles_found = re.findall(role_pattern, content, re.DOTALL)
+            
+            for role_name, role_description in roles_found:
+                if role_name and not role_name.lower() in ['init', 'main', 'game', 'player']:
+                    config['roles'].append({
+                        'name': role_name,
+                        'description': role_description.strip()[:100] + '...' if len(role_description.strip()) > 100 else role_description.strip()
+                    })
     
     except Exception as e:
-        print(f"Error parsing rule file: {e}")
+        print(f"Error importing rule module from {rule_file_path}: {e}")
+        # Fallback to original file reading method
+        try:
+            with open(rule_file_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            filename = os.path.basename(rule_file_path)
+            if filename.endswith('.py'):
+                config['title'] = filename[:-3].replace('_', ' ').title()
+            
+            # Simple fallback role extraction
+            role_pattern = r'"(\w+)"\s*:'
+            roles_found = re.findall(role_pattern, content)
+            
+            for role_name in roles_found:
+                if role_name and not role_name.lower() in ['init', 'main', 'game', 'player', 'common', 'role', 'gm_guideline', 'system_guideline']:
+                    config['roles'].append({
+                        'name': role_name,
+                        'description': f'A {role_name.lower()} character with mysterious abilities'
+                    })
+        except Exception as fallback_e:
+            print(f"Fallback method also failed: {fallback_e}")
     
     return config
 
