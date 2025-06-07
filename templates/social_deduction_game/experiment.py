@@ -6,9 +6,9 @@ import time
 import asyncio
 import tempfile
 import shutil
+import re
 from pathlib import Path
 import importlib.util
-import re
 from typing import Dict, List, Any
 
 # Add your experiment-specific imports here
@@ -16,6 +16,10 @@ import numpy as np
 
 # Import LLM utilities from the unified client
 from llm_client import get_llm_client
+from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+from langchain.prompts import ChatPromptTemplate
+from langchain.schema import SystemMessage
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -49,15 +53,11 @@ def generate_rule_file(idea: Dict[str, Any], output_path: str) -> bool:
     description = idea.get("Experiment", "A new social deduction game")
     
     try:
-        # Create LangChain LLM client using unified configuration
-        from langchain_openai import ChatOpenAI
-        
         # Get client from unified configuration
         client, model_name = get_llm_client()
         
         # Create LangChain wrapper for the configured client
         if "claude" in model_name:
-            from langchain_anthropic import ChatAnthropic
             llm_client = ChatAnthropic(
                 model=model_name,
                 temperature=0.1,
@@ -160,15 +160,10 @@ CRITICAL RULES:
 Generate a complete, working Python rule file that implements this specific social deduction game idea. The output should be valid Python code ready to run with the new GameSystem architecture."""
 
         # Get LLM response using LangChain API
-        from langchain.prompts import ChatPromptTemplate
-        from langchain.schema import SystemMessage
-        
-        prompt_template = ChatPromptTemplate.from_messages([
+        chain = ChatPromptTemplate.from_messages([
             SystemMessage(content="You are an experienced game designer. Please convert the given game idea into a complete social deduction game rule file. Follow the provided example structure exactly and implement specific game mechanics without using placeholders."),
             ("human", "{prompt}")
-        ])
-        
-        chain = prompt_template | llm_client
+        ]) | llm_client
         response = chain.invoke({"prompt": prompt})
         
         # Extract content from response
@@ -278,10 +273,6 @@ def evaluate_game_quality(new_game_results: Dict, baseline_results: Dict, rule_f
     Evaluate the quality of the new game compared to baseline using both rule analysis and gameplay logs.
     This comprehensive version analyzes rule coherence, balance, and actual gameplay quality.
     """
-    from langchain.prompts import ChatPromptTemplate
-    from langchain.schema import SystemMessage
-    from langchain.output_parsers.json import SimpleJsonOutputParser
-    
     metrics = {}
     
     # Basic completion metrics (updated to consider max turns)
@@ -316,37 +307,9 @@ def evaluate_game_quality(new_game_results: Dict, baseline_results: Dict, rule_f
             with open(rule_file_path, 'r', encoding='utf-8') as f:
                 rule_content = f.read()
             
-            # Create LLM for rule analysis using unified configuration
-            try:
-                from langchain_openai import ChatOpenAI
-                from langchain_anthropic import ChatAnthropic
-                
-                # Get client from unified configuration
-                client, model_name = get_llm_client()
-                
-                # Create LangChain wrapper for the configured client
-                if "claude" in model_name:
-                    llm = ChatAnthropic(
-                        model=model_name,
-                        temperature=0.1,
-                        anthropic_api_key=client.api_key
-                    )
-                else:
-                    # For OpenAI-compatible APIs
-                    llm = ChatOpenAI(
-                        model=model_name,
-                        temperature=0.1,
-                        openai_api_key=client.api_key,
-                        openai_api_base=getattr(client, 'base_url', None)
-                    )
-                    
-            except Exception:
-                # Fallback to basic analysis if LLM unavailable
-                rule_analysis = {"error": "LLM unavailable for rule analysis"}
-            else:
-                # LLM-based rule analysis
-                rule_analyzer = ChatPromptTemplate.from_messages([
-                    SystemMessage(content="""You are a game design expert analyzing social deduction game rules. 
+            # LLM-based rule analysis
+            rule_analyzer = ChatPromptTemplate.from_messages([
+                SystemMessage(content="""You are a game design expert analyzing social deduction game rules. 
 Evaluate the game rules on multiple dimensions and provide scores from 0.0 to 1.0.
 
 Analysis dimensions:
@@ -368,15 +331,15 @@ Respond with ONLY valid JSON matching this exact format:
   "overall_rule_quality": 0.77,
   "reasoning": "Brief explanation of the analysis"
 }"""),
-                    ("human", "Analyze these social deduction game rules:\n\n{rule_content}")
-                ]) | llm | SimpleJsonOutputParser()
-                
-                try:
-                    rule_analysis = rule_analyzer.invoke({"rule_content": rule_content})
-                    if not isinstance(rule_analysis, dict):
-                        rule_analysis = {"error": "Invalid rule analysis response"}
-                except Exception as e:
-                    rule_analysis = {"error": f"Rule analysis failed: {str(e)}"}
+                ("human", "Analyze these social deduction game rules:\n\n{rule_content}")
+            ]) | get_llm_client() | SimpleJsonOutputParser()
+            
+            try:
+                rule_analysis = rule_analyzer.invoke({"rule_content": rule_content})
+                if not isinstance(rule_analysis, dict):
+                    rule_analysis = {"error": "Invalid rule analysis response"}
+            except Exception as e:
+                rule_analysis = {"error": f"Rule analysis failed: {str(e)}"}
         
         except Exception as e:
             rule_analysis = {"error": f"Failed to read rule file: {str(e)}"}
@@ -431,28 +394,6 @@ Respond with ONLY valid JSON matching this exact format:
             
             if dialogue_text.strip():
                 try:
-                    from langchain_openai import ChatOpenAI
-                    from langchain_anthropic import ChatAnthropic
-                    
-                    # Get client from unified configuration
-                    client, model_name = get_llm_client()
-                    
-                    # Create LangChain wrapper for the configured client
-                    if "claude" in model_name:
-                        llm = ChatAnthropic(
-                            model=model_name,
-                            temperature=0.1,
-                            anthropic_api_key=client.api_key
-                        )
-                    else:
-                        # For OpenAI-compatible APIs
-                        llm = ChatOpenAI(
-                            model=model_name,
-                            temperature=0.1,
-                            openai_api_key=client.api_key,
-                            openai_api_base=getattr(client, 'base_url', None)
-                        )
-                    
                     dialogue_analyzer = ChatPromptTemplate.from_messages([
                         SystemMessage(content="""You are analyzing social deduction game dialogue quality.
 Rate the conversation on these dimensions (0.0 to 1.0):
@@ -476,7 +417,7 @@ Respond with ONLY valid JSON:
   "reasoning": "Brief explanation"
 }"""),
                         ("human", "Analyze this social deduction game dialogue:\n\nRULE CONTEXT:\n{rule_summary}\n\nDIALOGUE:\n{dialogue}")
-                    ]) | llm | SimpleJsonOutputParser()
+                    ]) | get_llm_client() | SimpleJsonOutputParser()
                     
                     # Extract rule summary for context
                     rule_summary = "No rule context available"
