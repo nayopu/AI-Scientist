@@ -15,7 +15,7 @@ coder_prompt = """Your goal is to implement the following idea: {title}.
 The proposed experiment is as follows: {idea}.
 You are given a total of up to {max_runs} runs to complete the necessary experiments. You do not need to use all {max_runs}.
 
-First, plan the list of experiments you would like to run. You can only modify the number of players (num_players) between runs. All other parameters (max_turns, player_model, etc.) will remain fixed.
+First, plan the list of experiments you would like to run. You should modify the experimental configuration within the experiment.py file itself, including the number of players and any other parameters you want to vary between runs.
 
 Note that we already provide the vanilla baseline results, so you do not need to re-run it.
 
@@ -23,7 +23,7 @@ For reference, the baseline results are as follows:
 
 {baseline_results}
 
-After you complete each change, we will run the command `python experiment.py --out_dir=run_i --num_players=N' where i is the run number and N is the number of players you want to test. Each configuration will be run multiple times in parallel for statistical significance, and the results will include means and standard deviations.
+After you complete each change, we will run the command `python experiment.py --out_dir=run_i' where i is the run number. The experiment configuration (number of players, game rules, etc.) should be determined programmatically within experiment.py based on the run number or experimental design. Each configuration will be run multiple times in parallel for statistical significance, and the results will include means and standard deviations.
 YOUR PROPOSED CHANGE MUST USE THIS COMMAND FORMAT, DO NOT ADD ADDITIONAL COMMAND LINE ARGS.
 You can then implement the next thing on your list."""
 
@@ -38,7 +38,6 @@ def run_experiment(
     client=None,
     model: str = "gpt-4o-mini",
     idea: Dict[str, Any] = None,
-    num_players: int = 5,
     max_turns: int = 100,
     player_model: str = "openrouter:deepseek/deepseek-r1-0528",
     gm_model: str = None,
@@ -65,8 +64,6 @@ def run_experiment(
         LLM model name to pass to experiment.py.
     idea : Dict[str, Any], optional
         Game idea dictionary to pass to experiment.py as JSON.
-    num_players : int, optional
-        Number of players in the social deduction game. This is the only parameter that can be modified between runs.
     max_turns : int, optional
         Maximum number of turns before game ends. This value is fixed from launch_scientist.py.
     player_model : str, optional
@@ -112,7 +109,6 @@ def run_experiment(
             f"--out_dir=run_{run_num}",
             f"--model={model}",
             f"--api={api}",
-            f"--num_players={num_players}",
             f"--max_turns={max_turns}",
             f"--player_model={player_model}",
             f"--num_game_runs={num_game_runs}",
@@ -129,7 +125,6 @@ def run_experiment(
             f"--out_dir=run_{run_num}",
             f"--model={model}",
             f"--api={api}",
-            f"--num_players={num_players}",
             f"--max_turns={max_turns}",
             f"--player_model={player_model}",
             f"--num_game_runs={num_game_runs}",
@@ -183,7 +178,8 @@ Someone else will be using `notes.txt` to perform a writeup on this in the futur
 Please include *all* relevant information for the writeup on Run {run_num}, including an experiment description and the run number. Be as verbose as necessary.
 
 Then, implement the next thing on your list.
-We will then run the command `python experiment.py --out_dir=run_{run_num + 1}'.
+We will then run the command `python experiment.py --out_dir=run_{run_num + 1}`.
+The experiment configuration (number of players, game rules, etc.) should be determined programmatically within experiment.py based on the run number or experimental design.
 YOUR PROPOSED CHANGE MUST USE THIS COMMAND FORMAT, DO NOT ADD ADDITIONAL COMMAND LINE ARGS.
 If you are finished with experiments, respond with 'ALL_COMPLETED'."""
         return result.returncode, next_prompt
@@ -263,7 +259,6 @@ def perform_experiments(
     docker_image: str = "ai-scientist:latest",
     client=None,
     model: str = "gpt-4o-mini",
-    num_players: int = 5,
     max_turns: int = 100,
     player_model: str = "openrouter:deepseek/deepseek-r1-0528",
     gm_model: str = None,
@@ -294,7 +289,6 @@ def perform_experiments(
             client=client,
             model=model,
             idea=idea,
-            num_players=num_players,
             max_turns=max_turns,
             player_model=player_model,
             gm_model=gm_model,

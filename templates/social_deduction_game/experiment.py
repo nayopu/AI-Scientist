@@ -32,8 +32,6 @@ def parse_args():
     parser.add_argument("--idea", type=str, help="JSON string of the idea to implement")
     parser.add_argument("--max_turns", type=int, default=100,
                         help="Maximum number of turns before game ends (default: 100)")
-    parser.add_argument("--num_players", type=int, default=5,
-                        help="Number of players in the game (default: 5)")
     parser.add_argument("--player_model", type=str, default="openrouter:deepseek/deepseek-r1-0528",
                         help="Model specification for players in format 'api:model_name' (default: openrouter:deepseek/deepseek-r1-0528)")
     parser.add_argument("--gm_model", type=str, default=None,
@@ -761,6 +759,43 @@ Respond with ONLY valid JSON:
     
     return metrics
 
+def determine_num_players(out_dir: str, idea: Dict[str, Any] = None) -> int:
+    """
+    Determine the number of players for this experiment run based on the output directory.
+    This allows different runs to test different player counts.
+    """
+    # Extract run number from output directory (e.g., "run_1" -> 1)
+    run_match = re.search(r'run_(\d+)', out_dir)
+    if run_match:
+        run_num = int(run_match.group(1))
+    else:
+        run_num = 0  # Default for baseline or unknown format
+    
+    # Experimental design: vary player count based on run number
+    # Run 0: Baseline (5 players) - this should already exist
+    # Run 1: Test with 3 players (minimum for most social deduction games)
+    # Run 2: Test with 4 players 
+    # Run 3: Test with 6 players
+    # Run 4: Test with 7 players
+    # Run 5+: Test with 8 players (maximum for complexity)
+    
+    player_count_map = {
+        0: 5,  # Baseline
+        1: 3,  # Minimum players
+        2: 4,  # Small group
+        3: 6,  # Medium group
+        4: 7,  # Large group
+        5: 8,  # Maximum players
+    }
+    
+    # For runs beyond 5, cycle through different player counts
+    if run_num > 5:
+        # Cycle through 3-8 players for additional runs
+        player_counts = [3, 4, 5, 6, 7, 8]
+        return player_counts[(run_num - 6) % len(player_counts)]
+    
+    return player_count_map.get(run_num, 5)  # Default to 5 if not found
+
 def run_experiment(args=None):
     """
     Main experiment function for social deduction game testing.
@@ -785,7 +820,9 @@ def run_experiment(args=None):
             "Experiment": "A simple test game for validation"
         }
     
-    print(f"Testing idea: {idea['Name']}")
+    # Determine number of players based on experimental design
+    num_players = determine_num_players(args.out_dir, idea)
+    print(f"Testing idea: {idea['Name']} with {num_players} players (determined from run configuration)")
     
     # Generate rule file
     rule_file_name = 'rule'
@@ -804,7 +841,7 @@ def run_experiment(args=None):
     aggregated_results = run_game_simulation_multiple(
         rule_module, 
         args.out_dir, 
-        num_players=args.num_players,
+        num_players=num_players,
         max_turns=args.max_turns,
         player_model=args.player_model,
         gm_model=args.gm_model,
@@ -948,6 +985,7 @@ def run_experiment(args=None):
         "success_rate": aggregated_stats.get("success_rate", 1.0 if new_game_results.get("success", False) else 0.0),
         
         "game_stats": {
+            "num_players": num_players,
             "new_game_turns_mean": turn_count_stats["mean"],
             "new_game_turns_std": turn_count_stats["std"],
             "new_game_max_turns": new_game_results.get("max_turns", 100),

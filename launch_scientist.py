@@ -92,12 +92,6 @@ def parse_arguments():
     )
     # Game-specific arguments
     parser.add_argument(
-        "--num-players",
-        type=int,
-        default=5,
-        help="Number of players in the social deduction game (default: 5)",
-    )
-    parser.add_argument(
         "--max-turns",
         type=int,
         default=100,
@@ -162,7 +156,6 @@ def worker(
         docker_image,
         experiment="social_deduction_game",
         engine="semanticscholar",
-        num_players=5,
         max_turns=100,
         player_model="openrouter:deepseek/deepseek-r1-0528",
         gm_model=None,
@@ -191,7 +184,6 @@ def worker(
             log_file=True,
             experiment=experiment,
             engine=engine,
-            num_players=num_players,
             max_turns=max_turns,
             player_model=player_model,
             gm_model=gm_model,
@@ -214,7 +206,6 @@ def do_idea(
         log_file=False,
         experiment="social_deduction_game",
         engine="semanticscholar",
-        num_players=5,
         max_turns=100,
         player_model="openrouter:deepseek/deepseek-r1-0528",
         gm_model=None,
@@ -292,7 +283,6 @@ def do_idea(
                 docker_image=docker_image,
                 client=client,
                 model=client_model,
-                num_players=num_players,
                 max_turns=max_turns,
                 player_model=player_model,
                 gm_model=gm_model,
@@ -491,7 +481,6 @@ if __name__ == "__main__":
                     args.docker_image,
                     args.experiment,
                     args.engine,
-                    args.num_players,
                     args.max_turns,
                     args.player_model,
                     args.gm_model,
@@ -526,7 +515,6 @@ if __name__ == "__main__":
                     args.docker_image,
                     experiment=args.experiment,
                     engine=args.engine,
-                    num_players=args.num_players,
                     max_turns=args.max_turns,
                     player_model=args.player_model,
                     gm_model=args.gm_model,
