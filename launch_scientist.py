@@ -344,7 +344,7 @@ def do_idea(
                 
                 if "social_deduction" in base_dir or experiment == "social_deduction_game":
                     # Use game manual review for social deduction games
-                    manual_text = load_paper(f"{folder_name}/{idea['Name']}.pdf")
+                    manual_text = load_paper(f"{folder_name}/{idea['Name']}_manual.pdf")
                     review = perform_game_manual_review(
                         manual_text,
                         model=review_model,

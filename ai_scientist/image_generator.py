@@ -127,13 +127,12 @@ class GameImageGenerator:
             return filepath
         return None
     
-    def generate_role_image(self, role_name: str, role_description: str, game_theme: str = 'fantasy') -> Optional[str]:
+    def generate_role_image(self, role_name: str, role_description: str) -> Optional[str]:
         """Generate an image for a specific role card.
         
         Args:
             role_name: Name of the role
             role_description: Description of the role's appearance/characteristics
-            game_theme: Theme of the game (fantasy, modern, sci-fi, etc.)
             
         Returns:
             Local filepath of the generated role image, or None if failed
@@ -142,7 +141,7 @@ class GameImageGenerator:
         # Extract key visual elements from role description while avoiding game mechanics
         role_visual_hint = self._extract_visual_elements(role_name, role_description)
         
-        prompt = f"Character portrait illustration of a {role_visual_hint}, {game_theme} setting. Digital artwork, portrait style, atmospheric lighting, detailed character design. IMPORTANT: absolutely no text, no words, no letters, no writing, no symbols, no labels, no titles anywhere in the image. Pure character art only, clean artwork without any textual elements whatsoever"
+        prompt = f"Character portrait illustration of a {role_visual_hint}. Digital artwork, portrait style, atmospheric lighting, detailed character design. IMPORTANT: absolutely no text, no words, no letters, no writing, no symbols, no labels, no titles anywhere in the image. Pure character art only, clean artwork without any textual elements whatsoever"
         
         url = self.generate_image(prompt, 'role_card', "1024x1024")
         if not url:
@@ -178,18 +177,19 @@ Role Name: {role_name}
 Role Description: {role_description}
 
 Generate a 1-2 sentence visual description focusing on:
-- Physical appearance and clothing style
-- Facial expression or demeanor 
+- Physical appearance and clothing style appropriate for the role
+- Facial expression or demeanor that matches the character
 - Visual elements that convey the role's nature/personality
+- Art style and setting that best fits this character (fantasy, modern, sci-fi, historical, etc.)
 - Avoid mentioning specific game mechanics or abilities
 
-The description should be suitable for fantasy/medieval character art generation.
+Let the role itself determine the visual style and setting. Choose whatever artistic approach best represents this character.
 
-Example format: "A wise scholar with kind eyes and flowing robes, carrying ancient tomes" or "A shadowy figure with calculating gaze, dressed in dark hooded cloak"
+Example format: "A wise scholar with kind eyes and flowing medieval robes, carrying ancient tomes" or "A shadowy modern spy with calculating gaze, dressed in a dark business suit" or "A futuristic android with glowing circuits, wearing sleek metallic armor"
 
 Visual description:"""
 
-            system_message = "You are an expert character artist creating visual descriptions for fantasy game characters. Focus on visual appearance, clothing, and demeanor rather than game mechanics."
+            system_message = "You are an expert character artist creating visual descriptions for game characters. Choose the art style, setting, and visual approach that best represents each specific role. Let the character's nature determine the visual aesthetic rather than forcing a single theme."
             
             response, _ = get_response_from_llm(
                 prompt,
@@ -245,8 +245,6 @@ Visual description:"""
             
             # Extract game information
             title = game_config.get('title', 'Social Deduction Game')
-            theme = game_config.get('theme', 'fantasy')
-            setting = game_config.get('setting', 'medieval')
             roles = game_config.get('roles', [])
             
             # Create role summary for context
@@ -256,20 +254,19 @@ Visual description:"""
             prompt = f"""Create a visual description for a cover image of a social deduction game with these details:
 
 Game Title: {title}
-Theme: {theme}
-Setting: {setting}
 Main Roles in Game: {role_summary}
 
-Generate a detailed 2-3 sentence visual description for an atmospheric cover illustration that:
-- Captures the mood and setting of the game
+Based on the game title and roles, determine the most appropriate visual style, setting, and artistic approach. Generate a detailed 2-3 sentence visual description for an atmospheric cover illustration that:
+- Captures the mood and setting that best fits this specific game
 - Shows multiple figures that represent the social deduction aspect (hidden identities, intrigue)
 - Uses appropriate atmospheric elements (lighting, environment, composition)
+- Chooses the visual style (fantasy, modern, sci-fi, historical, etc.) that best matches the game content
 - Avoids showing specific text, words, or book elements
 - Creates a sense of mystery, tension, and the theme of hidden identities
 
 The description should be suitable for generating a professional game manual cover illustration.
 
-Example format: "A moonlit medieval courtyard where shadowy figures in elaborate robes gather around a central fountain, their faces partially hidden, with dramatic chiaroscuro lighting creating an atmosphere of intrigue and hidden motives."
+Example format: "A moonlit medieval courtyard where shadowy figures in elaborate robes gather around a central fountain, their faces partially hidden, with dramatic chiaroscuro lighting creating an atmosphere of intrigue and hidden motives." or "A modern corporate boardroom with silhouetted figures in business suits seated around a glass table, harsh fluorescent lighting casting suspicious shadows as they engage in tense negotiations."
 
 Visual description:"""
 
@@ -299,10 +296,8 @@ Visual description:"""
             print(f"Error generating cover description with LLM: {e}")
             # Fallback to basic description
             title = game_config.get('title', 'Social Deduction Game')
-            theme = game_config.get('theme', 'mysterious')
-            setting = game_config.get('setting', 'fantasy')
             
-            return f"Atmospheric illustration for {theme} social deduction game in {setting} environment. Group of mysterious figures in shadows, dramatic lighting, intrigue and suspense atmosphere. Digital artwork, no text, no words, pure illustration only, cinematic composition"
+            return f"Atmospheric illustration for social deduction game titled '{title}'. Group of mysterious figures in shadows, dramatic lighting, intrigue and suspense atmosphere. Digital artwork, no text, no words, pure illustration only, cinematic composition"
     
     def generate_game_assets(self, game_config: Dict, output_dir: str = ".") -> Dict[str, str]:
         """Generate all image assets for a social deduction game.
@@ -338,8 +333,7 @@ Visual description:"""
                 print(f"Generating image for {role_name}...")
                 role_path = self.generate_role_image(
                     role_name, 
-                    role_desc, 
-                    game_config.get('theme', 'fantasy')
+                    role_desc
                 )
                 
                 if role_path:
@@ -367,8 +361,6 @@ def create_game_config_from_rules(rule_file_path: str) -> Dict:
     """
     config = {
         'title': 'Social Deduction Game',
-        'theme': 'fantasy',
-        'setting': 'medieval',
         'roles': []
     }
     
@@ -403,22 +395,6 @@ def create_game_config_from_rules(rule_file_path: str) -> Dict:
                             'name': role_name,
                             'description': description
                         })
-            
-            # Try to detect theme from common section content
-            if 'common' in rulebook:
-                content = rulebook['common'].lower()
-                if any(word in content for word in ['vampire', 'werewolf', 'witch', 'magic']):
-                    config['theme'] = 'dark fantasy'
-                    config['setting'] = 'gothic'
-                elif any(word in content for word in ['spy', 'agent', 'resistance', 'saboteur']):
-                    config['theme'] = 'espionage'
-                    config['setting'] = 'modern'
-                elif any(word in content for word in ['space', 'alien', 'robot', 'cyber']):
-                    config['theme'] = 'sci-fi'
-                    config['setting'] = 'futuristic'
-                elif any(word in content for word in ['medieval', 'knight', 'castle', 'kingdom']):
-                    config['theme'] = 'fantasy'
-                    config['setting'] = 'medieval'
         else:
             print(f"Warning: RULEBOOK not found in {rule_file_path}, using fallback method")
             # Fallback to reading file content if RULEBOOK is not available
@@ -476,8 +452,6 @@ if __name__ == "__main__":
     # Example game config
     test_config = {
         'title': 'Shadows of Betrayal',
-        'theme': 'dark fantasy',
-        'setting': 'gothic medieval',
         'roles': [
             {'name': 'Villager', 'description': 'An innocent townsperson trying to survive'},
             {'name': 'Werewolf', 'description': 'A shapeshifter hiding among the villagers'},

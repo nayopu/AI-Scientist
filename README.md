@@ -337,10 +337,10 @@ python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
   --search-api openai \
   --skip-novelty-check
 
-python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
-  --num-players 5 --max-turns 30 \
+python launch_scientist.py --experiment social_deduction_game --max-ideas 1 \
+  --num-players 5 --max-turns 50 \
   --player-model "openrouter:deepseek/deepseek-r1-0528" \
-  --player-model "openai:o3" \
+  --gm-model "openai:o3" \
   --search-api openai \
   --skip-novelty-check \
   --skip-idea-generation

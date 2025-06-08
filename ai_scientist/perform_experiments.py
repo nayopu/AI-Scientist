@@ -37,6 +37,7 @@ def run_experiment(
     docker_image: str = "ai-scientist:latest",
     client=None,
     model: str = "gpt-4o-mini",
+    idea: Dict[str, Any] = None,
     num_players: int = 5,
     max_turns: int = 100,
     player_model: str = "openrouter:deepseek/deepseek-r1-0528",
@@ -61,6 +62,8 @@ def run_experiment(
         LLM client object (for determining API type).
     model : str, optional
         LLM model name to pass to experiment.py.
+    idea : Dict[str, Any], optional
+        Game idea dictionary to pass to experiment.py as JSON.
     num_players : int, optional
         Number of players in the social deduction game.
     max_turns : int, optional
@@ -110,6 +113,8 @@ def run_experiment(
             f"--max_turns={max_turns}",
             f"--player_model={player_model}",
         ]
+        if idea:
+            command.append(f"--idea={json.dumps(idea)}")
         if gm_model:
             command.append(f"--gm_model={gm_model}")
         run_cwd = None
@@ -124,6 +129,8 @@ def run_experiment(
             f"--max_turns={max_turns}",
             f"--player_model={player_model}",
         ]
+        if idea:
+            command.append(f"--idea={json.dumps(idea)}")
         if gm_model:
             command.append(f"--gm_model={gm_model}")
         run_cwd = cwd
@@ -280,6 +287,7 @@ def perform_experiments(
             docker_image=docker_image,
             client=client,
             model=model,
+            idea=idea,
             num_players=num_players,
             max_turns=max_turns,
             player_model=player_model,

@@ -60,7 +60,7 @@ def create_llm(api_source: str, model_name: str, temperature: float = 0.1) -> Ch
     """
     api_source = api_source.lower()
     # o3-mini doesn't support temperature parameter
-    supports_temperature = not model_name.startswith("o3-mini")
+    supports_temperature = not model_name.startswith("o3")
     
     if api_source == "openai":
         api_key = os.environ.get("OPENAI_API_KEY")

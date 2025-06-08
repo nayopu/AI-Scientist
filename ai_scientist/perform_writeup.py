@@ -307,6 +307,46 @@ def generate_card_images(rule_file_path: str, output_dir: str, num_cards: int) -
     print(f"Generated {len(assets)} image assets")
     return assets
 
+def merge_role_card_pdfs(role_card_pdf_paths: List[str], cwd: str, output_filename: str = "role_cards_combined.pdf") -> str:
+    """Merge all role card PDFs into a single PDF"""
+    from pypdf import PdfWriter, PdfReader
+    
+    print("MERGING ROLE CARD PDFS")
+    
+    if not role_card_pdf_paths:
+        print("No role card PDFs provided to merge")
+        return None
+    
+    # Sort PDFs for consistent ordering
+    role_card_pdf_paths.sort()
+    
+    try:
+        # Create PdfWriter object
+        pdf_writer = PdfWriter()
+        
+        # Add each role card PDF to the writer
+        for pdf_path in role_card_pdf_paths:
+            print(f"Adding {osp.basename(pdf_path)} to combined PDF")
+            try:
+                pdf_reader = PdfReader(pdf_path)
+                for page in pdf_reader.pages:
+                    pdf_writer.add_page(page)
+            except Exception as e:
+                print(f"Error reading {pdf_path}: {e}")
+                continue
+        
+        # Write the combined PDF
+        output_path = osp.join(cwd, output_filename)
+        with open(output_path, 'wb') as output_file:
+            pdf_writer.write(output_file)
+        
+        print(f"Successfully merged {len(role_card_pdf_paths)} role card PDFs into: {output_path}")
+        return output_path
+        
+    except Exception as e:
+        print(f"Error merging role card PDFs: {e}")
+        return None
+
 def compile_latex(cwd: str, pdf_file: str, timeout: int = 30):
     """Compile LaTeX documents to PDF"""
     print("COMPILING LATEX DOCUMENTS")
@@ -352,6 +392,7 @@ def compile_latex(cwd: str, pdf_file: str, timeout: int = 30):
     # Compile role cards
     print("COMPILING ROLE CARDS")
     role_card_files = glob.glob(osp.join(cwd, "role_card_*.tex"))
+    compiled_pdfs = []
     
     for role_card_file in role_card_files:
         filename = osp.basename(role_card_file)
@@ -381,6 +422,7 @@ def compile_latex(cwd: str, pdf_file: str, timeout: int = 30):
             pdf_file_card = osp.join(cwd, f"{base_name}.pdf")
             if osp.exists(pdf_file_card):
                 print(f"Successfully generated: {pdf_file_card}")
+                compiled_pdfs.append(pdf_file_card)
             else:
                 print(f"Failed to generate PDF for: {filename}")
                 
@@ -388,6 +430,12 @@ def compile_latex(cwd: str, pdf_file: str, timeout: int = 30):
             print(f"Role card compilation timed out: {filename}")
         except subprocess.CalledProcessError as e:
             print(f"Error compiling role card {filename}: {e}")
+
+    # Merge all role card PDFs into a single PDF
+    if compiled_pdfs:
+        merged_pdf_path = merge_role_card_pdfs(compiled_pdfs, cwd)
+        if merged_pdf_path:
+            print(f"Role cards c1ombined into: {merged_pdf_path}")
 
     print("FINISHED COMPILING LATEX DOCUMENTS")
 
@@ -445,9 +493,14 @@ def perform_simplified_writeup(idea: Dict[str, Any], folder_name: str) -> bool:
         pdf_file = f"{folder_name}/{idea['Name']}_manual.pdf"
         compile_latex(latex_dir, pdf_file)
         
+        # Check if combined role cards PDF was created
+        combined_role_cards_pdf = osp.join(latex_dir, "role_cards_combined.pdf")
+        
         print(f"Writeup completed successfully! Generated files:")
         print(f"  - Main manual: {pdf_file}")
-        print(f"  - Role cards: {len(generated_card_files)} cards")
+        print(f"  - Role cards: {len(generated_card_files)} individual cards")
+        if osp.exists(combined_role_cards_pdf):
+            print(f"  - Combined role cards PDF: {combined_role_cards_pdf}")
         print(f"  - Images: {len(generated_images)} images")
         
         return True
