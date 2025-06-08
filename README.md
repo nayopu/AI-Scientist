@@ -336,6 +336,14 @@ python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
   --player-model "openai:o3-mini" \
   --search-api openai \
   --skip-novelty-check
+
+python launch_scientist.py --experiment social_deduction_game --max-ideas 2 \
+  --num-players 5 --max-turns 30 \
+  --player-model "openrouter:deepseek/deepseek-r1-0528" \
+  --player-model "openai:o3" \
+  --search-api openai \
+  --skip-novelty-check \
+  --skip-idea-generation
 ```
 
 ### Command Line Arguments
