@@ -469,65 +469,74 @@ Respond in JSON format:
 }}
 """
 
+    system_message = "You are an expert game design and technical writing reviewer."
+    initial_prompt = game_manual_review_prompt.format(manual_text=manual_text)
+    
     reviews = []
     
     for i in range(num_reviews_ensemble):
-        messages = [
-            {"role": "system", "content": "You are an expert game design and technical writing reviewer."},
-            {"role": "user", "content": game_manual_review_prompt.format(manual_text=manual_text)}
-        ]
+        msg_history = []
         
-        for j in range(num_reflections):
-            try:
-                response = client.chat.completions.create(
-                    model=model,
-                    messages=messages,
+        try:
+            # Get initial review
+            content, msg_history = get_response_from_llm(
+                initial_prompt,
+                system_message=system_message,
+                print_debug=False,
+                msg_history=msg_history,
+                temperature=temperature,
+                client=client,
+                model=model,
+            )
+            
+            # Perform reflections
+            for j in range(num_reflections - 1):
+                reflection_prompt = """Please reflect on your review and consider if you want to adjust any scores or add additional insights. 
+                Focus particularly on the three key criteria for game manuals:
+                - Can players actually reproduce the game from this manual?
+                - Is the manual clear and easy to follow?
+                - Is it concise while still being complete?
+                
+                Provide your final review in the same JSON format."""
+                
+                content, msg_history = get_response_from_llm(
+                    reflection_prompt,
+                    system_message=system_message,
+                    print_debug=False,
+                    msg_history=msg_history,
                     temperature=temperature,
-                    max_tokens=2000,
+                    client=client,
+                    model=model,
                 )
-                
-                content = response.choices[0].message.content
-                
-                # Try to extract JSON from the response
-                import json
-                import re
-                
-                # Look for JSON block
-                json_match = re.search(r'\{.*\}', content, re.DOTALL)
-                if json_match:
-                    review_json = json.loads(json_match.group())
-                    
-                    if j < num_reflections - 1:
-                        # Add reflection for next iteration
-                        messages.append({"role": "assistant", "content": content})
-                        messages.append({
-                            "role": "user", 
-                            "content": f"""Please reflect on your review and consider if you want to adjust any scores or add additional insights. 
-                            Focus particularly on the three key criteria for game manuals:
-                            - Can players actually reproduce the game from this manual?
-                            - Is the manual clear and easy to follow?
-                            - Is it concise while still being complete?
-                            
-                            Provide your final review in the same JSON format."""
-                        })
-                    else:
-                        reviews.append(review_json)
-                        break
+            
+            # Try to extract JSON from the final response
+            review_json = extract_json_between_markers(content)
+            if review_json:
+                reviews.append(review_json)
+            else:
+                # Fallback if JSON extraction fails
+                reviews.append({
+                    "Completeness": 5,
+                    "Clarity": 5,
+                    "Conciseness": 5,
+                    "Overall": 5,
+                    "Decision": "Reject",
+                    "Weaknesses": ["Unable to parse automated review"],
+                    "Suggestions": ["Manual review recommended"]
+                })
                         
-            except Exception as e:
-                print(f"Error in review iteration {i}, reflection {j}: {e}")
-                if j == num_reflections - 1:
-                    # Fallback review if all iterations fail
-                    reviews.append({
-                        "Completeness": 5,
-                        "Clarity": 5,
-                        "Conciseness": 5,
-                        "Overall": 5,
-                        "Decision": "Reject",
-                        "Weaknesses": ["Unable to complete automated review"],
-                        "Suggestions": ["Manual review recommended"]
-                    })
-                break
+        except Exception as e:
+            print(f"Error in review iteration {i}: {e}")
+            # Fallback review if iteration fails
+            reviews.append({
+                "Completeness": 5,
+                "Clarity": 5,
+                "Conciseness": 5,
+                "Overall": 5,
+                "Decision": "Reject",
+                "Weaknesses": ["Unable to complete automated review"],
+                "Suggestions": ["Manual review recommended"]
+            })
     
     if not reviews:
         return {

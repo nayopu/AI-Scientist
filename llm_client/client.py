@@ -156,7 +156,7 @@ def get_batch_responses_from_llm(
             content.append(c)
             new_msg_history.append(hist)
             
-    elif "o1" in model or "o3" in model:
+    elif model.startswith("o1") or model.startswith("o3"):
         # o1/o3 models have special handling regardless of provider
         new_msg_history = msg_history + [{"role": "user", "content": msg}]
         messages = [{"role": "user", "content": system_message}] + new_msg_history
