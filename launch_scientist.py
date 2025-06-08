@@ -115,6 +115,12 @@ def parse_arguments():
         default=None,
         help="Model specification for GM in format 'api:model_name' (if different from players)",
     )
+    parser.add_argument(
+        "--num-game-runs",
+        type=int,
+        default=5,
+        help="Number of times to run each game configuration for statistical significance (default: 5)",
+    )
     return parser.parse_args()
 
 
@@ -160,6 +166,7 @@ def worker(
         max_turns=100,
         player_model="openrouter:deepseek/deepseek-r1-0528",
         gm_model=None,
+        num_game_runs=5,
 ):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
     print(f"Worker {gpu_id} started.")
@@ -188,6 +195,7 @@ def worker(
             max_turns=max_turns,
             player_model=player_model,
             gm_model=gm_model,
+            num_game_runs=num_game_runs,
         )
         print(f"Completed idea: {idea['Name']}, Success: {success}")
     print(f"Worker {gpu_id} finished.")
@@ -210,6 +218,7 @@ def do_idea(
         max_turns=100,
         player_model="openrouter:deepseek/deepseek-r1-0528",
         gm_model=None,
+        num_game_runs=5,
 ):
     ## CREATE PROJECT FOLDER
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -287,6 +296,7 @@ def do_idea(
                 max_turns=max_turns,
                 player_model=player_model,
                 gm_model=gm_model,
+                num_game_runs=num_game_runs,
             )
         except Exception as e:
             print(f"Error during experiments: {e}")
@@ -485,6 +495,7 @@ if __name__ == "__main__":
                     args.max_turns,
                     args.player_model,
                     args.gm_model,
+                    args.num_game_runs,
                 ),
             )
             p.start()
@@ -519,6 +530,7 @@ if __name__ == "__main__":
                     max_turns=args.max_turns,
                     player_model=args.player_model,
                     gm_model=args.gm_model,
+                    num_game_runs=args.num_game_runs,
                 )
                 print(f"Completed idea: {idea['Name']}, Success: {success}")
             except Exception as e:

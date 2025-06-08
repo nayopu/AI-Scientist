@@ -5,7 +5,6 @@ import os.path as osp
 import re
 import shutil
 import subprocess
-import glob
 from pathlib import Path
 from typing import Optional, Tuple, Dict, List, Any
 
@@ -347,14 +346,21 @@ def merge_role_card_pdfs(role_card_pdf_paths: List[str], cwd: str, output_filena
         print(f"Error merging role card PDFs: {e}")
         return None
 
-def compile_latex(cwd: str, pdf_file: str, timeout: int = 30):
-    """Compile LaTeX documents to PDF"""
-    print("COMPILING LATEX DOCUMENTS")
-
-    # Compile main manual (manual.tex instead of template.tex)
+def compile_latex(tex_file_path: str, timeout: int = 30) -> str:
+    """Compile a single LaTeX file to PDF and return the PDF path"""
+    if not osp.exists(tex_file_path):
+        raise FileNotFoundError(f"LaTeX file not found: {tex_file_path}")
+    
+    cwd = osp.dirname(tex_file_path)
+    filename = osp.basename(tex_file_path)
+    base_name = filename[:-4]  # Remove .tex extension
+    
+    print(f"Compiling LaTeX file: {tex_file_path}")
+    
+    # Run pdflatex twice for proper cross-references
     commands = [
-        ["pdflatex", "-interaction=nonstopmode", "manual.tex"],
-        ["pdflatex", "-interaction=nonstopmode", "manual.tex"],
+        ["pdflatex", "-interaction=nonstopmode", filename],
+        ["pdflatex", "-interaction=nonstopmode", filename],
     ]
 
     for command in commands:
@@ -375,69 +381,71 @@ def compile_latex(cwd: str, pdf_file: str, timeout: int = 30):
                 print("STDERR:", result.stderr)
         except subprocess.TimeoutExpired:
             print(f"LaTeX timed out after {timeout} seconds")
+            raise
         except subprocess.CalledProcessError as e:
             print(f"Error running command {' '.join(command)}: {e}")
+            raise
 
-    # Move main PDF
-    manual_pdf = osp.join(cwd, "manual.pdf")
-    try:
-        if osp.exists(manual_pdf):
-            shutil.move(manual_pdf, pdf_file)
-            print(f"Successfully moved main PDF to: {pdf_file}")
-        else:
-            print(f"Manual PDF not found at: {manual_pdf}")
-    except Exception as e:
-        print(f"Error moving main PDF: {e}")
+    # Return the PDF path
+    pdf_file = osp.join(cwd, f"{base_name}.pdf")
+    if osp.exists(pdf_file):
+        print(f"Successfully generated PDF: {pdf_file}")
+        return pdf_file
+    else:
+        raise FileNotFoundError(f"PDF not generated: {pdf_file}")
 
-    # Compile role cards
-    print("COMPILING ROLE CARDS")
-    role_card_files = glob.glob(osp.join(cwd, "role_card_*.tex"))
-    compiled_pdfs = []
+def compile_game_documents(latex_dir: str, output_pdf_path: str, role_card_tex_files: List[str]) -> bool:
+    """Compile main manual and role cards, then merge role cards into combined PDF"""
+    print("COMPILING GAME DOCUMENTS")
     
-    for role_card_file in role_card_files:
-        filename = osp.basename(role_card_file)
-        base_name = filename[:-4]  # Remove .tex extension
-        
-        print(f"Compiling role card: {filename}")
-        
-        try:
-            # Run pdflatex for role cards
-            commands = [
-                ["pdflatex", "-interaction=nonstopmode", filename],
-                ["pdflatex", "-interaction=nonstopmode", filename]  # Second pass
-            ]
+    try:
+        # Compile main manual
+        manual_tex_path = osp.join(latex_dir, "manual.tex")
+        if osp.exists(manual_tex_path):
+            manual_pdf = compile_latex(manual_tex_path)
             
-            for command in commands:
-                result = subprocess.run(
-                    command,
-                    cwd=cwd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    text=True,
-                    encoding='utf-8',
-                    errors='replace',
-                    timeout=timeout,
-                )
-            
-            pdf_file_card = osp.join(cwd, f"{base_name}.pdf")
-            if osp.exists(pdf_file_card):
-                print(f"Successfully generated: {pdf_file_card}")
-                compiled_pdfs.append(pdf_file_card)
-            else:
-                print(f"Failed to generate PDF for: {filename}")
+            # Move main PDF to desired location
+            try:
+                shutil.move(manual_pdf, output_pdf_path)
+                print(f"Successfully moved main PDF to: {output_pdf_path}")
+            except Exception as e:
+                print(f"Error moving main PDF: {e}")
+        else:
+            print(f"Manual file not found: {manual_tex_path}")
+
+        # Compile role cards
+        print("COMPILING ROLE CARDS")
+        compiled_role_card_pdfs = []
+        
+        for role_card_tex in role_card_tex_files:
+            # Skip template files
+            if "template" in osp.basename(role_card_tex).lower():
+                print(f"Skipping template file: {role_card_tex}")
+                continue
                 
-        except subprocess.TimeoutExpired:
-            print(f"Role card compilation timed out: {filename}")
-        except subprocess.CalledProcessError as e:
-            print(f"Error compiling role card {filename}: {e}")
+            try:
+                pdf_path = compile_latex(role_card_tex)
+                compiled_role_card_pdfs.append(pdf_path)
+            except Exception as e:
+                print(f"Failed to compile role card {role_card_tex}: {e}")
+                continue
 
-    # Merge all role card PDFs into a single PDF
-    if compiled_pdfs:
-        merged_pdf_path = merge_role_card_pdfs(compiled_pdfs, cwd)
-        if merged_pdf_path:
-            print(f"Role cards c1ombined into: {merged_pdf_path}")
+        # Merge all role card PDFs into a single PDF
+        if compiled_role_card_pdfs:
+            merged_pdf_path = merge_role_card_pdfs(compiled_role_card_pdfs, latex_dir)
+            if merged_pdf_path:
+                print(f"Role cards combined into: {merged_pdf_path}")
+        else:
+            print("No role card PDFs to merge")
 
-    print("FINISHED COMPILING LATEX DOCUMENTS")
+        print("FINISHED COMPILING GAME DOCUMENTS")
+        return True
+        
+    except Exception as e:
+        print(f"Error compiling game documents: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 def perform_simplified_writeup(idea: Dict[str, Any], folder_name: str) -> bool:
     """
@@ -491,7 +499,7 @@ def perform_simplified_writeup(idea: Dict[str, Any], folder_name: str) -> bool:
         # 6. Compile LaTeX
         print("Compiling LaTeX documents...")
         pdf_file = f"{folder_name}/{idea['Name']}_manual.pdf"
-        compile_latex(latex_dir, pdf_file)
+        compile_game_documents(latex_dir, pdf_file, generated_card_files)
         
         # Check if combined role cards PDF was created
         combined_role_cards_pdf = osp.join(latex_dir, "role_cards_combined.pdf")
@@ -523,7 +531,7 @@ def generate_latex(coder, folder_name: str, pdf_file: str) -> bool:
     """Generate LaTeX PDF from compiled LaTeX files"""
     try:
         latex_dir = osp.join(folder_name, "latex")
-        compile_latex(latex_dir, pdf_file)
+        compile_game_documents(latex_dir, pdf_file, [])
         return True
     except Exception as e:
         print(f"Error generating LaTeX: {e}")

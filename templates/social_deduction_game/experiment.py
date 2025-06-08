@@ -10,6 +10,7 @@ import re
 from pathlib import Path
 import importlib.util
 from typing import Dict, List, Any
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Add your experiment-specific imports here
 import numpy as np
@@ -37,6 +38,8 @@ def parse_args():
                         help="Model specification for players in format 'api:model_name' (default: openrouter:deepseek/deepseek-r1-0528)")
     parser.add_argument("--gm_model", type=str, default=None,
                         help="Model specification for GM in format 'api:model_name' (if different from players)")
+    parser.add_argument("--num_game_runs", type=int, default=5,
+                        help="Number of times to run each game configuration for statistical significance (default: 5)")
     # Legacy arguments for compatibility - these are handled by the unified client system
     parser.add_argument("--model", type=str, default=None,
                         help="Legacy model argument (handled by AI_SCIENTIST_MODEL env var)")
@@ -214,11 +217,11 @@ Generate a complete, working Python rule file that implements this specific soci
         print(f"Error generating rule file with LLM: {e}")
         raise e  # Re-raise the error instead of falling back
 
-def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int = 5, 
-                       max_turns: int = 100, player_model: str = "openrouter:deepseek/deepseek-r1-0528",
-                       gm_model: str = None) -> Dict:
+def run_game_simulation_single(rule_module: str, out_dir: str = None, num_players: int = 5, 
+                              max_turns: int = 100, player_model: str = "openrouter:deepseek/deepseek-r1-0528",
+                              gm_model: str = None, run_index: int = 0) -> Dict:
     """
-    Run a game simulation and capture the results.
+    Run a single game simulation and capture the results.
     
     Args:
         rule_module: Name of the rules module to use
@@ -227,11 +230,14 @@ def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int 
         max_turns: Maximum number of turns (default: 100)
         player_model: Model specification for players in format "api:model_name" (default: "openrouter:deepseek/deepseek-r1-0528")
         gm_model: Model specification for GM in format "api:model_name" (if different from players)
+        run_index: Index of this particular run for organizing output (default: 0)
     """
     try:
         # Use default output directory if not specified
         if out_dir is None:
-            out_dir = "temp_game_logs"
+            out_dir = f"temp_game_logs/run_{run_index}"
+        else:
+            out_dir = f"{out_dir}/run_{run_index}"
         
         # Create output directory
         Path(out_dir).mkdir(parents=True, exist_ok=True)
@@ -288,6 +294,150 @@ def run_game_simulation(rule_module: str, out_dir: str = None, num_players: int 
         return {"success": False, "error": f"Failed to import sdg_core: {e}", "dialogue": []}
     except Exception as e:
         return {"success": False, "error": str(e), "dialogue": []}
+
+
+def run_game_simulation_multiple(rule_module: str, out_dir: str = None, num_players: int = 5, 
+                                max_turns: int = 100, player_model: str = "openrouter:deepseek/deepseek-r1-0528",
+                                gm_model: str = None, num_runs: int = 5) -> Dict:
+    """
+    Run multiple game simulations in parallel and aggregate the results.
+    
+    Args:
+        rule_module: Name of the rules module to use
+        out_dir: Directory to save game logs
+        num_players: Number of players (default: 5)
+        max_turns: Maximum number of turns (default: 100)
+        player_model: Model specification for players in format "api:model_name" (default: "openrouter:deepseek/deepseek-r1-0528")
+        gm_model: Model specification for GM in format "api:model_name" (if different from players)
+        num_runs: Number of times to run the game simulation (default: 5)
+    
+    Returns:
+        Dict: Aggregated results including means, standard deviations, and individual run results
+    """
+    print(f"Starting {num_runs} parallel game simulations...")
+    
+    # Use default output directory if not specified
+    if out_dir is None:
+        out_dir = "temp_game_logs"
+    
+    # Create main output directory
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    
+    all_results = []
+    successful_results = []
+    
+    # Run simulations in parallel using ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=min(num_runs, 4)) as executor:  # Limit concurrent runs to avoid overwhelming the system
+        # Submit all tasks
+        future_to_run = {
+            executor.submit(
+                run_game_simulation_single,
+                rule_module=rule_module,
+                out_dir=out_dir,
+                num_players=num_players,
+                max_turns=max_turns,
+                player_model=player_model,
+                gm_model=gm_model,
+                run_index=i
+            ): i for i in range(num_runs)
+        }
+        
+        # Collect results as they complete
+        for future in as_completed(future_to_run):
+            run_index = future_to_run[future]
+            try:
+                result = future.result()
+                all_results.append(result)
+                
+                if result["success"]:
+                    successful_results.append(result)
+                    print(f"Run {run_index} completed successfully: {result.get('turn_count', 0)} turns")
+                else:
+                    print(f"Run {run_index} failed: {result.get('error', 'Unknown error')}")
+                    
+            except Exception as e:
+                print(f"Run {run_index} encountered an exception: {str(e)}")
+                all_results.append({"success": False, "error": f"Exception: {str(e)}", "run_index": run_index})
+    
+    # Check if we have any successful results
+    if not successful_results:
+        return {
+            "success": False,
+            "error": f"All {num_runs} simulation runs failed",
+            "num_attempted": num_runs,
+            "num_successful": 0,
+            "raw_results": all_results
+        }
+    
+    # Aggregate successful results
+    game_completed_list = [r["game_completed"] for r in successful_results]
+    turn_count_list = [r["turn_count"] for r in successful_results]
+    total_messages_list = [r["total_messages"] for r in successful_results]
+    max_turns_reached_list = [r.get("max_turns_reached", False) for r in successful_results]
+    
+    # Calculate aggregated statistics
+    aggregated_results = {
+        "success": True,
+        "num_attempted": num_runs,
+        "num_successful": len(successful_results),
+        "success_rate": len(successful_results) / num_runs,
+        
+        # Game completion statistics
+        "game_completed": {
+            "mean": float(np.mean(game_completed_list)),
+            "std": float(np.std(game_completed_list)),
+            "count": len(game_completed_list)
+        },
+        
+        # Turn count statistics
+        "turn_count": {
+            "mean": float(np.mean(turn_count_list)),
+            "std": float(np.std(turn_count_list)),
+            "min": float(np.min(turn_count_list)),
+            "max": float(np.max(turn_count_list)),
+            "count": len(turn_count_list)
+        },
+        
+        # Message count statistics
+        "total_messages": {
+            "mean": float(np.mean(total_messages_list)),
+            "std": float(np.std(total_messages_list)),
+            "min": float(np.min(total_messages_list)),
+            "max": float(np.max(total_messages_list)),
+            "count": len(total_messages_list)
+        },
+        
+        # Max turns reached statistics
+        "max_turns_reached": {
+            "mean": float(np.mean(max_turns_reached_list)),
+            "std": float(np.std(max_turns_reached_list)),
+            "count": len(max_turns_reached_list)
+        },
+        
+        # Configuration used
+        "config": {
+            "num_players": num_players,
+            "max_turns": max_turns,
+            "player_model": player_model,
+            "gm_model": gm_model,
+            "num_runs": num_runs
+        },
+        
+        # Raw individual results for detailed analysis
+        "individual_results": successful_results,
+        "all_results": all_results  # Include failed results too for debugging
+    }
+    
+    # Save aggregated results to JSON file
+    results_file = Path(out_dir) / "aggregated_results.json"
+    with open(results_file, 'w') as f:
+        json.dump(aggregated_results, f, indent=2)
+    
+    print(f"Completed {len(successful_results)}/{num_runs} simulations successfully")
+    print(f"Average turn count: {aggregated_results['turn_count']['mean']:.2f} ± {aggregated_results['turn_count']['std']:.2f}")
+    print(f"Average messages: {aggregated_results['total_messages']['mean']:.2f} ± {aggregated_results['total_messages']['std']:.2f}")
+    
+    return aggregated_results
 
 def evaluate_game_quality(new_game_results: Dict, baseline_results: Dict, rule_file_path: str = None) -> Dict:
     """
@@ -353,6 +503,10 @@ def evaluate_game_quality(new_game_results: Dict, baseline_results: Dict, rule_f
                 else:
                     # For OpenAI-compatible APIs
                     base_url = getattr(client, 'base_url', None)
+                    # Convert URL object to string if needed
+                    if base_url is not None:
+                        base_url = str(base_url)
+                    
                     if supports_temperature:
                         llm = ChatOpenAI(
                             model=model_name,
@@ -367,9 +521,9 @@ def evaluate_game_quality(new_game_results: Dict, baseline_results: Dict, rule_f
                             openai_api_base=base_url
                         )
                     
-            except Exception:
+            except Exception as e:
                 # Fallback to basic analysis if LLM unavailable
-                rule_analysis = {"error": "LLM unavailable for rule analysis"}
+                rule_analysis = {"error": f"LLM unavailable for rule analysis: {str(e)}"}
             else:
                 # LLM-based rule analysis
                 rule_analyzer = ChatPromptTemplate.from_messages([
@@ -450,11 +604,12 @@ Respond with ONLY valid JSON matching this exact format:
     # ═══════════════════════════════════════════════════════════════════════
     
     dialogue_analysis = {}
-    if new_game_results.get("dialogue") and rule_file_path:
+    # Use game_summary_text instead of dialogue field which is usually empty
+    game_summary = new_game_results.get("game_summary_text", "")
+    if game_summary and rule_file_path:
         try:
-            # Get dialogue sample for analysis (last 20 messages for efficiency)
-            dialogue = new_game_results["dialogue"][-20:] if len(new_game_results["dialogue"]) > 20 else new_game_results["dialogue"]
-            dialogue_text = "\n".join([f"[{msg['turn']:02d}] {msg['speaker']}: {msg['message']}" for msg in dialogue])
+            # Extract meaningful dialogue from game summary text
+            dialogue_text = game_summary
             
             if dialogue_text.strip():
                 try:
@@ -480,6 +635,10 @@ Respond with ONLY valid JSON matching this exact format:
                     else:
                         # For OpenAI-compatible APIs
                         base_url = getattr(client, 'base_url', None)
+                        # Convert URL object to string if needed
+                        if base_url is not None:
+                            base_url = str(base_url)
+                        
                         if supports_temperature:
                             llm = ChatOpenAI(
                                 model=model_name,
@@ -550,7 +709,12 @@ Respond with ONLY valid JSON:
         except Exception as e:
             dialogue_analysis = {"error": f"Failed to analyze dialogue: {str(e)}"}
     else:
-        dialogue_analysis = {"error": "No dialogue or rule file available"}
+        if not game_summary:
+            dialogue_analysis = {"error": "No game summary text available for analysis"}
+        elif not rule_file_path:
+            dialogue_analysis = {"error": "Rule file path not provided for analysis"}
+        else:
+            dialogue_analysis = {"error": "Unknown issue with dialogue analysis"}
     
     # ═══════════════════════════════════════════════════════════════════════
     # INTEGRATED SCORING - Combine all analysis dimensions
@@ -635,16 +799,32 @@ def run_experiment(args=None):
     # Convert rule file name to module format
     # Convert path separators and dashes to dots for Python module format
     rule_module = str(Path(args.out_dir) / rule_file_name).replace('/', '.').replace('-', '_')
-    # Test the new game
-    print("Running new game simulation...")
-    new_game_results = run_game_simulation(
+    # Test the new game with multiple runs for statistical significance
+    print(f"Running {args.num_game_runs} game simulations in parallel...")
+    aggregated_results = run_game_simulation_multiple(
         rule_module, 
         args.out_dir, 
         num_players=args.num_players,
         max_turns=args.max_turns,
         player_model=args.player_model,
-        gm_model=args.gm_model
+        gm_model=args.gm_model,
+        num_runs=args.num_game_runs
     )
+    
+    # Extract representative results for evaluation (use aggregated statistics)
+    if aggregated_results["success"]:
+        new_game_results = {
+            "success": True,
+            "game_completed": aggregated_results["game_completed"]["mean"] > 0.5,  # Majority completed
+            "turn_count": int(aggregated_results["turn_count"]["mean"]),
+            "max_turns": args.max_turns,
+            "max_turns_reached": aggregated_results["max_turns_reached"]["mean"] > 0.5,  # Majority reached max turns
+            "total_messages": int(aggregated_results["total_messages"]["mean"]),
+            "dialogue": [],  # Empty for now, will use aggregated data for analysis
+            "aggregated_stats": aggregated_results  # Include full aggregated statistics
+        }
+    else:
+        new_game_results = aggregated_results  # Pass through the error
     
     if not new_game_results["success"]:
         print(f"New game failed: {new_game_results.get('error', 'Unknown error')}")
@@ -697,28 +877,89 @@ def run_experiment(args=None):
             "game_summary_text": ""
         }
     
-    # Evaluate game quality
-    print("Evaluating game quality...")
-    evaluation = evaluate_game_quality(new_game_results, baseline_results, str(rule_file_path))
+    # Evaluate game quality independently for each run to get proper statistics
+    print("Evaluating game quality for each individual run...")
+    aggregated_stats = new_game_results.get("aggregated_stats", {})
+    individual_results = aggregated_stats.get("individual_results", [])
+    
+    if not individual_results:
+        # Fallback to single evaluation
+        print("Warning: No individual results found, using aggregated evaluation")
+        evaluation = evaluate_game_quality(new_game_results, baseline_results, str(rule_file_path))
+        individual_evaluations = [evaluation]
+    else:
+        # Evaluate each individual game run separately
+        individual_evaluations = []
+        for i, individual_result in enumerate(individual_results):
+            print(f"Evaluating game run {i+1}/{len(individual_results)}")
+            evaluation = evaluate_game_quality(individual_result, baseline_results, str(rule_file_path))
+            individual_evaluations.append(evaluation)
+    
+    # Calculate statistics across all evaluations
+    if individual_evaluations:
+        completion_rates = [e["completion_rate"] for e in individual_evaluations]
+        rule_qualities = [e.get("rule_quality", 0.0) for e in individual_evaluations]
+        dialogue_qualities = [e.get("dialogue_quality", 0.0) for e in individual_evaluations]
+        turn_qualities = [e["turn_quality"] for e in individual_evaluations]
+        engagement_scores = [e["engagement"] for e in individual_evaluations]
+        overall_scores = [e["overall_score"] for e in individual_evaluations]
+        beats_baseline_list = [1.0 if e["beats_baseline"] else 0.0 for e in individual_evaluations]
+        
+        # Calculate means and standard deviations
+        evaluation_stats = {
+            "game_completion_rate": {"means": float(np.mean(completion_rates)), "stds": float(np.std(completion_rates))},
+            "rule_quality_score": {"means": float(np.mean(rule_qualities)), "stds": float(np.std(rule_qualities))},
+            "dialogue_quality_score": {"means": float(np.mean(dialogue_qualities)), "stds": float(np.std(dialogue_qualities))},
+            "turn_quality_score": {"means": float(np.mean(turn_qualities)), "stds": float(np.std(turn_qualities))},
+            "engagement_score": {"means": float(np.mean(engagement_scores)), "stds": float(np.std(engagement_scores))},
+            "overall_quality": {"means": float(np.mean(overall_scores)), "stds": float(np.std(overall_scores))},
+            "beats_baseline": {"means": float(np.mean(beats_baseline_list)), "stds": float(np.std(beats_baseline_list))},
+        }
+    else:
+        # Fallback if no evaluations
+        evaluation_stats = {
+            "game_completion_rate": {"means": 0.0, "stds": 0.0},
+            "rule_quality_score": {"means": 0.0, "stds": 0.0},
+            "dialogue_quality_score": {"means": 0.0, "stds": 0.0},
+            "turn_quality_score": {"means": 0.0, "stds": 0.0},
+            "engagement_score": {"means": 0.0, "stds": 0.0},
+            "overall_quality": {"means": 0.0, "stds": 0.0},
+            "beats_baseline": {"means": 0.0, "stds": 0.0},
+        }
 
-    # Convert to expected format
-    formatted_results = {
-        "game_completion_rate": {"means": evaluation["completion_rate"], "stds": 0.0},
-        "rule_quality_score": {"means": evaluation.get("rule_quality", 0.0), "stds": 0.0},
-        "dialogue_quality_score": {"means": evaluation.get("dialogue_quality", 0.0), "stds": 0.0},
-        "turn_quality_score": {"means": evaluation["turn_quality"], "stds": 0.0},
-        "engagement_score": {"means": evaluation["engagement"], "stds": 0.0},
-        "overall_quality": {"means": evaluation["overall_score"], "stds": 0.0},
-        "beats_baseline": {"means": 1.0 if evaluation["beats_baseline"] else 0.0, "stds": 0.0},
-        "max_turns_reached": {"means": 1.0 if new_game_results.get("max_turns_reached", False) else 0.0, "stds": 0.0},
+    # Extract statistical metrics from game runs if available
+    turn_count_stats = aggregated_stats.get("turn_count", {"mean": new_game_results.get("turn_count", 0), "std": 0.0})
+    message_stats = aggregated_stats.get("total_messages", {"mean": new_game_results.get("total_messages", 0), "std": 0.0})
+    completion_stats = aggregated_stats.get("game_completed", {"mean": 1.0 if new_game_results.get("game_completed", False) else 0.0, "std": 0.0})
+    max_turns_stats = aggregated_stats.get("max_turns_reached", {"mean": 1.0 if new_game_results.get("max_turns_reached", False) else 0.0, "std": 0.0})
+    
+    # Combine evaluation statistics with run statistics
+    formatted_results = evaluation_stats.copy()
+    formatted_results.update({
+        # Statistical metrics from multiple runs
+        "turn_count": {"means": turn_count_stats["mean"], "stds": turn_count_stats["std"]},
+        "total_messages": {"means": message_stats["mean"], "stds": message_stats["std"]},
+        "game_completed": {"means": completion_stats["mean"], "stds": completion_stats["std"]},
+        "max_turns_reached": {"means": max_turns_stats["mean"], "stds": max_turns_stats["std"]},
+        
+        # Summary statistics
+        "num_runs_attempted": aggregated_stats.get("num_attempted", 1),
+        "num_runs_successful": aggregated_stats.get("num_successful", 1 if new_game_results.get("success", False) else 0),
+        "success_rate": aggregated_stats.get("success_rate", 1.0 if new_game_results.get("success", False) else 0.0),
+        
         "game_stats": {
-            "new_game_turns": new_game_results.get("turn_count", 0),
+            "new_game_turns_mean": turn_count_stats["mean"],
+            "new_game_turns_std": turn_count_stats["std"],
             "new_game_max_turns": new_game_results.get("max_turns", 100),
-            "new_game_completed": new_game_results.get("game_completed", False),
-            "new_game_max_turns_reached": new_game_results.get("max_turns_reached", False)
+            "new_game_completed_rate": completion_stats["mean"],
+            "new_game_max_turns_reached_rate": max_turns_stats["mean"],
+            "total_runs": aggregated_stats.get("num_attempted", 1),
+            "successful_runs": aggregated_stats.get("num_successful", 1 if new_game_results.get("success", False) else 0)
         },
-        "detailed_analysis": evaluation.get("detailed_analysis", {})
-    }
+        "detailed_analysis": individual_evaluations[-1].get("detailed_analysis", {}) if individual_evaluations else {},
+        "aggregated_statistics": aggregated_stats,  # Include full aggregated stats for reference
+        "individual_evaluations": individual_evaluations  # Include all individual evaluations for debugging
+    })
     
     return formatted_results
 

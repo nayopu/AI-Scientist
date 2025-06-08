@@ -15,7 +15,7 @@ coder_prompt = """Your goal is to implement the following idea: {title}.
 The proposed experiment is as follows: {idea}.
 You are given a total of up to {max_runs} runs to complete the necessary experiments. You do not need to use all {max_runs}.
 
-First, plan the list of experiments you would like to run. For example, if you are sweeping over a specific hyperparameter, plan each value you would like to test for each run.
+First, plan the list of experiments you would like to run. You can only modify the number of players (num_players) between runs. All other parameters (max_turns, player_model, etc.) will remain fixed.
 
 Note that we already provide the vanilla baseline results, so you do not need to re-run it.
 
@@ -23,7 +23,7 @@ For reference, the baseline results are as follows:
 
 {baseline_results}
 
-After you complete each change, we will run the command `python experiment.py --out_dir=run_i' where i is the run number and evaluate the results.
+After you complete each change, we will run the command `python experiment.py --out_dir=run_i --num_players=N' where i is the run number and N is the number of players you want to test. Each configuration will be run multiple times in parallel for statistical significance, and the results will include means and standard deviations.
 YOUR PROPOSED CHANGE MUST USE THIS COMMAND FORMAT, DO NOT ADD ADDITIONAL COMMAND LINE ARGS.
 You can then implement the next thing on your list."""
 
@@ -42,6 +42,7 @@ def run_experiment(
     max_turns: int = 100,
     player_model: str = "openrouter:deepseek/deepseek-r1-0528",
     gm_model: str = None,
+    num_game_runs: int = 5,
 ):
     """Run ``experiment.py`` either locally or inside a Docker container.
 
@@ -65,13 +66,15 @@ def run_experiment(
     idea : Dict[str, Any], optional
         Game idea dictionary to pass to experiment.py as JSON.
     num_players : int, optional
-        Number of players in the social deduction game.
+        Number of players in the social deduction game. This is the only parameter that can be modified between runs.
     max_turns : int, optional
-        Maximum number of turns before game ends.
+        Maximum number of turns before game ends. This value is fixed from launch_scientist.py.
     player_model : str, optional
-        Model specification for players in format 'api:model_name'.
+        Model specification for players in format 'api:model_name'. This value is fixed from launch_scientist.py.
     gm_model : str, optional
-        Model specification for GM in format 'api:model_name'.
+        Model specification for GM in format 'api:model_name'. This value is fixed from launch_scientist.py.
+    num_game_runs : int, optional
+        Number of times to run each game configuration for statistical significance. This value is fixed from launch_scientist.py.
     """
     cwd = osp.abspath(folder_name)
     if use_docker and shutil.which("docker") is None:
@@ -112,6 +115,7 @@ def run_experiment(
             f"--num_players={num_players}",
             f"--max_turns={max_turns}",
             f"--player_model={player_model}",
+            f"--num_game_runs={num_game_runs}",
         ]
         if idea:
             command.append(f"--idea={json.dumps(idea)}")
@@ -128,6 +132,7 @@ def run_experiment(
             f"--num_players={num_players}",
             f"--max_turns={max_turns}",
             f"--player_model={player_model}",
+            f"--num_game_runs={num_game_runs}",
         ]
         if idea:
             command.append(f"--idea={json.dumps(idea)}")
@@ -262,6 +267,7 @@ def perform_experiments(
     max_turns: int = 100,
     player_model: str = "openrouter:deepseek/deepseek-r1-0528",
     gm_model: str = None,
+    num_game_runs: int = 5,
 ) -> bool:
     ## RUN EXPERIMENT
     current_iter = 0
@@ -292,6 +298,7 @@ def perform_experiments(
             max_turns=max_turns,
             player_model=player_model,
             gm_model=gm_model,
+            num_game_runs=num_game_runs,
         )
         if return_code == 0:
             run += 1
