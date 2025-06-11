@@ -15,14 +15,14 @@ coder_prompt = """Your goal is to implement the following idea: {title}.
 The proposed experiment is as follows: {idea}.
 You are given a total of up to {max_runs} runs to complete the necessary experiments. You do not need to use all {max_runs}.
 
-First, plan the list of experiments you would like to run. You should modify the experimental configuration within the experiment.py file itself, including the number of players and any other parameters you want to vary between runs.
-
-Additionally, based on experimental results, you should iteratively improve the game rules in rule.py to enhance game quality, balance, and player engagement. Use the evaluation metrics from each run to identify specific issues and make targeted improvements to:
+Your PRIMARY FOCUS should be iteratively improving the game rules in rule.py based on experimental results to enhance game quality, balance, and player engagement. Use the evaluation metrics from each run to identify specific issues and make targeted improvements to:
 - Game balance and role distribution
-- Victory conditions and win rates
+- Victory conditions and win rates  
 - Rule clarity and completeness
 - Strategic depth and player interaction
 - Any specific issues identified in the detailed analysis
+
+The experiment.py configuration (number of players, etc.) should remain consistent across runs to ensure fair comparison when evaluating rule improvements. Only modify experiment.py if absolutely necessary for testing specific rule variations.
 
 Note that we already provide the vanilla baseline results, so you do not need to re-run it.
 
@@ -179,22 +179,19 @@ def run_experiment(
             next_prompt = f"""Run {run_num} completed. Here are the results:
 {results}
 
-Analyze these results and consider improvements to rule.py based on the evaluation metrics. Pay special attention to:
+FOCUS ON RULE IMPROVEMENT: Analyze these results and improve rule.py based on the evaluation metrics. Pay special attention to:
 - rule_quality_score: indicates issues with game balance, clarity, or completeness
-- dialogue_quality_score: shows problems with player engagement or rule compliance
+- dialogue_quality_score: shows problems with player engagement or rule compliance  
 - overall_quality: suggests overall game improvement opportunities
 - beats_baseline: whether the current rules are better than baseline
 
-If the results show room for improvement, modify rule.py to address specific issues identified in the detailed analysis.
-
-Decide if you need to re-plan your experiments given the result (you often will not need to).
+Your primary task is to modify rule.py to address specific issues identified in the detailed analysis. Make targeted improvements to game balance, role interactions, victory conditions, and rule clarity.
 
 Someone else will be using `notes.txt` to perform a writeup on this in the future.
-Please include *all* relevant information for the writeup on Run {run_num}, including an experiment description and the run number. Be as verbose as necessary.
+Please include *all* relevant information for the writeup on Run {run_num}, including an experiment description, rule changes made, and the run number. Be as verbose as necessary.
 
-Then, implement the next thing on your list.
-We will then run the command `python experiment.py --out_dir=run_{run_num + 1}`.
-The experiment configuration (number of players, game rules, etc.) should be determined programmatically within experiment.py based on the run number or experimental design.
+After making your rule improvements, we will run the command `python experiment.py --out_dir=run_{run_num + 1}` to test the improved rules.
+Keep the experiment configuration consistent to ensure fair comparison of rule improvements.
 YOUR PROPOSED CHANGE MUST USE THIS COMMAND FORMAT, DO NOT ADD ADDITIONAL COMMAND LINE ARGS.
 If you are finished with experiments, respond with 'ALL_COMPLETED'."""
         return result.returncode, next_prompt
