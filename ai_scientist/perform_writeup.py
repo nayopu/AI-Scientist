@@ -291,11 +291,12 @@ INSTRUCTIONS:
 1. Analyze the rule file to identify ALL playable roles in the game
 2. For each role, create a distinctive visual description that will be used to generate role card images
 3. CRITICAL: Make each role's appearance significantly different from others:
-   - Use different color schemes (some dark/mysterious, some bright/heroic, some neutral/earthy)
+   - Use different time periods (historical, modern, futuristic)
+   - Use different settings (urban, rural, fantasy, sci-fi, etc.)
    - Use different clothing styles (formal suits, casual wear, uniforms, robes, armor, etc.)
-   - Use different settings/backgrounds (offices, streets, nature, indoors, etc.)
    - Use different artistic styles when appropriate (realistic, stylized, anime, etc.)
    - Use different ages, body types, and distinctive features
+   - Ensure a good mix of styles across all roles
 4. Each prompt should be detailed enough to generate a unique, recognizable character
 5. Focus on creating visual diversity to ensure players can easily distinguish roles
 6. Include atmospheric elements that match the role's function in the game

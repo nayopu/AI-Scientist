@@ -185,11 +185,16 @@ Generate a 1-2 sentence visual description focusing on:
 
 Let the role itself determine the visual style and setting. Choose whatever artistic approach best represents this character.
 
-Example format: "A wise scholar with kind eyes and flowing medieval robes, carrying ancient tomes" or "A shadowy modern spy with calculating gaze, dressed in a dark business suit" or "A futuristic android with glowing circuits, wearing sleek metallic armor"
+Example format: 
+- "A wise medieval scholar with kind eyes and flowing robes, carrying ancient tomes"
+- "A shadowy modern spy with calculating gaze, dressed in a dark business suit"
+- "A futuristic android with glowing circuits, wearing sleek metallic armor"
+- "A mysterious forest guardian with nature-inspired clothing and ethereal presence"
+- "A corporate executive in a sharp suit, exuding authority and confidence"
 
 Visual description:"""
 
-            system_message = "You are an expert character artist creating visual descriptions for game characters. Choose the art style, setting, and visual approach that best represents each specific role. Let the character's nature determine the visual aesthetic rather than forcing a single theme."
+            system_message = "You are an expert character artist creating visual descriptions for game characters. Choose from a diverse range of art styles and settings that best represent each role's nature. Consider various time periods (historical, modern, futuristic), settings (urban, rural, fantasy, sci-fi), and visual approaches. Ensure a good mix of styles across different roles to maintain visual diversity."
             
             response, _ = get_response_from_llm(
                 prompt,
