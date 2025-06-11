@@ -17,6 +17,13 @@ You are given a total of up to {max_runs} runs to complete the necessary experim
 
 First, plan the list of experiments you would like to run. You should modify the experimental configuration within the experiment.py file itself, including the number of players and any other parameters you want to vary between runs.
 
+Additionally, based on experimental results, you should iteratively improve the game rules in rule.py to enhance game quality, balance, and player engagement. Use the evaluation metrics from each run to identify specific issues and make targeted improvements to:
+- Game balance and role distribution
+- Victory conditions and win rates
+- Rule clarity and completeness
+- Strategic depth and player interaction
+- Any specific issues identified in the detailed analysis
+
 Note that we already provide the vanilla baseline results, so you do not need to re-run it.
 
 For reference, the baseline results are as follows:
@@ -171,6 +178,14 @@ def run_experiment(
 
             next_prompt = f"""Run {run_num} completed. Here are the results:
 {results}
+
+Analyze these results and consider improvements to rule.py based on the evaluation metrics. Pay special attention to:
+- rule_quality_score: indicates issues with game balance, clarity, or completeness
+- dialogue_quality_score: shows problems with player engagement or rule compliance
+- overall_quality: suggests overall game improvement opportunities
+- beats_baseline: whether the current rules are better than baseline
+
+If the results show room for improvement, modify rule.py to address specific issues identified in the detailed analysis.
 
 Decide if you need to re-plan your experiments given the result (you often will not need to).
 

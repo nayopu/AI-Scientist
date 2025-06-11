@@ -250,7 +250,9 @@ def do_idea(
         print_time()
         print(f"*Starting idea: {idea_name}*")
         ## PERFORM EXPERIMENTS
-        fnames = [exp_file, vis_file, notes]
+        # Add rule.py to the list of files that can be edited by the coder
+        rule_file = osp.join(folder_name, "rule.py")
+        fnames = [exp_file, vis_file, notes, rule_file]
         io = InputOutput(
             yes=True, chat_history_file=f"{folder_name}/{idea_name}_aider.txt"
         )

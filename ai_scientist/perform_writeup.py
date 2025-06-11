@@ -14,7 +14,8 @@ from langchain.prompts import ChatPromptTemplate
 from langchain.schema import SystemMessage
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
-
+from langchain.output_parsers.json import SimpleJsonOutputParser
+    
 def create_llm_client():
     """Create LangChain LLM client using the same method as experiment.py"""
     try:
@@ -65,28 +66,12 @@ def create_llm_client():
         raise e
 
 def find_latest_rule_file(folder_name: str) -> str:
-    """Find the latest run_x/rule.py file"""
-    run_dirs = []
-    for item in os.listdir(folder_name):
-        if re.match(r'^run_\d+$', item):
-            run_path = osp.join(folder_name, item)
-            if osp.isdir(run_path):
-                # Extract run number for sorting
-                run_num = int(item.split('_')[1])
-                run_dirs.append((run_num, run_path))
-    
-    # Sort by run number and get the latest one
-    if not run_dirs:
-        raise FileNotFoundError(f"No run_x directories found in {folder_name}")
-    
-    run_dirs.sort(key=lambda x: x[0], reverse=True)
-    latest_run_dir = run_dirs[0][1]
-    
-    # Look for rule.py in the latest run directory
-    rule_file = osp.join(latest_run_dir, "rule.py")
+    """Find rule.py file in the main experiment directory"""
+    rule_file = osp.join(folder_name, "rule.py")
     if not osp.exists(rule_file):
-        raise FileNotFoundError(f"Required rule.py file not found in latest run directory: {latest_run_dir}")
+        raise FileNotFoundError(f"Required rule.py file not found in main directory: {folder_name}")
     
+    print(f"Found rule file in main directory: {rule_file}")
     return rule_file
 
 def generate_rulebook(idea: Dict[str, Any], rule_file_path: str, template_tex_path: str, output_path: str, llm_client) -> bool:
@@ -288,23 +273,132 @@ Generate cards for ALL roles found in the rule file."""
         print(f"Error generating role cards: {e}")
         return []
 
+def generate_visual_prompts_for_roles(rule_file_path: str, llm_client) -> Dict[str, str]:
+    """Generate visual prompts for all roles using a single LLM call"""
+    
+    # Read rule file to understand roles
+    with open(rule_file_path, 'r', encoding='utf-8') as f:
+        rule_content = f.read()
+    
+    prompt = f"""TASK: Generate visual description prompts for role card images in a social deduction game.
+
+RULE FILE CONTENT:
+```python
+{rule_content}
+```
+
+INSTRUCTIONS:
+1. Analyze the rule file to identify ALL playable roles in the game
+2. For each role, create a distinctive visual description that will be used to generate role card images
+3. CRITICAL: Make each role's appearance significantly different from others:
+   - Use different color schemes (some dark/mysterious, some bright/heroic, some neutral/earthy)
+   - Use different clothing styles (formal suits, casual wear, uniforms, robes, armor, etc.)
+   - Use different settings/backgrounds (offices, streets, nature, indoors, etc.)
+   - Use different artistic styles when appropriate (realistic, stylized, anime, etc.)
+   - Use different ages, body types, and distinctive features
+4. Each prompt should be detailed enough to generate a unique, recognizable character
+5. Focus on creating visual diversity to ensure players can easily distinguish roles
+6. Include atmospheric elements that match the role's function in the game
+7. Keep prompts suitable for AI image generation (avoid complex scenes, focus on character portraits)
+
+OUTPUT FORMAT:
+Return a JSON object with visual prompts:
+{{
+  "role_prompts": {{
+    "ROLE_NAME_1": "detailed visual description prompt for this role",
+    "ROLE_NAME_2": "detailed visual description prompt for this role",
+    ...
+  }}
+}}
+
+Example structure for each prompt:
+"A [age/appearance] [role description] wearing [clothing] in [setting], [art style], [mood/lighting], [distinctive features]"
+
+Generate prompts for ALL roles found in the rule file. Ensure maximum visual diversity between roles."""
+
+    try:
+        prompt_generator = ChatPromptTemplate.from_messages([
+            SystemMessage(content="You are a professional concept artist creating visual descriptions for social deduction game role cards. Generate diverse, distinctive visual prompts that will help players easily distinguish between different roles. Always respond with valid JSON."),
+            ("human", "{prompt}")
+        ]) | llm_client | SimpleJsonOutputParser()
+        
+        response = prompt_generator.invoke({"prompt": prompt})
+        
+        if isinstance(response, dict) and "role_prompts" in response:
+            visual_prompts = response["role_prompts"]
+            print(f"Generated visual prompts for {len(visual_prompts)} roles:")
+            for role_name, prompt in visual_prompts.items():
+                print(f"  - {role_name}: {prompt[:100]}...")
+            return visual_prompts
+        else:
+            print("Error: Invalid response format from LLM")
+            return {}
+        
+    except Exception as e:
+        print(f"Error generating visual prompts: {e}")
+        return {}
+
 def generate_card_images(rule_file_path: str, output_dir: str, num_cards: int) -> Dict[str, str]:
-    """Generate images for role cards using AI image generation"""
+    """Generate images for role cards using AI image generation with LLM-generated visual prompts"""
     import sys
     sys.path.append(osp.dirname(osp.dirname(output_dir)))  # Go up to AI-Scientist directory
-    from ai_scientist.image_generator import GameImageGenerator, create_game_config_from_rules
     
-    image_generator = GameImageGenerator()
-    
-    # Create game config from rules
-    game_config = create_game_config_from_rules(rule_file_path)
-    print(f"Game config: {game_config}")
-    
-    # Generate role images
-    assets = image_generator.generate_game_assets(game_config, output_dir)
-    
-    print(f"Generated {len(assets)} image assets")
-    return assets
+    try:
+        # Create LLM client for visual prompt generation
+        llm_client, model_name = create_llm_client()
+        print(f"Using LLM model for visual prompts: {model_name}")
+        
+        # Generate visual prompts for all roles using LLM
+        print("Generating visual prompts for all roles...")
+        visual_prompts = generate_visual_prompts_for_roles(rule_file_path, llm_client)
+        
+        if not visual_prompts:
+            print("No visual prompts generated, falling back to default image generation")
+            # Fallback to original implementation
+            from ai_scientist.image_generator import GameImageGenerator, create_game_config_from_rules
+            image_generator = GameImageGenerator()
+            game_config = create_game_config_from_rules(rule_file_path)
+            assets = image_generator.generate_game_assets(game_config, output_dir)
+            return assets
+        
+        # Generate images using the visual prompts
+        from ai_scientist.image_generator import GameImageGenerator
+        image_generator = GameImageGenerator()
+        
+        # Create a modified game config with our custom visual prompts
+        game_config = {
+            'roles': [],
+            'visual_prompts': visual_prompts
+        }
+        
+        # Extract role names and create role configs
+        for role_name, visual_prompt in visual_prompts.items():
+            role_config = {
+                'name': role_name.lower(),
+                'visual_prompt': visual_prompt
+            }
+            game_config['roles'].append(role_config)
+        
+        print(f"Game config with visual prompts: {len(game_config['roles'])} roles")
+        
+        # Generate role images with custom prompts
+        assets = image_generator.generate_game_assets(game_config, output_dir)
+        
+        print(f"Generated {len(assets)} image assets with custom visual prompts")
+        return assets
+        
+    except Exception as e:
+        print(f"Error in generate_card_images: {e}")
+        # Fallback to original implementation
+        try:
+            from ai_scientist.image_generator import GameImageGenerator, create_game_config_from_rules
+            image_generator = GameImageGenerator()
+            game_config = create_game_config_from_rules(rule_file_path)
+            assets = image_generator.generate_game_assets(game_config, output_dir)
+            return assets
+        except Exception as fallback_error:
+            print(f"Fallback also failed: {fallback_error}")
+            return {}
 
 def merge_role_card_pdfs(role_card_pdf_paths: List[str], cwd: str, output_filename: str = "role_cards_combined.pdf") -> str:
     """Merge all role card PDFs into a single PDF"""

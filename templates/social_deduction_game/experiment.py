@@ -824,18 +824,23 @@ def run_experiment(args=None):
     num_players = determine_num_players(args.out_dir, idea)
     print(f"Testing idea: {idea['Name']} with {num_players} players (determined from run configuration)")
     
-    # Generate rule file
+    # Handle rule file (generate only if it doesn't exist, use existing one otherwise)
     rule_file_name = 'rule'
-    rule_file_path = Path(args.out_dir) / f"{rule_file_name}.py"
-    rule_file_path.parent.mkdir(parents=True, exist_ok=True)
+    rule_file_path = Path(__file__).parent / f"{rule_file_name}.py"  # Place in same directory as experiment.py
     
-    success = generate_rule_file(idea, rule_file_path)
-    if not success:
-        return {"error": "Failed to generate rule file"}
+    if not rule_file_path.exists():
+        # Generate rule file only if it doesn't exist
+        print(f"Generating new rule file: {rule_file_path}")
+        success = generate_rule_file(idea, rule_file_path)
+        if not success:
+            return {"error": "Failed to generate rule file"}
+    else:
+        print(f"Using existing rule file: {rule_file_path}")
+        # The rule file will be potentially modified by the coder system based on experimental results
     
-    # Convert rule file name to module format
-    # Convert path separators and dashes to dots for Python module format
-    rule_module = str(Path(args.out_dir) / rule_file_name).replace('/', '.').replace('-', '_')
+    # Convert rule file name to module format  
+    # Use simple module name since rule.py is in the same directory
+    rule_module = rule_file_name
     # Test the new game with multiple runs for statistical significance
     print(f"Running {args.num_game_runs} game simulations in parallel...")
     aggregated_results = run_game_simulation_multiple(
