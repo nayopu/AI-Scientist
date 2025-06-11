@@ -180,21 +180,30 @@ Generate a 1-2 sentence visual description focusing on:
 - Physical appearance and clothing style appropriate for the role
 - Facial expression or demeanor that matches the character
 - Visual elements that convey the role's nature/personality
-- Art style and setting that best fits this character (fantasy, modern, sci-fi, historical, etc.)
+- Maintain consistent art style and setting with other roles
 - Avoid mentioning specific game mechanics or abilities
 
-Let the role itself determine the visual style and setting. Choose whatever artistic approach best represents this character.
+Let the role's personality and function determine its specific visual elements while maintaining consistency with the overall game's style.
 
-Example format: 
-- "A wise medieval scholar with kind eyes and flowing robes, carrying ancient tomes"
-- "A shadowy modern spy with calculating gaze, dressed in a dark business suit"
-- "A futuristic android with glowing circuits, wearing sleek metallic armor"
-- "A mysterious forest guardian with nature-inspired clothing and ethereal presence"
-- "A corporate executive in a sharp suit, exuding authority and confidence"
+Example format (maintaining consistent style within each game):
+For a medieval fantasy game:
+- "A wise scholar with kind eyes and flowing robes, carrying ancient tomes"
+- "A shadowy spy with calculating gaze, wearing dark leather armor"
+- "A mysterious forest guardian with nature-inspired clothing"
+
+For a modern corporate game:
+- "A sharp-dressed executive with commanding presence"
+- "A tech-savvy analyst with focused expression"
+- "A charismatic negotiator in a tailored suit"
+
+For a sci-fi game:
+- "A sleek android with glowing circuits"
+- "A space station engineer in a high-tech jumpsuit"
+- "A cyber-enhanced security officer"
 
 Visual description:"""
 
-            system_message = "You are an expert character artist creating visual descriptions for game characters. Choose from a diverse range of art styles and settings that best represent each role's nature. Consider various time periods (historical, modern, futuristic), settings (urban, rural, fantasy, sci-fi), and visual approaches. Ensure a good mix of styles across different roles to maintain visual diversity."
+            system_message = "You are an expert character artist creating visual descriptions for game characters. Choose a consistent art style and setting that best represents the game's theme, then create diverse character designs within that style. Maintain visual consistency across all roles while ensuring each character is unique and recognizable."
             
             response, _ = get_response_from_llm(
                 prompt,
