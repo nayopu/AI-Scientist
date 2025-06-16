@@ -146,6 +146,7 @@ export GEMINI_API_KEY="your-gemini-api-key"
 We support Google Gemini models (e.g., "gemini-1.5-flash", "gemini-1.5-pro") via the [google-generativeai](https://pypi.org/project/google-generativeai) Python library.
 
 
+
 #### Web Search APIs (Game Design Novelty Checking)
 
 For game design templates, the system uses web search APIs to check novelty instead of academic literature search:
@@ -160,39 +161,9 @@ export OPENROUTER_API_KEY="YOUR OPENROUTER API KEY"
 export OPENAI_API_KEY="YOUR OPENAI API KEY"
 ```
 
-## Setting Up the Social Deduction Game Template
-
+## Run Social Deduction Game Experiments
 **Description:** This template focuses on designing innovative social deduction games with unique mechanics, roles, and gameplay phases. The AI Scientist generates game concepts, implements rule systems, and creates comprehensive game manuals.
 
-**Setup Steps:**
-
-1. **Create baseline game data:**
-
-   ```bash
-   # Set up Social Deduction Game baseline run
-   cd templates/social_deduction_game
-   python experiment.py --out_dir run_0
-   python plot.py
-   ```
-
-2. **Configure search APIs (optional):**
-
-   The template supports multiple search APIs for novelty checking:
-   - **DuckDuckGo** (free, no API key required)
-   - **Perplexity via OpenRouter** (requires `OPENROUTER_API_KEY`)
-   - **OpenAI** (requires `OPENAI_API_KEY`)
-
-   ```bash
-   # For Perplexity search
-   export OPENROUTER_API_KEY="YOUR OPENROUTER API KEY"
-   
-   # For OpenAI search
-   export OPENAI_API_KEY="YOUR OPENAI API KEY"
-   ```
-
-## Run Social Deduction Game Experiments
-
-**Note:** Please ensure the setup steps above are completed before running these experiments.
 
 ### Prerequisites
 
@@ -245,17 +216,20 @@ python launch_scientist.py --experiment social_deduction_game --max-ideas 1 \
   --skip-novelty-check --skip-idea-generation
 ```
 
-#### Different Search APIs
-```bash
-# Using DuckDuckGo (free, no API key required)
-python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api duckduckgo
+#### Command Line Arguments
 
-# Using Perplexity via OpenRouter
-python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api perplexity
+| Argument | Type | Default | Description |
+|----------|------|---------|-------------|
+| `--max-ideas` | int | `5` | Number of ideas to generate |
+| `--parallel` | int | `0` | Parallel processes |
+| `--skip-idea-generation` | flag | `False` | Use existing ideas |
+| `--skip-novelty-check` | flag | `False` | Skip novelty check |
+| `--search-api` | str | `"perplexity"` | Search API (`duckduckgo`, `perplexity`, `openai`) |
+| `--max-turns` | int | `100` | Game length |
+| `--player-model` | str | `"openrouter:deepseek/deepseek-r1-0528"` | Player AI model |
+| `--gm-model` | str | `None` | Game Master AI model |
+| `--num-game-runs` | int | `5` | Runs per game |
 
-# Using OpenAI for enhanced search
-python launch_scientist.py --experiment social_deduction_game --max-ideas 2 --search-api openai
-```
 
 ### Generated Output Files
 
@@ -263,227 +237,5 @@ After running social deduction game experiments, you can expect the following fi
 
 Each successful experiment creates a timestamped folder containing:
 
-**Core Files:**
-- `experiment.py` - Modified experimental code with implemented game ideas
-- `rule.py` - Game rule implementations and mechanics
-- `plot.py` - Visualization and plotting code
-- `notes.txt` - Experiment log with baseline results and iterations
-- `log.txt` - Complete execution log
-- `[idea_name]_aider.txt` - AI assistant conversation history
-
-**Game Development:**
-- `game_results.json` - Comprehensive game testing results
-- `game_logs/` - Directory containing detailed game session logs
-- `player_interactions.json` - Analysis of player behavior patterns
-
-**Game Manual:**
-- `latex/template.tex` - LaTeX source for game manual
 - `[idea_name]_manual.pdf` - Complete game manual with rules and instructions
-- Game balance analysis and playtest results
-
-**Testing Data:**
-- Multiple game session logs with different player counts
-- Statistical analysis of game outcomes
-- Player experience feedback (simulated)
-
-**Review and Evaluation:**
-- `review.txt` - AI-generated game manual review in JSON format
-
-#### Directory Structure Example
-
-```
-results/social_deduction_game/
-├── 20241225_143052_InnovativeSpyGame/
-│   ├── experiment.py
-│   ├── rule.py
-│   ├── plot.py
-│   ├── notes.txt
-│   ├── log.txt
-│   ├── InnovativeSpyGame_aider.txt
-│   ├── game_results.json
-│   ├── game_logs/
-│   │   ├── game_1_3players.json
-│   │   ├── game_2_4players.json
-│   │   └── ...
-│   ├── latex/
-│   │   └── template.tex
-│   ├── InnovativeSpyGame_manual.pdf
-│   ├── review.txt
-│   └── *.png (various plots)
-```
-
-#### Success Indicators
-
-- **Success: True** - All phases completed successfully
-- **Success: False** - May indicate PDF generation issues, but core experiment may still be valid
-- Check for the existence of final PDF and results files to confirm successful completion
-
-### Command Line Arguments Reference
-
-#### General Arguments
-
-| Argument | Type | Default | Description |
-|----------|------|---------|-------------|
-| `--max-ideas` | int | `5` | Maximum number of ideas to generate |
-| `--parallel` | int | `0` | Number of parallel processes to run |
-
-#### Control Flow Arguments
-
-| Argument | Type | Default | Description |
-|----------|------|---------|-------------|
-| `--skip-idea-generation` | flag | `False` | Skip idea generation and use existing ideas |
-| `--skip-novelty-check` | flag | `False` | Skip novelty checking of ideas |
-
-#### Search Arguments
-
-| Argument | Type | Default | Description |
-|----------|------|---------|-------------|
-| `--search-api` | str | `"perplexity"` | Search API for novelty checking |
-
-**Search API Options:**
-- `duckduckgo` - Free, no API key required
-- `perplexity` - Requires `OPENROUTER_API_KEY`
-- `openai` - Requires `OPENAI_API_KEY`
-
-#### Game-Specific Arguments
-
-For social deduction game experiments:
-
-| Argument | Type | Default | Description |
-|----------|------|---------|-------------|
-| `--max-turns` | int | `100` | Maximum turns before game ends |
-| `--player-model` | str | `"openrouter:deepseek/deepseek-r1-0528"` | Model for players |
-| `--gm-model` | str | `None` | Model for Game Master (if different) |
-| `--num-game-runs` | int | `5` | Number of runs per game configuration |
-
-**Important Notes:**
-- Player count is automatically determined by experimental design (typically 3-8 players)
-- Different runs test various player counts to explore group dynamics
-- Use `--gm-model` to specify a different model for the Game Master role
-
-
-
-## Frequently Asked Questions
-
-**Why am I missing files when running social deduction game experiments?**
-
-Ensure you have completed all the setup steps in the [Setting Up the Social Deduction Game Template](#setting-up-the-social-deduction-game-template) section before running experiments.
-
-**Why has a game manual PDF not been generated?**
-
-The AI Scientist finishes a game design idea with a success rate that depends on the foundation model and the complexity of the game concept. The highest success rates are observed with Claude Sonnet 3.5 and OpenAI's o3 models. If you encounter PDF generation issues, check the LaTeX compilation logs in the experiment directory.
-
-**What is the cost of each game design idea generated?**
-
-Game design experiments may vary in cost depending on the search API used (DuckDuckGo is free, while Perplexity and OpenAI have API costs). With OpenAI's o3 models, expect higher costs but better quality results. DeepSeek models provide a more cost-effective approach. A good place to look for new models is the [Aider leaderboard](https://aider.chat/docs/leaderboards/).
-
-**How do I configure search APIs for game design novelty checking?**
-
-The social deduction game template supports three search options:
-
-1. **DuckDuckGo (Free):**
-   ```bash
-   python launch_scientist.py --experiment social_deduction_game --search-api duckduckgo
-   ```
-   No API key required.
-
-2. **Perplexity via OpenRouter:**
-   ```bash
-   export OPENROUTER_API_KEY="your-openrouter-key"
-   python launch_scientist.py --experiment social_deduction_game --search-api perplexity
-   ```
-
-3. **OpenAI Search:**
-   ```bash
-   export OPENAI_API_KEY="your-openai-key"
-   python launch_scientist.py --experiment social_deduction_game --search-api openai
-   ```
-
-The system automatically falls back to DuckDuckGo if the specified API is unavailable.
-
-**How do I customize game parameters for social deduction games?**
-
-You can customize the game setup using the following arguments:
-- `--max-turns N`: Set maximum turns before game ends (default: 100)
-- `--player-model "api:model"`: Specify the model for players (default: "openrouter:deepseek/deepseek-r1-0528")
-- `--gm-model "api:model"`: Specify a different model for the Game Master (optional)
-- `--num-game-runs N`: Number of runs per game configuration (default: 5)
-
-The number of players is automatically determined by the experimental design. Each run tests different player counts (3-8 players) to explore how group size affects game dynamics.
-
-**Example (using recommended o3 models):**
-```bash
-export AI_SCIENTIST_MODEL="openai:o3"
-export OPENAI_API_KEY="your-openai-key"
-
-python launch_scientist.py --experiment social_deduction_game \
-  --max-ideas 3 --max-turns 50 --player-model "openai:o3" \
-  --gm-model "openai:o3" --search-api openai --num-game-runs 3
-```
-
-**Cost-effective alternative:**
-```bash
-export AI_SCIENTIST_MODEL="openrouter:deepseek/deepseek-r1-0528"
-export OPENROUTER_API_KEY="your-openrouter-key"
-
-python launch_scientist.py --experiment social_deduction_game \
-  --max-turns 100 --player-model "openrouter:deepseek/deepseek-r1-0528" \
-  --search-api duckduckgo --num-game-runs 5
-```
-
-**What if I have problems with web search APIs?**
-
-The system uses web search APIs for game design novelty checking. DuckDuckGo is always available as a free fallback option. If you have issues with Perplexity or OpenAI APIs, the system will automatically fall back to DuckDuckGo search.
-
-**How do I specify which model and API to use?**
-
-The system uses environment variable configuration instead of command-line arguments:
-
-1. **Set the model specification:**
-   ```bash
-   export AI_SCIENTIST_MODEL="provider:model_name"
-   ```
-
-2. **Set the corresponding API key:**
-   ```bash
-   export OPENAI_API_KEY="your-key"        # for OpenAI models
-   export ANTHROPIC_API_KEY="your-key"     # for Anthropic models
-   export OPENROUTER_API_KEY="your-key"    # for OpenRouter models
-   export DEEPSEEK_API_KEY="your-key"      # for DeepSeek models
-   export GEMINI_API_KEY="your-key"        # for Gemini models
-   ```
-
-3. **Run experiments without model arguments:**
-   ```bash
-   # Old way (no longer works):
-   # python launch_scientist.py --model "openai:gpt-4o" --experiment social_deduction_game
-   
-   # New way:
-   export AI_SCIENTIST_MODEL="openai:gpt-4o"
-   python launch_scientist.py --experiment social_deduction_game
-   ```
-
-**Supported format examples:**
-- `"openai:gpt-4o-mini"`
-- `"openrouter:llama-3.1-405b-instruct"`
-- `"anthropic:claude-3-5-sonnet-20241022"`
-- `"deepseek:deepseek-chat"`
-- `"gemini:gemini-1.5-pro"`
-
-**Python Usage:**
-```python
-from llm_client import get_llm_client, get_response_from_llm
-
-# Get the configured client (reads from environment variables)
-client, model_name = get_llm_client()
-
-# Use the unified interface
-response, history = get_response_from_llm(
-    msg="Hello, how are you?",
-    system_message="You are a helpful assistant.",
-    client=client,
-    model=model_name
-)
-```
-
-
+- `latex/role_cards_combined.pdf` - Combined PDF containing all role cards for the game
